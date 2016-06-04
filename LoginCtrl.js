@@ -11,19 +11,17 @@ controller('LoginCtrl', function($scope,  $location, $http) {
 		}
 		
 		//window.location.href = '/attemptLogin/?username=' + $scope.username + '&password=' + $scope.password;
-		var url =  '/attemptLogin/?username=' + $scope.username + '&password=' + $scope.password;
+		var url =  '/attemptLogin?username=' + $scope.username + '&password=' + $scope.password;
 		$http({
 			method: 'GET',
 			url: url
 		}).then( function (res) {
-			alert('authorized! logging in...');
 			window.location.href = '/main';
 		}, function (res) {
-			alert(res.status);
 			if (res.status === 401){
 				alert('unauthorized');
 			} else {
-				alert('unknown error');
+				alert('some other error occurred: ' + 	JSON.stringify(res));
 			}
 		});
 	}
