@@ -10,7 +10,8 @@ const PORT = 8888;
 var validate = function (userName, password){
 	var users = [
 		{ username: 'ChadK', password: 'Tenable'},
-		{ username: 'Admin', password: '123xyzABC!@'}];
+		{ username: 'Admin', password: '123xyzABC!@'},
+		{ username: 'user', password: 'pass'}];
 		 
 	for (var i = 0; i <= users.length - 1; i++){
 		if (userName === users[i].username && password === users[i].password){
@@ -25,17 +26,17 @@ http.createServer(function (req, res) {
 	var currentWorkingDir = process.cwd(),
 	uri = url.parse(req.url).pathname,
 	fileName = path.join(currentWorkingDir, uri);
+	
 		
-		if (uri.indexOf('/main') > -1){
-			fs.readFile('main.html', 'binary', function( err, file){
-				if (err) {
-				console.log('error!!!');
-					res.writeHead(500, {'Content-Type': 'text/html'});
-					res.write(err + '\n');
-					res.end();
-					return;
-				}
-				
+	if (uri.indexOf('/main') > -1){
+		fs.readFile('main.html', 'binary', function( err, file){
+			if (err) {
+				res.writeHead(500, {'Content-Type': 'text/html'});
+				res.write(err + '\n');
+				res.end();
+				return;
+			}
+			
 			res.writeHeader(200, {'Content-Type': 'text/html'},
 						{'Authorization': 'Basic ' + token});
 			res.write(file, 'binary');
@@ -44,21 +45,25 @@ http.createServer(function (req, res) {
 		});
 		
 		return;
-		}
+	}
 		
 		if (uri.indexOf('/attemptLogin') > -1){
+			//console.log('begin validate');
 				var credentials = url.parse(req.url, true).query;
 				
 				if (credentials){
+					//console.log('has credential');
 					var username = credentials.username;
 					var password = credentials.password;
 					
 					if (!validate(username, password)){
+						//console.log('Not a valid user');
 						res.writeHead(401);
 						res.write('401 Unauthorized');
 						res.end();
 						return;
 					} else {
+						//console.log('A valid user!');
 						token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
 						
 						res.writeHeader(200, {'Content-Type': 'text/html'},
@@ -70,6 +75,7 @@ http.createServer(function (req, res) {
 					}
 				}
 				
+				//res.writeHead();
 				return;
 		}
 		
@@ -79,22 +85,18 @@ http.createServer(function (req, res) {
 		
 		fs.readFile(fileName, 'binary', function( err, file){
 				if (err) {					
-				console.log('error!!!');
 					res.writeHead(500, {'Content-Type': 'text/html'});
 					res.write(err + '\n');
 					res.end();
 					return;
 				}
 				
-				//console.log('hosting: ' + fileName);
-				//res.writeHeader(200, {'Content-Type': 'text/html'});
-				//res.write(file, 'binary');
-				//res.end();
-			
+			//console.log('hosting file: ' + fileName);
 			res.writeHead(200);
 			res.write(file, 'binary');
 			res.end();
+			return;
 		});
-}).listen(parseInt(PORT, 10)); 
+}).listen(parseInt(PORT)); 
 
 console.log('Server running at --> http://localhost:' + PORT + '/\nCTRL+C to shutdown');
