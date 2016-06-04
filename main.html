@@ -1,0 +1,46 @@
+<html>
+
+ <head> 
+        <meta charset="UTF-8">
+        <base href="/">
+		
+		
+		<title>Main Page</title>
+		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.css">
+		 
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-route.min.js"></script> 
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.js"></script>
+		
+	<script src="MainCtrl.js"></script>
+		 
+   </head> 
+   <body ng-app="sampleApp">
+   <script type="text/javascript">
+		angular.module('sampleApp', ['ngMaterial', 'ngRoute', 'sampleApp.controllers']);
+			/*.config(function ($locationProvider, $routeProvider) {
+			$routeProvider
+				.when('/main', {
+					templateUrl: '/main.html',
+					controller: 'MainCtrl'
+				});*/
+			//$locationProvider.html5Mode(true);
+		//});
+		
+		</script>
+		
+		<div ng-cloak layout="column" ng-controller="MainCtrl"> 
+			<div>
+				<H3>You're Logged In!</H3>
+				<md-button ng-click="isValid()">Am I valid?</md-button>
+				<md-button class="md-raised" ng-click='logout()'>Logout</md-button>
+			</div>
+		</div>
+		
+		</body>
+</html>
+ 

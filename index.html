@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <base href="/">
+		
+		
+		<title>Sample Application</title>
+		
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.css">
+        
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-route.min.js"></script> 
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.js"></script>
+		
+		<script src="LoginCtrl.js"></script>
+		<script src="main.html"></script>
+
+    </head>
+	<body ng-app="sampleApp" ng-cloak layout="column">
+		<script type="text/javascript">
+		angular.module('sampleApp', ['ngMaterial', 'ngRoute', 'sampleApp.controllers']);
+		</script>
+  
+	   <div ng-controller="LoginCtrl">   
+			<md-toolbar>
+				{{ title }}
+			</md-toolbar>			
+				<H2>Please Login:</H2>
+				User:<input ng-model="username"></input>
+				Password:<input ng-model="password"></input>
+				<md-button class="md-raised" ng-click="login()">Login</md-button>
+		</div>
+	</body>
+</html>
+
+
