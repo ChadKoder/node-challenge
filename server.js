@@ -8,10 +8,13 @@ var http = require('http'),
 	chrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
 	iexplore = 'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
 
-var selectedBrowser = process.argv[2].toLowerCase();
+const PORT = 8888;
+var userArg = process.argv[2].toLowerCase();
 
-if (selectedBrowser){
-	if (selectedBrowser === 'chrome'){
+if (userArg){
+	console.log('attempting to run node with parameter ' + userArg + '...');
+	
+	if (userArg === 'chrome'){
 		try {
 			fs.statSync(chrome);
 			browserToLaunch = chrome;
@@ -19,7 +22,7 @@ if (selectedBrowser){
 			console.log('chrome does not exist, setting to launch with iexplore');
 			browserToLaunch = iexplore;
 		}
-	} else if (selectedBrowser === 'iexplore'){
+	} else if (userArg === 'iexplore'){
 		try {
 			fs.statSync(iexplore);
 			browserToLaunch = iexplore;
@@ -27,16 +30,17 @@ if (selectedBrowser){
 			console.log('iexplore does not exist, please manually launch your browser and navigate to "http://localhost:8888"');
 			browserToLaunch = '';
 		}
+	} else if (userArg === 'tests/') {
+		browserToLaunch = null;
+		return;
 	} else {
-		console.log('defined browser does not exist, please manually launch your browser and navigate to "http://localhost:8888"');
+		console.log('defined parameter does not exist! Continuing...');
 	}
 }
-	
-const PORT = 8888;
 
-console.log('attempting to open ' + selectedBrowser + '...');
-
-childProcess.spawn(browserToLaunch, ['http://localhost:8888']);
+if (browserToLaunch){
+	childProcess.spawn(browserToLaunch, ['http://localhost:8888']);
+}
 
 var validate = function (userName, password){
 	var users = [
@@ -50,7 +54,7 @@ var validate = function (userName, password){
 		}
 		
 		return false;
-	}   
+	}
 };
 
 var urlContains = function(url, str){
