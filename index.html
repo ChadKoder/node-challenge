@@ -6,12 +6,14 @@
 		
 		<title>Sample Application</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.css">
+		 <link rel="stylesheet" href="styles.css">
 		
 		<script src="node_modules/angular/angular.min.js"></script>
 		<script src="node_modules/angular-route/angular-route.min.js"></script> 
 		<script src="node_modules/angular-animate/angular-animate.min.js"></script>
 		<script src="node_modules/angular-aria/angular-aria.min.js"></script>
 		<script src="node_modules/angular-messages/angular-messages.min.js"></script>
+		<script src="node_modules/angular-toastr/dist/angular-toastr.tpls.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.js"></script>
 		
 		<script src="LoginCtrl.js"></script>
@@ -19,23 +21,44 @@
     </head>
 	<body ng-app="sampleApp" ng-cloak layout="column">
 		<script type="text/javascript">
-		angular.module('sampleApp', ['ngMaterial', 'ngRoute', 'sampleApp.controllers']);
-		/*sampleApp.config(['$routeProvider', function($routeProvider){
-			$routeProvider.when('/main', {
-			templateUrl: 'main.html',
-			controller: 'MainCtrl'
-			});
-		]);*/
+		var sampleApp = angular.module('sampleApp', ['ngMaterial', 'ngRoute', 'sampleApp.controllers']);
+		sampleApp.config(['$mdThemingProvider', function($mdThemingProvider){
+			$mdThemingProvider.definePalette('success-toast-theme', {
+                '50': '#c7f5ff',
+                '100': '#7be8ff',
+                '200': '#43deff',
+                '300': '#00cefa',
+                '400': '#00b5dc',
+                '500': '#009cbd',
+                '600': '#00839e',
+                '700': '#006980',
+                '800': '#005061',
+                '900': '#003743',
+                'A100': '#c7f5ff',
+                'A200': '#7be8ff',
+                'A400': '#00b5dc',
+                'A700': '#006980',
+                'contrastDefaultColor': 'dark',    // whether, by default, text (contrast)
+                // on this palette should be dark or light
+                'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
+                    '200', '300', '400', 'A100'],
+                'contrastLightColors': ['500']
+            });    // could also specify this if default was 'dark'
+			
+			
+		}]);
 		</script>
   
 	   <div ng-controller="LoginCtrl">   
+		<md-content>
 			<md-toolbar>
 				{{ title }}
 			</md-toolbar>
-				<H2>Please Login:</H2>
-				User:<input ng-model="username"></input>
-				Password:<input ng-model="password"></input>
-				<md-button class="md-raised" ng-click="login()">Login</md-button>
+			<H2>Please Login:</H2>
+			User:<input ng-model="username"></input>
+			Password:<input ng-model="password"></input>
+			<md-button class="md-raised" ng-click="login()">Login</md-button>
+		</md-content>
 		</div>
 	</body>
 </html>

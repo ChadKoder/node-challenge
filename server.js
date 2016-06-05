@@ -145,7 +145,6 @@ http.createServer(function (req, res) {
 		fileName += '.html';
 		fs.readFile(fileName, 'binary', function(err, file){
 			if (err) {
-				console.log('error11: ' + err);
 				write500InternalErrorResponse(res, err, contentType);
 				return;
 			}

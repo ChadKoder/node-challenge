@@ -1,9 +1,9 @@
 angular.module('sampleApp.controllers', []).
 controller('ConfigsCtrl', function($scope) {
-	$scope.totalStairs = 0;
+	$scope.totalStairs = null;
 	
 	$scope.logout = function (){
-		alert('logging out');
+		window.location.href = '/';
 	}
 	
 	$scope.isValid = function(){
