@@ -6,10 +6,13 @@ var http = require('http'),
 	childProcess = require('child_process'),
 	browserToLaunch = '',
 	chrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-	iexplore = 'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe';
+	iexplore = 'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe',
+	arg = process.argv[2], userArg = null;
 
 const PORT = 8888;
-var userArg = process.argv[2].toLowerCase();
+if (arg){
+	userArg = arg.toLowerCase();
+}
 
 if (userArg){
 	console.log('attempting to run node with parameter ' + userArg + '...');
@@ -92,11 +95,17 @@ var write200SuccessResponse = function (res, file, contentType, token){
 	res.end();
 };
 
+var write404NotFoundResponse = function(res, contentType){
+	res.writeHead(404, {'Content-Type': contentType });
+	res.write('404 Not Found');
+	res.end();
+};
+
 var write500InternalErrorResponse = function(res, err, contentType){
 	res.writeHead(500, {'Content-Type': contentType});
 	res.write(err + '\n');
 	res.end();
-}
+};
 
 http.createServer(function (req, res) {
 	var contentType, currentWorkingDir = process.cwd(),
@@ -115,43 +124,45 @@ http.createServer(function (req, res) {
 			return;
 		});
 		
+		write404NotFoundResponse(res, contentType);
 		return;
 	}
 		
-		if (uri.indexOf('/attemptLogin') > -1){
-				var credentials = url.parse(req.url, true).query;
+	if (uri.indexOf('/attemptLogin') > -1){
+		console.log('attempting login...');
+			var credentials = url.parse(req.url, true).query;
+			
+			if (credentials){
+				var username = credentials.username;
+				var password = credentials.password;
 				
-				if (credentials){
-					var username = credentials.username;
-					var password = credentials.password;
-					
-					if (!validate(username, password)){
-						write401Unauthorized(res);
-						return;
-					} else {
-						token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
-						write200SuccessResponse(res, null, contentType, token);						
-						return;
-					}
-				}
-				
-				//res.writeHead();
-				return;
-		}
-		
-		if (fs.statSync(fileName).isDirectory()) {
-			fileName += 'index.html'; 
-		}
-		
-		fs.readFile(fileName, 'binary', function(err, file){
-				if (err) {
-					write500InternalErrorResponse(res, err, contentType);					
+				if (!validate(username, password)){
+					write401Unauthorized(res);
+					return;
+				} else {
+					token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
+					write200SuccessResponse(res, null, contentType, token);						
 					return;
 				}
-
-				write200SuccessResponse(res, file, contentType, null);			
+			}
+			
+			write404NotFoundResponse(res, contentType);
 			return;
-		});
+	}
+		
+	if (fs.statSync(fileName).isDirectory()) {
+		fileName += 'index.html'; 
+	}
+	
+	fs.readFile(fileName, 'binary', function(err, file){
+			if (err) {
+				write500InternalErrorResponse(res, err, contentType);					
+				return;
+			}
+
+			write200SuccessResponse(res, file, contentType, null);			
+		return;
+	});
 
 }).listen(parseInt(PORT)); 
 
