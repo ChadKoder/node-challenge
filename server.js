@@ -33,8 +33,9 @@ if (selectedBrowser){
 }
 	
 const PORT = 8888;
-//childProcess.spawn('C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe', ['http://localhost:8888']);
-console.log('attempting to open ' + selectedBrowser);
+
+console.log('attempting to open ' + selectedBrowser + '...');
+
 childProcess.spawn(browserToLaunch, ['http://localhost:8888']);
 
 var validate = function (userName, password){
@@ -56,34 +57,57 @@ var urlContains = function(url, str){
 	return url.indexOf(str) != -1;
 };
 
+var setContentType = function (url) {
+	var contentType = 'text/html';
+	
+	if (urlContains(url, '.html')){
+		contentType = 'text/html';
+	} else if (urlContains(url, '.css')){
+		contentType = 'text/css';
+	} else if (urlContains(url, '.js')) {
+		contentType = 'text/javascript';
+	}
+	
+	return contentType;
+};
+
+var write200SuccessResponse = function (res, file, contentType, token){
+	if (token){
+		res.writeHeader(200, {'Content-Type': contentType},
+		{'Authorization': 'Basic ' + token});
+	} else {
+		res.writeHead(200);
+	}
+	
+	if (file){
+		res.write(file, 'binary');
+	} else {
+		res.write('200 OK');
+	}
+	
+	res.end();
+};
+
+var write500InternalErrorResponse = function(res, err, contentType){
+	res.writeHead(500, {'Content-Type': contentType});
+	res.write(err + '\n');
+	res.end();
+}
+
 http.createServer(function (req, res) {
 	var contentType, currentWorkingDir = process.cwd(),
 	uri = url.parse(req.url).pathname,
-	fileName = path.join(currentWorkingDir, uri);
+	fileName = path.join(currentWorkingDir, uri),
+	contentType = setContentType(req.url);
 	
-	if (urlContains(req.url, '.html')){
-		contentType = 'text/html';
-	} else if (urlContains(req.url, '.css')){
-		contentType = 'text/css';
-	} else if (urlContains(req.url, '.js')) {
-		contentType = 'text/javascript';
-	} else {
-		contentType = 'text/html';
-	}
-		
 	if (uri.indexOf('/main') > -1){
-		fs.readFile('main.html', 'binary', function( err, file){
+		fs.readFile('main.html', 'binary', function(err, file){
 			if (err) {
-				res.writeHead(500, {'Content-Type': contentType});
-				res.write(err + '\n');
-				res.end();
+				write500InternalErrorResponse(res, err, contentType);
 				return;
 			}
 			
-			res.writeHeader(200, {'Content-Type': contentType},
-						{'Authorization': 'Basic ' + token});
-			res.write(file, 'binary');
-			res.end();
+			write200SuccessResponse(res, file, contentType, null);
 			return;
 		});
 		
@@ -91,29 +115,18 @@ http.createServer(function (req, res) {
 	}
 		
 		if (uri.indexOf('/attemptLogin') > -1){
-			//console.log('begin validate');
 				var credentials = url.parse(req.url, true).query;
 				
 				if (credentials){
-					//console.log('has credential');
 					var username = credentials.username;
 					var password = credentials.password;
 					
 					if (!validate(username, password)){
-						//console.log('Not a valid user');
-						res.writeHead(401);
-						res.write('401 Unauthorized');
-						res.end();
+						write401Unauthorized(res);
 						return;
 					} else {
-						//console.log('A valid user!');
 						token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
-						
-						res.writeHeader(200, {'Content-Type': contentType},
-										{'Authorization': 'Basic ' + token});
-						res.write('200 OK');
-						res.end();
-						
+						write200SuccessResponse(res, null, contentType, token);						
 						return;
 					}
 				}
@@ -126,24 +139,15 @@ http.createServer(function (req, res) {
 			fileName += 'index.html'; 
 		}
 		
-		fs.readFile(fileName, 'binary', function( err, file){
-				if (err) {					
-					res.writeHead(500, {'Content-Type': contentType});
-					res.write(err + '\n');
-					res.end();
+		fs.readFile(fileName, 'binary', function(err, file){
+				if (err) {
+					write500InternalErrorResponse(res, err, contentType);					
 					return;
 				}
-				
-			//console.log('hosting file: ' + fileName);
-			res.writeHead(200);
-			res.write(file, 'binary');
-			res.end();
-			
-			//spawn('chrome.exe', ['http://localhost:8888']);
+
+				write200SuccessResponse(res, file, contentType, null);			
 			return;
 		});
-		
-
 
 }).listen(parseInt(PORT)); 
 
