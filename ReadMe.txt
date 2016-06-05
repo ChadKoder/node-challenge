@@ -15,13 +15,13 @@ New Setup Instructions:
 1. Install NodeJS: https://nodejs.org/en/download/
 2. Extract zip file to desired location.
 3. Open your preferred command line tool (I use Console Emulator: https://sourceforge.net/projects/conemu/) and navigate to the location of the extracted files.
-4. Run 'build.sh' from the extracted file location.
-5. 
+4. Run 'build.sh' from the extracted file location to install dependencies.
+5. Run 'launchChrome.sh' or 'launchInternetExplorer.sh' to run the server and launch the application from your browser of choice (currently only supports chrome/iexplore)
 
 NOTES:
 Authentication:
 - Pass 'Authentication' header for 'Basic' authentication with encoded "username:<username>,password:<password>"
 
 Unit Tests:
-- Run unit tests with 'npm test tests/'
+- Run 'runUnitTests.sh' to launch unit tests.
 
