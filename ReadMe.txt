@@ -23,5 +23,6 @@ Authentication:
 - Pass 'Authentication' header for 'Basic' authentication with encoded "username:<username>,password:<password>"
 
 Unit Tests:
+- Must run 'launchForUnitTests.sh' before running 'runUnitTests.sh'.
 - Run 'runUnitTests.sh' to launch unit tests.
 
