@@ -7,8 +7,9 @@ var http = require('http'),
 	browserToLaunch = '',
 	chrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
 	iexplore = 'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe',
-	arg = process.argv[2], userArg = null,
-	server = this;
+	arg = process.argv[2], userArg = null;
+	
+	
 
 	
 	
@@ -82,21 +83,42 @@ var setContentType = function (url) {
 	return contentType;
 };
 
-var write200SuccessResponse = function (res, file, contentType, token){
-	if (token){
-		res.writeHeader(200, {'Content-Type': contentType},
+var write200SuccessResponse = function (res, file, contentType){
+	if (token) {
+		if (file){
+			console.log('writing token and file');
+			res.writeHeader(200, {'Content-Type': contentType},
 		{'Authorization': 'Basic ' + token});
+			res.write(file, 'binary');
+			res.end();
+			return;
+		} else {
+			console.log('writing token with no file');
+			res.writeHead(200);
+			res.write('200 OK');
+			res.end();
+			return;
+		}
+		
+		res.end();
+		return;
 	} else {
-		res.writeHead(200);
+		if (file){
+			console.log('writing NO token with a file');
+			res.writeHead(200);
+			res.write(file, 'binary');
+			res.end();
+			console.log('made it to No token with file END');
+			return;
+		} else {
+			console.log('writing NO token and NO file');
+			res.writeHead(200);
+			res.write('200 OK');
+			res.end();
+			return;
+		}
 	}
 	
-	if (file){
-		res.write(file, 'binary');
-	} else {
-		res.write('200 OK');
-	}
-	
-	res.end();
 };
 
 var write404NotFoundResponse = function(res, contentType){
@@ -123,57 +145,76 @@ http.createServer(function (req, res) {
 	fileName = path.join(currentWorkingDir, uri),
 	contentType = setContentType(req.url);
 	
-	if (uri.indexOf('/main') > -1){
-		fs.readFile('main.html', 'binary', function(err, file){
+	//if (uri.indexOf('node_module') > -1 || uri.indexOf('tests') > -1) {
+//		return;
+//	}	
+	
+	if (uri.indexOf('/config') > -1){
+		fileName += '.html';
+		fs.readFile(fileName, 'binary', function(err, file){
 			if (err) {
+				console.log('error11: ' + err);
 				write500InternalErrorResponse(res, err, contentType);
 				return;
 			}
 			
-			write200SuccessResponse(res, file, contentType, null);
+			write200SuccessResponse(res, file, contentType);
 			return;
 		});
 		
-		write404NotFoundResponse(res, contentType);
+		console.log('failed on /config');
+		//write404NotFoundResponse(res, contentType);
 		return;
-	}
-		
+	} 
+
 	if (uri.indexOf('/attemptLogin') > -1){
 		console.log('attempting login...');
-			var credentials = url.parse(req.url, true).query;
+		var credentials = url.parse(req.url, true).query;
+		
+		if (credentials){
+			var username = credentials.username;
+			var password = credentials.password;
 			
-			if (credentials){
-				var username = credentials.username;
-				var password = credentials.password;
-				
-				if (!validate(username, password)){
-					write401Unauthorized(res);
-					return;
-				} else {
-					token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
-					write200SuccessResponse(res, null, contentType, token);
-					return;
-				}
+			if (!validate(username, password)){
+				write401Unauthorized(res);
+				return;
+			} else {
+				token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
+				write200SuccessResponse(res, null, contentType);
+				return;
 			}
-			
-			write404NotFoundResponse(res, contentType);
-			return;
+		}
+		
+		console.log('failed on /attemptLogin');
+		//write404NotFoundResponse(res, contentType);
+		return;
 	}
 		
 	if (fs.statSync(fileName).isDirectory()) {
-		fileName += 'index.html'; 
-	}
+		fileName += 'index.html';
+		//console.log('reading index.html');
+	} 
 	
 	fs.readFile(fileName, 'binary', function(err, file){
-			if (err) {
-				write500InternalErrorResponse(res, err, contentType);					
-				return;
-			}
-
-			write200SuccessResponse(res, file, contentType, null);			
+		//console.log('serving file: ' + fileName);
+		if (err) {
+			console.log('error for file : ' + fileName + ' err: ' + err);
+			write500InternalErrorResponse(res, err, contentType);
+			return;
+		}
+		console.log('SERVING FILE: ' + fileName);
+		write200SuccessResponse(res, file, contentType);
+		
 		return;
 	});
-}).listen(parseInt(PORT)); 
+	
+	
+	console.log('failed on :::'  + fileName + ' content-type: ' + contentType);
+	//write404NotFoundResponse(res, contentType);
+	//write200SuccessResponse(res, file, contentType);
+	return;
+	 
+}).listen(parseInt(PORT, 10)); 
 
 
 

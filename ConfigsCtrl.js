@@ -1,5 +1,5 @@
 angular.module('sampleApp.controllers', []).
-controller('MainCtrl', function($scope) {
+controller('ConfigsCtrl', function($scope) {
 	$scope.totalStairs = 0;
 	
 	$scope.logout = function (){

@@ -16,7 +16,7 @@ controller('LoginCtrl', function($scope,  $location, $http) {
 			method: 'GET',
 			url: url
 		}).then( function (res) {
-			window.location.href = '/main';
+			window.location.href = '/config';
 		}, function (res) {
 			if (res.status === 401){
 				alert('unauthorized');
