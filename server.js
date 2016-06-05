@@ -9,10 +9,6 @@ var http = require('http'),
 	iexplore = 'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe',
 	arg = process.argv[2], userArg = null;
 	
-	
-
-	
-	
 const PORT = 8888;
 
 if (arg){
@@ -145,10 +141,6 @@ http.createServer(function (req, res) {
 	fileName = path.join(currentWorkingDir, uri),
 	contentType = setContentType(req.url);
 	
-	//if (uri.indexOf('node_module') > -1 || uri.indexOf('tests') > -1) {
-//		return;
-//	}	
-	
 	if (uri.indexOf('/config') > -1){
 		fileName += '.html';
 		fs.readFile(fileName, 'binary', function(err, file){
@@ -208,14 +200,9 @@ http.createServer(function (req, res) {
 		return;
 	});
 	
-	
 	console.log('failed on :::'  + fileName + ' content-type: ' + contentType);
-	//write404NotFoundResponse(res, contentType);
-	//write200SuccessResponse(res, file, contentType);
 	return;
 	 
 }).listen(parseInt(PORT, 10)); 
-
-
 
 console.log('Server running at --> http://localhost:' + PORT + '/\nCTRL+C to shutdown');
