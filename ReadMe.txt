@@ -11,10 +11,17 @@ Setup Instructions:
 7. Login with a valid user -> user name: user, password: pass <- is one that will work.
 8. On successful login you will see the main page. Here you have the option to view the encoded token or logout.
 
-
+New Setup Instructions:
+1. Install NodeJS: https://nodejs.org/en/download/
+2. Extract zip file to desired location.
+3. Open your preferred command line tool (I use Console Emulator: https://sourceforge.net/projects/conemu/) and navigate to the location of the extracted files.
+4. Run 'build.sh' from the extracted file location.
+5. 
 
 NOTES:
 Authentication:
-Pass 'Authentication' header for 'Basic' authentication with encoded "username:<username>,password:<password>"
+- Pass 'Authentication' header for 'Basic' authentication with encoded "username:<username>,password:<password>"
 
+Unit Tests:
+- Run unit tests with 'npm test tests/'
 
