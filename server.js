@@ -7,9 +7,13 @@ var http = require('http'),
 	browserToLaunch = '',
 	chrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
 	iexplore = 'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe',
-	arg = process.argv[2], userArg = null;
+	arg = process.argv[2], userArg = null,
+	server = this;
 
+	
+	
 const PORT = 8888;
+
 if (arg){
 	userArg = arg.toLowerCase();
 }
@@ -107,6 +111,12 @@ var write500InternalErrorResponse = function(res, err, contentType){
 	res.end();
 };
 
+var write401Unauthorized = function(res, contentType){
+	res.writeHead(401, {'Content-Type': contentType});
+	res.write('401 Unauthorized');
+	res.end();
+};
+
 http.createServer(function (req, res) {
 	var contentType, currentWorkingDir = process.cwd(),
 	uri = url.parse(req.url).pathname,
@@ -141,7 +151,7 @@ http.createServer(function (req, res) {
 					return;
 				} else {
 					token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
-					write200SuccessResponse(res, null, contentType, token);						
+					write200SuccessResponse(res, null, contentType, token);
 					return;
 				}
 			}
@@ -163,7 +173,8 @@ http.createServer(function (req, res) {
 			write200SuccessResponse(res, file, contentType, null);			
 		return;
 	});
-
 }).listen(parseInt(PORT)); 
+
+
 
 console.log('Server running at --> http://localhost:' + PORT + '/\nCTRL+C to shutdown');
