@@ -16,27 +16,30 @@
 		<script src="node_modules/angular-toastr/dist/angular-toastr.tpls.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.js"></script>
 		
+		
+		<script src="ConfigurationCtrl.js"></script>
 		<script src="LoginCtrl.js"></script>
 		<!--<script src="configurations.json"></script> -->
     </head>
 	<body ng-app="sampleApp" ng-cloak layout="column">
 		<script type="text/javascript">
 		var sampleApp = angular.module('sampleApp', ['ngMaterial', 'ngRoute', 'sampleApp.controllers']);
-		
 		</script>
   
 	   <div ng-controller="LoginCtrl">   
-		<md-content>
-			<md-toolbar>
-				{{ title }}
-			</md-toolbar>
-			<H2>Please Login:</H2>
-			User:<input ng-model="username"></input>
-			Password:<input ng-model="password"></input>
-			<md-button class="md-raised" ng-click="login()">Login</md-button>
-			<md-button class="md-raised" ng-click="getConfigs()">Get Configs</md-button>
-		</md-content>
+			<md-content>
+				<md-toolbar>
+					{{ title }}
+				</md-toolbar>
+				<H2>Please Login:</H2>
+				User:<input ng-model="username"></input>
+				Password:<input ng-model="password"></input>
+				<md-button class="md-raised" ng-click="login()">Login</md-button>
+				<md-button class="md-raised" ng-click="getConfigs()">Get Configs</md-button>
+			</md-content>
 		</div>
+		
+
 	</body>
 </html>
 

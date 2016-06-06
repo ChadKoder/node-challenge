@@ -17,7 +17,7 @@ if (arg){
 }
 
 if (userArg){
-	console.log('attempting to run node with parameter ' + userArg + '...');
+	console.log('attempting to run node with ' + userArg + '...');
 	
 	if (userArg === 'chrome'){
 		try {

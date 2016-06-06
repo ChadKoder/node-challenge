@@ -3,6 +3,7 @@ controller('LoginCtrl', function($scope, $http, $mdToast) {
 	$scope.title = 'Node.js Sample Application';
 	$scope.username = 'ChadK';
 	$scope.password = 'Tenable';
+	$scope.showConfigs = false;
 	
 	var redirectDelay = 2000;
 	
@@ -20,8 +21,12 @@ controller('LoginCtrl', function($scope, $http, $mdToast) {
 		$http({
 			method: 'GET',
 			url: url
-		}).then( function (res) {  
-			alert('SUCCESS! --> ' + JSON.stringify(res));
+		}).then( function (res) { 
+			alert(JSON.stringify(res.data.configurations));
+			var configs = res.data[0];
+			$scope.configs = configs;
+			$scope.showConfigs = true;
+			
 		}, function (res) {
 			if (res.status === 401){
 				$scope.showSimpleToast('Unauthorized user!');
