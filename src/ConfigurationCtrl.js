@@ -30,6 +30,23 @@ controller('ConfigurationCtrl', function($scope, $http) {
 		
 	};
 	
+	$scope.deleteConfig = function(){
+		var url =  '/configs';
+		$http({
+			method: 'DELETE',
+			url: url
+		}).then(function (res) {
+			$scope.showSimpleToast('Configuration Deleted');
+			//$scope.configs = res.data.configurations;
+		}, function (res) {
+			if (res.status === 401){
+				$scope.showSimpleToast('Unauthorized user!');
+			} else {
+				$scope.showSimpleToast('unknown error has occurred.');
+			}
+		});
+	};
+	
 	$scope.getConfigs = function() {
 		var url =  '/configs';
 		$http({

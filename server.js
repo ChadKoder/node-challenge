@@ -211,17 +211,23 @@ var handlePutRequest = function(res, contentType){
 };
 
 var handleDeleteRequest = function(res, contentType){
-	write405MethodNotAllowed(res, contentType);
+	var currentWorkingDir = process.cwd();
+	var fileName = currentWorkingDir + '\\src\\configurations.json';
+	console.log("ASFSAFSFSAF---->>> " + fileName);
+	//write405MethodNotAllowed(res, contentType);
+	//var configurations = fs.readFileSync(configs);
+	//console.log('CONFIGGGSSS: ' + JSON.stringify(configs));
+	var update = configs.configurations[0];
+	update.username = 'Chad Keibler';
+	fs.writeFileSync()
+	//console.log('update me: ' + JSON.stringify(update));
+	
+	
 };
 
 http.createServer(function (req, res) {
 	var contentType, 
 	contentType = setContentType(req.url);
-	
-	/*if ((uri.indexOf('node_modules') > -1) || uri.indexOf('src') > -1){
-		renderFile(res, fileName, contentType);
-		return;
-	}*/
 	
 	switch (req.method){
 		case 'GET':
@@ -234,7 +240,7 @@ http.createServer(function (req, res) {
 			handlePutRequest(res, contentType);
 			break;
 		case 'DELETE':
-			//handleDeleteRequest(res, contentType);
+			handleDeleteRequest(res, contentType);
 			break;
 		default:
 	}
