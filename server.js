@@ -2,6 +2,7 @@ var http = require('http'),
 	url = require('url'),
 	path = require('path'),
 	fs = require('fs'),
+	configs = require('./configurations.json'),
 	token = '',
 	childProcess = require('child_process'),
 	browserToLaunch = '',
@@ -23,7 +24,7 @@ if (userArg){
 			fs.statSync(chrome);
 			browserToLaunch = chrome;
 		} catch(e) {
-			console.log('chrome does not exist, setting to launch with iexplore');
+			//console.log('chrome does not exist, setting to launch with iexplore');
 			browserToLaunch = iexplore;
 		}
 	} else if (userArg === 'iexplore'){
@@ -31,14 +32,14 @@ if (userArg){
 			fs.statSync(iexplore);
 			browserToLaunch = iexplore;
 		} catch(e) {
-			console.log('iexplore does not exist, please manually launch your browser and navigate to "http://localhost:8888"');
+			//console.log('iexplore does not exist, please manually launch your browser and navigate to "http://localhost:8888"');
 			browserToLaunch = '';
 		}
 	} else if (userArg === 'tests/') {
 		browserToLaunch = null;
 		return;
 	} else {
-		console.log('defined parameter does not exist! Continuing...');
+		//console.log('defined parameter does not exist! Continuing...');
 	}
 }
 
@@ -82,14 +83,14 @@ var setContentType = function (url) {
 var write200SuccessResponse = function (res, file, contentType){
 	if (token) {
 		if (file){
-			console.log('writing token and file');
+			//console.log('writing token and file');
 			res.writeHeader(200, {'Content-Type': contentType},
 		{'Authorization': 'Basic ' + token});
 			res.write(file, 'binary');
 			res.end();
 			return;
 		} else {
-			console.log('writing token with no file');
+			//console.log('writing token with no file');
 			res.writeHead(200);
 			res.write('200 OK');
 			res.end();
@@ -100,14 +101,14 @@ var write200SuccessResponse = function (res, file, contentType){
 		return;
 	} else {
 		if (file){
-			console.log('writing NO token with a file');
+			//console.log('writing NO token with a file');
 			res.writeHead(200);
 			res.write(file, 'binary');
 			res.end();
-			console.log('made it to No token with file END');
+			//console.log('made it to No token with file END');
 			return;
 		} else {
-			console.log('writing NO token and NO file');
+			//console.log('writing NO token and NO file');
 			res.writeHead(200);
 			res.write('200 OK');
 			res.end();
@@ -141,25 +142,15 @@ http.createServer(function (req, res) {
 	fileName = path.join(currentWorkingDir, uri),
 	contentType = setContentType(req.url);
 	
-	if (uri.indexOf('/config') > -1){
-		fileName += '.html';
-		fs.readFile(fileName, 'binary', function(err, file){
-			if (err) {
-				write500InternalErrorResponse(res, err, contentType);
-				return;
-			}
-			
-			write200SuccessResponse(res, file, contentType);
-			return;
-		});
-		
-		console.log('failed on /config');
-		//write404NotFoundResponse(res, contentType);
+	if (uri.indexOf('/configs') > -1){
+		res.setHeader('Content-Type', 'application/json');
+		res.write(JSON.stringify(configs));
+		res.end();
 		return;
 	} 
 
 	if (uri.indexOf('/attemptLogin') > -1){
-		console.log('attempting login...');
+		//console.log('attempting login...');
 		var credentials = url.parse(req.url, true).query;
 		
 		if (credentials){
@@ -176,7 +167,7 @@ http.createServer(function (req, res) {
 			}
 		}
 		
-		console.log('failed on /attemptLogin');
+		//console.log('failed on /attemptLogin');
 		//write404NotFoundResponse(res, contentType);
 		return;
 	}
@@ -184,7 +175,12 @@ http.createServer(function (req, res) {
 	if (fs.statSync(fileName).isDirectory()) {
 		fileName += 'index.html';
 		//console.log('reading index.html');
-	} 
+	}// else {
+		//if (url.indexOf('configs') > -1){
+			//fileName = 'configurations.json';
+			//return;
+	//	}
+	//}
 	
 	fs.readFile(fileName, 'binary', function(err, file){
 		//console.log('serving file: ' + fileName);
@@ -193,13 +189,13 @@ http.createServer(function (req, res) {
 			write500InternalErrorResponse(res, err, contentType);
 			return;
 		}
-		console.log('SERVING FILE: ' + fileName);
+		//console.log('SERVING FILE: ' + fileName);
 		write200SuccessResponse(res, file, contentType);
 		
 		return;
 	});
 	
-	console.log('failed on :::'  + fileName + ' content-type: ' + contentType);
+//	console.log('failed on :::'  + fileName + ' content-type: ' + contentType);
 	return;
 	 
 }).listen(parseInt(PORT, 10)); 

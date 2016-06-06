@@ -17,36 +17,12 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.js"></script>
 		
 		<script src="LoginCtrl.js"></script>
-		<script src="config.html"></script> 
+		<!--<script src="configurations.json"></script> -->
     </head>
 	<body ng-app="sampleApp" ng-cloak layout="column">
 		<script type="text/javascript">
 		var sampleApp = angular.module('sampleApp', ['ngMaterial', 'ngRoute', 'sampleApp.controllers']);
-		sampleApp.config(['$mdThemingProvider', function($mdThemingProvider){
-			$mdThemingProvider.definePalette('success-toast-theme', {
-                '50': '#c7f5ff',
-                '100': '#7be8ff',
-                '200': '#43deff',
-                '300': '#00cefa',
-                '400': '#00b5dc',
-                '500': '#009cbd',
-                '600': '#00839e',
-                '700': '#006980',
-                '800': '#005061',
-                '900': '#003743',
-                'A100': '#c7f5ff',
-                'A200': '#7be8ff',
-                'A400': '#00b5dc',
-                'A700': '#006980',
-                'contrastDefaultColor': 'dark',    // whether, by default, text (contrast)
-                // on this palette should be dark or light
-                'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
-                    '200', '300', '400', 'A100'],
-                'contrastLightColors': ['500']
-            });    // could also specify this if default was 'dark'
-			
-			
-		}]);
+		
 		</script>
   
 	   <div ng-controller="LoginCtrl">   
@@ -58,6 +34,7 @@
 			User:<input ng-model="username"></input>
 			Password:<input ng-model="password"></input>
 			<md-button class="md-raised" ng-click="login()">Login</md-button>
+			<md-button class="md-raised" ng-click="getConfigs()">Get Configs</md-button>
 		</md-content>
 		</div>
 	</body>

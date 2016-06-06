@@ -15,9 +15,25 @@ controller('LoginCtrl', function($scope, $http, $mdToast) {
 			);
 	};
 	
+	$scope.getConfigs = function() {
+		var url =  '/configs';
+		$http({
+			method: 'GET',
+			url: url
+		}).then( function (res) {  
+			alert('SUCCESS! --> ' + JSON.stringify(res));
+		}, function (res) {
+			if (res.status === 401){
+				$scope.showSimpleToast('Unauthorized user!');
+			} else {
+				$scope.showSimpleToast('unknown error has occurred.');
+			}
+		});
+	};
+	
 	$scope.login = function (){
 		if (!$scope.username || !$scope.password){
-			alert('username and password are required.');
+			//alert('username and password are required.');
 			return;
 		}
 		
@@ -30,7 +46,7 @@ controller('LoginCtrl', function($scope, $http, $mdToast) {
 			$scope.showSimpleToast('Login Successful! redirecting...');
 		 
 			setTimeout(function(){
-				window.location.href = '/config';
+				//window.location.href = '/config';
 			}, redirectDelay);
 		}, function (res) {
 			if (res.status === 401){
