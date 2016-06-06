@@ -128,6 +128,12 @@ var write401Unauthorized = function(res, contentType){
 	res.end();
 };
 
+var write405MethodNotAllowed = function (res, contentType){
+	res.writeHeader(405, {'Content-Type': contentType},
+		{'Allow': 'GET'});
+	res.write('405 Method Not Allowed');
+	res.end();
+}
 var renderFile = function (res, fileName, contentType){
 	fs.readFile(fileName, 'binary', function(err, file){
 		if (err) {
@@ -140,12 +146,11 @@ var renderFile = function (res, fileName, contentType){
 	});
 };
 
-http.createServer(function (req, res) {
-	var contentType, currentWorkingDir = process.cwd(),
-	uri = url.parse(req.url).pathname,
-	fileName = path.join(currentWorkingDir, uri),
-	contentType = setContentType(req.url);
-	
+var handleGetRequest = function (res, req, contentType){
+	var currentWorkingDir = process.cwd();
+	var uri = url.parse(req.url).pathname;
+	var fileName = path.join(currentWorkingDir, uri);
+		
 	if ((uri.indexOf('node_modules') > -1) || uri.indexOf('src') > -1){
 		renderFile(res, fileName, contentType);
 		return;
@@ -153,26 +158,20 @@ http.createServer(function (req, res) {
 	
 	switch (uri){
 		case '/':
-			if (fs.statSync(fileName).isDirectory()) {
-				fileName += 'src/index.html';
-			}
-			
+			fileName += 'src/index.html';
 			renderFile(res, fileName, contentType);
 			break;
 		case '/user-configurations':
-			//res.writeHead(200);
-			//res.write('200 OK');
-			if (token){
-				
-			}
-			res.end();
+			fileName = currentWorkingDir + "\\src\\" + "user-configurations.html";
+			
+			renderFile(res, fileName, contentType);
 			break;
 		case '/configs':
 			res.setHeader('Content-Type', 'application/json');
 			res.write(JSON.stringify(configs));
 			res.end();
 			break;
-		case '/attemptLogin':
+		case '/attemptLogin/':
 			var credentials = url.parse(req.url, true).query;
 		
 			if (credentials){
@@ -195,6 +194,91 @@ http.createServer(function (req, res) {
 			res.write('404 Not Found');
 			res.end();
 	}
+};
+
+var handlePostRequest = function(res, contentType){
+	/*res.writeHeader(405, {'Content-Type': contentType},
+				{'Allow': 'GET'});
+			//res.write(file, 'binary');
+			res.write('405 Method Not Allowed');
+			res.end();*/
+			
+	write405MethodNotAllowed(res, contentType);
+};
+
+var handlePutRequest = function(res, contentType){
+	write405MethodNotAllowed(res, contentType);
+};
+
+var handleDeleteRequest = function(res, contentType){
+	write405MethodNotAllowed(res, contentType);
+};
+
+http.createServer(function (req, res) {
+	var contentType, 
+	contentType = setContentType(req.url);
+	
+	/*if ((uri.indexOf('node_modules') > -1) || uri.indexOf('src') > -1){
+		renderFile(res, fileName, contentType);
+		return;
+	}*/
+	
+	switch (req.method){
+		case 'GET':
+			handleGetRequest(res, req, contentType);
+			break;
+		case 'POST':
+			handlePostRequest(res, contentType);
+			break;
+		case 'PUT':
+			handlePutRequest(res, contentType);
+			break;
+		case 'DELETE':
+			//handleDeleteRequest(res, contentType);
+			break;
+		default:
+	}
+	
+	
+	/*switch (uri){
+		case '/':
+			fileName += 'src/index.html';
+			renderFile(res, fileName, contentType);
+			break;
+		case '/user-configurations':
+			fileName = currentWorkingDir + "\\src\\" + "user-configurations.html";
+			
+			renderFile(res, fileName, contentType);
+			break;
+		case '/configs':
+		console.log('METHOD: ' + req.method);
+			res.setHeader('Content-Type', 'application/json');
+			res.write(JSON.stringify(configs));
+			res.end();
+			break;
+		case '/attemptLogin/':
+			var credentials = url.parse(req.url, true).query;
+		
+			if (credentials){
+				var username = credentials.username;
+				var password = credentials.password;
+				
+				if (!validate(username, password)){
+					write401Unauthorized(res);
+					return;
+				} else {
+					token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
+					write200SuccessResponse(res, null, contentType);
+					return;
+				}
+			}
+		
+			break;
+		default:
+			res.writeHead(404);
+			res.write('404 Not Found');
+			res.end();
+	}*/
 	
 		 
 }).listen(parseInt(PORT, 10)); 
