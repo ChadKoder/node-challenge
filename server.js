@@ -242,12 +242,37 @@ var handlePostRequest = function(res, reqUrl, contentType){
 	}
 };
 
-var handlePutRequest = function(res, reqUrl, contentType){
-	var currentWorkingDir = process.cwd();
-	var id = url.parse(reqUrl, true).query;
-	var configurations = configs.configurations;
-	var fileName = currentWorkingDir + '\\src\\configurations.json';
+var handlePutRequest = function(res, req, contentType){
+	var data = '', index = null, currentWorkingDir = process.cwd(),
+		fileName = currentWorkingDir + '\\src\\configurations.json';
+		uri = url.parse(req.url).pathname;
+	if (uri === '/configs'){
+		req.on('data', function(chunk){
+			data += chunk;
+		});
+		
+		req.on('end', function(){
+			var updatedConfig =  JSON.parse(data).config,
+				configurations = configs.configurations;
+			
+			for (var i = 0; i < configurations.length; i++){
+				if (configurations[i].username === updatedConfig.username){
+					index = configurations.indexOf(configurations[i]);
+				}
+			}
+			
+			if (index > -1){
+				configurations[index] = updatedConfig;
+				fs.writeFileSync(fileName, JSON.stringify(configurations));
+				write204NoContentResponse(res);
+				return;
+			}
+		});
+		
+		return;
+	}
 	
+	write404NotFoundResponse(res, contentType);
 };
 
 var handleDeleteRequest = function(res, reqUrl, contentType){
@@ -289,7 +314,7 @@ http.createServer(function (req, res) {
 			handlePostRequest(res, req.url, contentType);
 			break;
 		case 'PUT':
-			handlePutRequest(res, contentType);
+			handlePutRequest(res, req, contentType);
 			break;
 		case 'DELETE':
 			handleDeleteRequest(res, req.url, contentType);
