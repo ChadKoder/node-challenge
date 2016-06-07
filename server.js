@@ -171,12 +171,19 @@ var handleGetRequest = function (res, req, contentType){
 			res.write(JSON.stringify(configs));
 			res.end();
 			break;
-		case '/attemptLogin/':
-			var credentials = url.parse(req.url, true).query;
-		
+		case '/validateUser':
+			var qry = url.parse(req.url, true).query;
+			 var authHeader = req.headers['authorization'];
+			 var auth = authHeader.split(' ')[1];
+			  var credString = new Buffer(auth, 'base64').toString();
+			  console.log('AUTH---> ' + credString);
+			  
+			  var credentials = credString.split(':');
+			  console.log(credentials);
+			  
 			if (credentials){
-				var username = credentials.username;
-				var password = credentials.password;
+				var username = credentials[0];
+				var password = credentials[1];
 				
 				if (!validate(username, password)){
 					write401Unauthorized(res);
@@ -200,16 +207,19 @@ var handlePostRequest = function(res, contentType){
 	write405MethodNotAllowed(res, contentType);
 };
 
-var handlePutRequest = function(res, contentType){
-	write405MethodNotAllowed(res, contentType);
+var handlePutRequest = function(res, reqUrl, contentType){
+	//write405MethodNotAllowed(res, contentType);
+	var currentWorkingDir = process.cwd();
+	var id = url.parse(reqUrl, true).query;
+	var configurations = configs.configurations;
+	var fileName = currentWorkingDir + '\\src\\configurations.json';
+	
 };
 
 var handleDeleteRequest = function(res, reqUrl, contentType){
 	var currentWorkingDir = process.cwd();
 	var id = url.parse(reqUrl, true).query;
 	var configurations = configs.configurations;
-	console.log(reqUrl);
-	console.log('IDDD: ' + JSON.stringify(id));
 	var fileName = currentWorkingDir + '\\src\\configurations.json';
 	
 	var index = null;
@@ -221,9 +231,7 @@ var handleDeleteRequest = function(res, reqUrl, contentType){
 	
 	if (index > -1){
 		configurations.splice(index, 1);
-	 
 		//overwrite file with new json object
-		console.log('WRITING CONFIGS: ' + JSON.stringify(configurations));
 		fs.writeFileSync(fileName, JSON.stringify(configurations));
 		res.writeHead(204);
 		res.end();

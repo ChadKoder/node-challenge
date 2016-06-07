@@ -21,8 +21,12 @@ controller('LoginCtrl', function($scope, $http, $mdToast, $location) {
 			return;
 		}
 		
-		//window.location.href = '/attemptLogin/?username=' + $scope.username + '&password=' + $scope.password;
-		var url =  '/attemptLogin/?username=' + $scope.username + '&password=' + $scope.password;
+		var url =  '/validateUser';
+		var encodedAuth = btoa($scope.username + ':' + $scope.password);
+		$http.defaults.headers.common.Authorization = 'Basic ' + encodedAuth;
+		
+		
+		//?username=' + $scope.username + '&password=' + $scope.password;
 		$http({
 			method: 'GET',
 			url: url
