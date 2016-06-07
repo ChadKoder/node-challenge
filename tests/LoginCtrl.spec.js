@@ -1,30 +1,35 @@
 describe('LoginCtrl', function () {
     var ctrl,
         $rootScope,
-        $scope;
+        $scope,
+		$mdToast;
 
-    beforeEach(module('sampleApp'));
+    beforeEach(function(){
+		module('sampleApp');
+	});
 
     beforeEach(function () {
+		$mdToast = jasmine.createSpyObj('$mdToast', ['showSimple']);
 
         inject(function ($injector, $controller) {
             $rootScope = $injector.get('$rootScope');
             $scope = $rootScope.$new();
-
+			
             ctrl = $controller('LoginCtrl', {
-                $scope: $scope
+                $scope: $scope,
+				$mdToast: $mdToast
             });
         });
     });
 
-    describe('$scope.runUnitTests()', function () {
+    describe('$scope.showSimpleToast()', function () {
         beforeEach(function () {
-          // spyOn(window, 'open');
-         //   $scope.runUnitTests();
+			$scope.showSimpleToast('test');
+			
         });
 
-        it('should do stuff', function () {
-           expect(1).toEqual(1);
+        it('should display toast message', function () {
+           expect($mdToast.showSimple).toHaveBeenCalled();
         });
     });
    
