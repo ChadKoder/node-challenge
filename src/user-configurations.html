@@ -26,8 +26,13 @@
 			});
 		</script>
 	 <div ng-controller="ConfigurationCtrl">
-	 <md-toolbar>
-		{{ title }}
+	 <md-toolbar style="background-color: #00A5B5;" layout="row">
+		<div layout="column" layout-align="center" flex>
+			{{ title }}
+		</div>
+		<div layout="column" layout-align="center end" flex>
+			<md-button class="md-raised" style="background-color: #265BAF; margin-right: 30px" ng-click="logout()">Logout</md-button>
+		</div>
 	</md-toolbar>
 	 <md-content flex style="background-color: #D4D4D4;">
 		<md-card ng-if="selectedConfig" flex style="background-color: #C4C3C3;">
