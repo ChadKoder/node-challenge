@@ -197,12 +197,6 @@ var handleGetRequest = function (res, req, contentType){
 };
 
 var handlePostRequest = function(res, contentType){
-	/*res.writeHeader(405, {'Content-Type': contentType},
-				{'Allow': 'GET'});
-			//res.write(file, 'binary');
-			res.write('405 Method Not Allowed');
-			res.end();*/
-			
 	write405MethodNotAllowed(res, contentType);
 };
 
@@ -210,19 +204,35 @@ var handlePutRequest = function(res, contentType){
 	write405MethodNotAllowed(res, contentType);
 };
 
-var handleDeleteRequest = function(res, contentType){
+var handleDeleteRequest = function(res, reqUrl, contentType){
 	var currentWorkingDir = process.cwd();
+	var id = url.parse(reqUrl, true).query;
+	var configurations = configs.configurations;
+	console.log(reqUrl);
+	console.log('IDDD: ' + JSON.stringify(id));
 	var fileName = currentWorkingDir + '\\src\\configurations.json';
-	console.log("ASFSAFSFSAF---->>> " + fileName);
-	//write405MethodNotAllowed(res, contentType);
-	//var configurations = fs.readFileSync(configs);
-	//console.log('CONFIGGGSSS: ' + JSON.stringify(configs));
-	var update = configs.configurations[0];
-	update.username = 'Chad Keibler';
-	fs.writeFileSync()
-	//console.log('update me: ' + JSON.stringify(update));
 	
+	var index = null;
+	for (var i = 0; i < configurations.length; i++){
+		if (configurations[i].username === id){
+			index = configurations.indexOf(configurations[i]);
+		}
+	}
 	
+	if (index > -1){
+		configurations.splice(index, 1);
+	 
+		//overwrite file with new json object
+		console.log('WRITING CONFIGS: ' + JSON.stringify(configurations));
+		fs.writeFileSync(fileName, JSON.stringify(configurations));
+		res.writeHead(204);
+		res.end();
+		return;
+	}
+	
+	res.writeHead(404);
+	res.end();
+	return;
 };
 
 http.createServer(function (req, res) {
@@ -240,53 +250,11 @@ http.createServer(function (req, res) {
 			handlePutRequest(res, contentType);
 			break;
 		case 'DELETE':
-			handleDeleteRequest(res, contentType);
+			handleDeleteRequest(res, req.url, contentType);
 			break;
 		default:
 	}
-	
-	
-	/*switch (uri){
-		case '/':
-			fileName += 'src/index.html';
-			renderFile(res, fileName, contentType);
-			break;
-		case '/user-configurations':
-			fileName = currentWorkingDir + "\\src\\" + "user-configurations.html";
-			
-			renderFile(res, fileName, contentType);
-			break;
-		case '/configs':
-		console.log('METHOD: ' + req.method);
-			res.setHeader('Content-Type', 'application/json');
-			res.write(JSON.stringify(configs));
-			res.end();
-			break;
-		case '/attemptLogin/':
-			var credentials = url.parse(req.url, true).query;
-		
-			if (credentials){
-				var username = credentials.username;
-				var password = credentials.password;
-				
-				if (!validate(username, password)){
-					write401Unauthorized(res);
-					return;
-				} else {
-					token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
-					write200SuccessResponse(res, null, contentType);
-					return;
-				}
-			}
-		
-			break;
-		default:
-			res.writeHead(404);
-			res.write('404 Not Found');
-			res.end();
-	}*/
-	
-		 
+	 
 }).listen(parseInt(PORT, 10)); 
 
 console.log('Server running at --> http://localhost:' + PORT + '/\nCTRL+C to shutdown');

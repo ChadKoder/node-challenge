@@ -4,7 +4,7 @@ controller('LoginCtrl', function($scope, $http, $mdToast, $location) {
 	$scope.username = 'ChadK';
 	$scope.password = 'Tenable';
 		
-	var redirectDelay = 2000;
+	var redirectDelay = 1000;
 	
 	$scope.showSimpleToast = function (msg){
 		$mdToast.show(

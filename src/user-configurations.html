@@ -16,8 +16,7 @@
 		<script src="node_modules/angular-toastr/dist/angular-toastr.tpls.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.js"></script>
 		
-		<script src="src/ConfigurationCtrl.js"></script>
-		 <!--<script src="src/LoginCtrl.js"></script> -->
+		<script src="src/ConfigurationCtrl.js"></script> 
     </head>
 	<body ng-app="sampleApp" ng-cloak style="background-color:#d4d4d4;">
 		<script type="text/javascript">
@@ -66,26 +65,14 @@
 		<div ng-show="configs.length > 0" flex  style="background-color: #D4D4D4;">
 				<md-list>
 					<md-subheader  style="background-color: #D4D4D4;"><h3>Configurations</h3></md-subheader>
-					<!--<md-list-item ng-if="vm.activeTray.Items && vm.activeTray.Items.length > 0" ng-click="vm.editMed(med)" ng-repeat="med in vm.activeTray.Items track by med.ItemCode">-->
-					
-					<md-list-item ng-if="configs.length > 0" ng-click="editConfig(config)" ng-repeat="config in configs">
-					<!--<div  ng-click="editConfig(config)"></div> -->
-						
+									<md-list-item ng-if="configs.length > 0" ng-click="editConfig(config)" ng-repeat="config in configs">
 							 <p> {{ config.name }}</p>
 							 <p>{{ config.hostname }}</p>
 							 <p>{{ config.port }}</p>
 							 <p>{{ config.username }}</p>
-						
-						<!-- <md-checkbox class="md-secondary"></md-checkbox> -->
 						<md-divider></md-divider>
 					</md-list-item>
 				</md-list>
-				<!--<section style="" ng-repeat="config in configs">
-					<div style="line-height: 30px;">
-						username: {{ config.name }}
-						host: {{ config.host }}
-					</div>
-				</section>-->
 			
 		</div>
 		 </md-content>

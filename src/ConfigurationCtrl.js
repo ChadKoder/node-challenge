@@ -1,5 +1,5 @@
 angular.module('sampleApp.controllers', []).
-controller('ConfigurationCtrl', function($scope, $http) {
+controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 	$scope.logout = function (){
 		//window.location.href = '/';
 	};
@@ -31,19 +31,16 @@ controller('ConfigurationCtrl', function($scope, $http) {
 	};
 	
 	$scope.deleteConfig = function(){
-		var url =  '/configs';
+		var url =  '/configs/?' + $scope.selectedConfig.username;
 		$http({
 			method: 'DELETE',
 			url: url
 		}).then(function (res) {
-			$scope.showSimpleToast('Configuration Deleted');
-			//$scope.configs = res.data.configurations;
+			$scope.configs = $scope.getConfigs();
+			$scope.selectedConfig = null;
+			$scope.showSimpleToast('Configuration deleted');
 		}, function (res) {
-			if (res.status === 401){
-				$scope.showSimpleToast('Unauthorized user!');
-			} else {
-				$scope.showSimpleToast('unknown error has occurred.');
-			}
+			$scope.showSimpleToast('Deletion failed');
 		});
 	};
 	
