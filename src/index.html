@@ -19,23 +19,23 @@
 		<script src="src/ConfigurationCtrl.js"></script>
 		<script src="src/LoginCtrl.js"></script>
     </head>
-	<body ng-app="sampleApp" ng-cloak layout="column" style="background-color: #C4C3C3;">
+	<body ng-app="sampleApp" ng-cloak layout="column" style="background-color: #D4D4D4;">
 		<script type="text/javascript">
 		var sampleApp = angular.module('sampleApp', ['ngMaterial', 'ngRoute', 'sampleApp.controllers']);
 		sampleApp.config(function ($locationProvider) {
 			$locationProvider.html5Mode(true);
 		});
 		</script>
-		<md-content style="background-color: #C4C3C3;" flex>
+		<md-content style="background-color: #D4D4D4;" flex>
 		   <div ng-controller="LoginCtrl">
 					<div ng-hide="showConfigs">
 						<md-toolbar style="background-color: #00A5B5;"  layout="column" layout-align="center" flex>
 							{{ title }}
 						</md-toolbar>
 						<H2>Please Login:</H2>
-						User:<input ng-model="username"></input>
-						Password:<input type="password" ng-model="password"></input>
-						<md-button class="md-raised" style="background-color: #1867BB;" ng-click="login()">Login</md-button>
+						User: <input ng-model="username"></input>
+						Password: <input type="password" ng-model="password"></input>
+						<md-button class="md-raised" style="background-color: #00A5B5;" ng-click="login()">Login</md-button>
 					</div>
 			</div>
 		</md-content>
