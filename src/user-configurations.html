@@ -26,61 +26,95 @@
 			});
 		</script>
 	 <div ng-controller="ConfigurationCtrl">
-	 <md-toolbar style="background-color: #00A5B5;" layout="row">
-		<div layout="column" layout-align="center" flex>
-			{{ title }}
-		</div>
-		<div layout="column" layout-align="center end" flex>
-			<md-button class="md-raised" style="background-color: #1867BB; margin-right: 30px" ng-click="logout()">Logout</md-button>
-		</div>
-	</md-toolbar>
-	 <md-content flex style="background-color: #D4D4D4;">
-		<md-card ng-if="selectedConfig" flex style="background-color: #C4C3C3;">
-			<md-card-content flex>
-				<h3>Edit Configuration</h3>
-				<form>
-					<div layout="column">
-						<label>name</label>
-						<md-input-container>
-							<input aria-label="name" ng-model="selectedConfig.name" />
-						</md-input-container>
-						<label>hostname</label>
-						<md-input-container>
-							<input aria-label="hostname" ng-model="selectedConfig.hostname" />
-						</md-input-container>
-						<label>port</label>
-						<md-input-container>
-							<input aria-label="port" ng-model="selectedConfig.port" />
-						</md-input-container>
-						<label>username</label>
-						<md-input-container>
-							<input aria-label="username" ng-model="selectedConfig.username" />
-						</md-input-container>
-					
+		 <md-toolbar style="background-color: #00A5B5;" layout="row">
+			<div layout="column" layout-align="center" flex>
+				{{ title }}
+			</div>
+			<div layout="column" layout-align="center end" flex>
+				<md-button class="md-raised" style="background-color: #1867BB; margin-right: 30px" ng-click="logout()">Logout</md-button>
+			</div>
+		</md-toolbar>
+		 <md-content flex style="background-color: #D4D4D4;">
+			<div ng-hide="configs.length > 0">
+				<h3>There are no existing configurations to view.</h3>
+				<md-button class="md-raised" style="background-color: #00A5B5;" ng-click="showAdd()">Add Configuration</md-button>
+			</div>
+			<md-card ng-if="selectedConfig" flex style="background-color: #C4C3C3;">
+				<md-card-content flex>
+					<h3>Edit Configuration</h3>
+					<form>
+						<div layout="column">
+							<label>name</label>
+							<md-input-container>
+								<input aria-label="name" ng-model="selectedConfig.name" />
+							</md-input-container>
+							<label>hostname</label>
+							<md-input-container>
+								<input aria-label="hostname" ng-model="selectedConfig.hostname" />
+							</md-input-container>
+							<label>port</label>
+							<md-input-container>
+								<input aria-label="port" ng-model="selectedConfig.port" />
+							</md-input-container>
+							<label>username</label>
+							<md-input-container>
+								<input aria-label="username" ng-model="selectedConfig.username" />
+							</md-input-container>
+						
+						</div>
+					</form>
+					<div layout="row">
+						<md-button ng-click="cancelEdit()">Cancel</md-button>
+						<md-button ng-click="deleteConfig()">Delete</md-button>
+						<md-button ng-click="updateConfig()">Update</md-button>
 					</div>
-				</form>
-				<div layout="row">
-					<md-button ng-click="cancelEdit()">Cancel</md-button>
-					<md-button ng-click="deleteConfig()">Delete</md-button>
-					<md-button ng-click="updateConfig()">Update</md-button>
-				</div>
-			</md-card-content>
-		</md-card>
-	 
-		<div ng-show="configs.length > 0" flex  style="background-color: #D4D4D4;">
-				<md-list>
-					<md-subheader  style="background-color: #D4D4D4;"><h3>Configurations</h3></md-subheader>
-									<md-list-item ng-if="configs.length > 0" ng-click="editConfig(config)" ng-repeat="config in configs">
-							 <p> {{ config.name }}</p>
-							 <p>{{ config.hostname }}</p>
-							 <p>{{ config.port }}</p>
-							 <p>{{ config.username }}</p>
-						<md-divider></md-divider>
-					</md-list-item>
-				</md-list>
-			
-		</div>
-		 </md-content>
+				</md-card-content>
+			</md-card>
+		 
+			<div ng-show="configs.length > 0" flex  style="background-color: #D4D4D4;">
+					<md-list>
+						<md-subheader style="background-color: #D4D4D4;"><h3>Configurations</h3></md-subheader>
+						<md-list-item ng-if="configs.length > 0" ng-click="editConfig(config)" ng-repeat="config in configs">
+							<div layout="column" flex layout-align="center">
+							 
+								<!--<div layout="row" flex layout-padding>
+									<md-subheader flex style="background-color: #D4D4D4;">Name: </md-subheader>
+									<md-subheader flex style="background-color: #D4D4D4;">d2222: </md-subheader>
+									<md-subheader flex style="background-color: #D4D4D4;">333: </md-subheader>
+									<md-subheader flex style="background-color: #D4D4D4;">444: </md-subheader>
+								</div> -->
+								<div layout="row" flex>
+									<span flex style="background-color: #D4D4D4;"><b>Name</b></span>
+									<span flex style="background-color: #D4D4D4;"><b>Host Name</b></span>
+									<span flex style="background-color: #D4D4D4;"><b>Port</b></span>
+									<span flex style="background-color: #D4D4D4;"><b>User Name</b></span>
+								</div>
+								<div layout="row" flex>
+									<span  flex>{{ config.name }}</span>
+									<span flex>{{ config.hostname }}</span>
+									 <span flex>{{ config.port }} </span>
+									 <span flex>{{ config.username }}</span>
+								</div>
+								 
+								
+								
+								
+							</div>
+							
+								
+								 <!--<p> {{ config.name }}</p>
+								 
+								 <p>{{ config.hostname }}</p>
+								 
+								 <p>{{ config.port }}</p>
+								 
+								 <p>{{ config.username }}</p> -->
+							<md-divider></md-divider>
+						</md-list-item>
+					</md-list>
+				
+			</div>
+			</md-content>
 		 </div>
 	</body>
 </html>
