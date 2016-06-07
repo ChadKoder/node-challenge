@@ -37,26 +37,31 @@
 			 <md-content flex style="background-color: #D4D4D4;">
 				<div ng-hide="configs.length > 0">
 					<h3>There are no existing configurations to view.</h3>
-					<md-button class="md-raised" style="background-color: #00A5B5;" ng-click="showAdd()">Add Configuration</md-button>
+					<md-button ng-show="adding" class="md-raised" style="background-color: #00A5B5;" ng-click="showAdd()">Add Configuration</md-button>
 				</div>
-				<md-card ng-if="selectedConfig" flex style="background-color: #C4C3C3;">
+				<md-card ng-if="editing || adding" flex style="background-color: #C4C3C3;">
 					<md-card-content flex>
-						<h3>Edit Configuration</h3>
-						<form>
-							<div layout="column">
-								<label>name</label>
-								<md-input-container>
+						<md-subheader style="background-color: #C4C3C3;">
+							<h2 ng-if="editing">Edit Configuration for User {{ selectedConfig.name }}</h2>
+							<h2 ng-if="adding">Add User Configuration</h2>
+							<md-divider style="background-color: black;"></md-divider>
+						</md-subheader>
+						
+						<form style="margin: 10px 0 0 15px;">
+							<div layout="column" style="margin-left: 15px;">
+								<label ng-show="adding"><b>name:</b></label>
+								<md-input-container ng-show="adding">
 									<input aria-label="name" ng-model="selectedConfig.name" />
 								</md-input-container>
-								<label>hostname</label>
+								<label><b>hostname:</b></label>
 								<md-input-container>
 									<input aria-label="hostname" ng-model="selectedConfig.hostname" />
 								</md-input-container>
-								<label>port</label>
+								<label><b>port:</b></label>
 								<md-input-container>
 									<input aria-label="port" ng-model="selectedConfig.port" />
 								</md-input-container>
-								<label>username</label>
+								<label><b>username:</b></label>
 								<md-input-container>
 									<input aria-label="username" ng-model="selectedConfig.username" />
 								</md-input-container>
@@ -64,9 +69,10 @@
 							</div>
 						</form>
 						<div layout="row">
-							<md-button ng-click="cancelEdit()">Cancel</md-button>
-							<md-button ng-click="deleteConfig()">Delete</md-button>
-							<md-button ng-click="updateConfig()">Update</md-button>
+							<md-button class="md-raised" style="background-color: #00A5B5;" ng-click="cancelEdit()">Cancel</md-button>
+							<md-button ng-show="editing" class="md-raised" style="background-color: #00A5B5;" ng-click="deleteConfig()">Delete</md-button>
+							<md-button ng-show="editing" class="md-raised" style="background-color: #00A5B5;" ng-click="updateConfig()">Update</md-button>
+							<md-button ng-show="adding" class="md-raised" style="background-color: #00A5B5;" ng-click="addConfig()">Add</md-button>
 						</div>
 					</md-card-content>
 				</md-card>
@@ -93,6 +99,7 @@
 							</md-list-item>
 						</md-list>
 				</div>
+				<md-button class="md-raised" style="background-color: #00A5B5;" ng-click="showAdd()">Add new user config</md-button>
 			</md-content>
 		 </div>
 	</body>
