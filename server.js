@@ -52,7 +52,7 @@ var validate = function (userName, password){
 		{ username: 'user', password: 'pass'}];
 		 
 	for (var i = 0; i <= users.length - 1; i++){
-		if (userName === users[i].username && password === users[i].password){
+		if (userName.toLowerCase() === users[i].username.toLowerCase() && password === users[i].password){
 			return true;
 		}
 		
@@ -146,6 +146,15 @@ var renderFile = function (res, fileName, contentType){
 	});
 };
 
+var isAuthorized = function(){
+	if (token){
+		return true;
+	} 
+	
+	return false;
+	
+};
+
 var handleGetRequest = function (res, req, contentType){
 	var currentWorkingDir = process.cwd();
 	var uri = url.parse(req.url).pathname;
@@ -162,24 +171,35 @@ var handleGetRequest = function (res, req, contentType){
 			renderFile(res, fileName, contentType);
 			break;
 		case '/user-configurations':
+			if (!isAuthorized()){
+				write401Unauthorized(res, contentType);
+				return;
+			}
+			
 			fileName = currentWorkingDir + "\\src\\" + "user-configurations.html";
 			
 			renderFile(res, fileName, contentType);
 			break;
 		case '/configs':
+			if (!isAuthorized()){
+				write401Unauthorized(res, contentType);
+				return;
+			}
 			res.setHeader('Content-Type', 'application/json');
 			res.write(JSON.stringify(configs));
 			res.end();
 			break;
 		case '/validateUser':
+			/*if (!isAuthorized()){
+				write401Unauthorized(res, contentType);
+				return;
+			}*/
 			var qry = url.parse(req.url, true).query;
 			 var authHeader = req.headers['authorization'];
 			 var auth = authHeader.split(' ')[1];
 			  var credString = new Buffer(auth, 'base64').toString();
-			  console.log('AUTH---> ' + credString);
 			  
 			  var credentials = credString.split(':');
-			  console.log(credentials);
 			  
 			if (credentials){
 				var username = credentials[0];
@@ -203,12 +223,21 @@ var handleGetRequest = function (res, req, contentType){
 	}
 };
 
-var handlePostRequest = function(res, contentType){
-	write405MethodNotAllowed(res, contentType);
+var handlePostRequest = function(res, reqUrl, contentType){
+	var currentWorkingDir = process.cwd();
+	var uri = url.parse(reqUrl).pathname;
+	
+	switch (uri) {
+		case '/logout':
+			token = null;
+			write200SuccessResponse(res, null, contentType);
+			break;
+		default:
+			write404NotFoundResponse(res, contentType);
+	}
 };
 
 var handlePutRequest = function(res, reqUrl, contentType){
-	//write405MethodNotAllowed(res, contentType);
 	var currentWorkingDir = process.cwd();
 	var id = url.parse(reqUrl, true).query;
 	var configurations = configs.configurations;
@@ -252,7 +281,7 @@ http.createServer(function (req, res) {
 			handleGetRequest(res, req, contentType);
 			break;
 		case 'POST':
-			handlePostRequest(res, contentType);
+			handlePostRequest(res, req.url, contentType);
 			break;
 		case 'PUT':
 			handlePutRequest(res, contentType);
