@@ -3,7 +3,7 @@ var http = require('http'),
 	path = require('path'),
 	fs = require('fs'),
 	configs = require('./src/configurations.json'),
-	token = '',
+	token = null,
 	childProcess = require('child_process'),
 	browserToLaunch = '',
 	chrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
@@ -108,6 +108,13 @@ var write200SuccessResponse = function (res, file, contentType){
 			return;
 		}
 	}
+};
+
+var write204NoContentResponse = function (res){
+	res.writeHead(204);
+	res.write('204 No Content');
+	res.end();
+	
 };
 
 var write404NotFoundResponse = function(res, contentType){
@@ -217,9 +224,7 @@ var handleGetRequest = function (res, req, contentType){
 		
 			break;
 		default:
-			res.writeHead(404);
-			res.write('404 Not Found');
-			res.end();
+			write404NotFoundResponse(res, contentType);
 	}
 };
 
@@ -230,7 +235,7 @@ var handlePostRequest = function(res, reqUrl, contentType){
 	switch (uri) {
 		case '/logout':
 			token = null;
-			write200SuccessResponse(res, null, contentType);
+			write204NoContentResponse(res);
 			break;
 		default:
 			write404NotFoundResponse(res, contentType);
