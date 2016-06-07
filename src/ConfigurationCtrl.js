@@ -31,6 +31,8 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 	
 	$scope.cancelEdit = function(){
 		$scope.selectedConfig = null;
+		$scope.editing = false;
+		$scope.adding = false;
 	};
 	
 	$scope.updateConfig = function(){
@@ -52,16 +54,12 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 			data: { config: $scope.selectedConfig }
 		};
 		$http(req).success(function(){
-			alert('success');
+			$scope.configs = $scope.getConfigs();
+			$scope.selectedConfig = null;
+			$scope.showSimpleToast('Configuration updated successfully');
 		}).error(function(){
-			alert('failure');
+			$scope.showSimpleToast('Configuration failed to update');
 		});
-		/*($http.put('/configs', $scope.selectedConfig)
-			.then(function (res) {
-				$scope.showSimpleToast('Updated configurations!');
-			}, function () {
-				$scope.showSimpleToast('Failed to update configuration');
-		});*/
 	};
 	
 	$scope.deleteConfig = function(){
@@ -70,14 +68,43 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 			.then(function (res) {
 				$scope.configs = $scope.getConfigs();
 				$scope.selectedConfig = null;
+				$scope.editing = false;
 				$scope.showSimpleToast('Configuration deleted');
 			}, function () {
 				$scope.showSimpleToast('Deletion failed');
 			});
 	};
 	
+	$scope.addConfig = function(){
+		if (!$scope.selectedConfig.name || !$scope.selectedConfig.hostname || !$scope.selectedConfig.port || !$scope.selectedConfig.username){
+			$scope.showSimpleToast('All values are required.');
+			return;
+		}
+		
+		var req = {
+			method: 'POST',
+			url: '/configs',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			data: { config: $scope.selectedConfig }
+		};
+		
+		$http(req).success(function(){
+			$scope.configs = $scope.getConfigs();
+			$scope.selectedConfig = null;
+			$scope.adding = false;
+			
+			$scope.showSimpleToast('Configuration updated successfully');
+			
+		}).error(function(){
+			$scope.showSimpleToast('Configuration failed to update');
+		});
+	};
+	
 	$scope.showAdd = function(){
-		$scope.showAddConfig = true;
+		$scope.selectedConfig = {};
+		$scope.adding = true;
 	};
 	
 	$scope.getConfigs = function() {
@@ -95,7 +122,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 	
 	$scope.init = function(){
 		$scope.configs = $scope.getConfigs();
-		$scope.showAddConfig = false;
+		$scope.adding = false;
 		$scope.selectedConfig = null;
 		$scope.editing = false;
 	};
