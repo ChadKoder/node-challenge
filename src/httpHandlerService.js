@@ -42,6 +42,13 @@ var renderFile = function (res, fileName, contentType){
 	};
 
 module.exports = {
+	getToken: function () {
+		//probably not the best thing to do, but this is just a sample app and its for unit testing.
+		return token;
+	},
+	setToken: function (newVal){
+		token = newVal;
+	},
 	handleGetRequest: function (res, req, url, contentType){
 		var currentWorkingDir = process.cwd();
 		var uri = url.parse(req.url).pathname;
@@ -118,9 +125,14 @@ module.exports = {
 				responseService.write204NoContentResponse(res);
 				break;
 			case '/configs':
-			var data = '';
+				if (!isAuthorized()){
+					responseService.write401Unauthorized(res, contentType);
+					return;
+				}
+				
+				var data = '';
 				req.on('data', function(chunk){
-				data += chunk;
+					data += chunk;
 				});
 				
 				req.on('end', function(){
@@ -152,6 +164,11 @@ module.exports = {
 			fileName = currentWorkingDir + '\\src\\configurations.json';
 			uri = url.parse(req.url).pathname;
 		
+		if (!isAuthorized()){
+			responseService.write401Unauthorized(res, contentType);
+			return;
+		}
+			
 		if (uri === '/configs'){
 			req.on('data', function(chunk){
 				data += chunk;
@@ -186,20 +203,27 @@ module.exports = {
 		var configurations = configs.configurations;
 		var fileName = currentWorkingDir + '\\src\\configurations.json';
 		
-		var index = null;
-		for (var i = 0; i < configurations.length; i++){
-			if (configurations[i].username === id){
-				index = configurations.indexOf(configurations[i]);
-			}
+		if (!isAuthorized()){
+			responseService.write401Unauthorized(res, contentType);
+			return;
 		}
 		
-		if (index > -1){
-			configurations.splice(index, 1);
-			//overwrite file with new json object
-			fs.writeFileSync(fileName, JSON.stringify(configurations));
-			res.writeHead(204);
-			res.end();
-			return;
+		if (uri === '/configs'){
+			var index = null;
+			for (var i = 0; i < configurations.length; i++){
+				if (configurations[i].username === id){
+					index = configurations.indexOf(configurations[i]);
+				}
+			}
+			
+			if (index > -1){
+				configurations.splice(index, 1);
+				//overwrite file with new json object
+				fs.writeFileSync(fileName, JSON.stringify(configurations));
+				res.writeHead(204);
+				res.end();
+				return;
+			}
 		}
 		
 		res.writeHead(404);
