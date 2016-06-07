@@ -36,7 +36,7 @@ module.exports = {
 		res.end();
 	},
 	write401Unauthorized: function (res, contentType){
-		res.writeHead(401, {'Content-Type': contentType});
+		res.writeHead(401);
 		res.write('401 Unauthorized');
 		res.end();
 	},
@@ -46,7 +46,7 @@ module.exports = {
 		res.end();
 	},
 	write405MethodNotAllowed: function (res, contentType){
-		res.writeHeader(405, {'Content-Type': contentType},
+		res.writeHead(405, {'Content-Type': contentType},
 		{'Allow': 'GET'});
 	res.write('405 Method Not Allowed');
 	res.end();

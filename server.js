@@ -76,7 +76,7 @@ http.createServer(function (req, res) {
 			httpHandler.handlePutRequest(res, req, contentType);
 			break;
 		case 'DELETE':
-			httpHandler.handleDeleteRequest(res, req.url, contentType);
+			httpHandler.handleDeleteRequest(res, req, contentType);
 			break;
 		default:
 	}

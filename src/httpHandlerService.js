@@ -1,4 +1,5 @@
 var token = null,
+	pageSize = 5,
 	path = require('path'),
 	url = require('url'),
 	configs = require('./configurations.json'),
@@ -28,7 +29,8 @@ var isAuthorized = function(){
 	return false;
 	
 };
- 
+
+
 var renderFile = function (res, fileName, contentType){
 		fs.readFile(fileName, 'binary', function(err, file){
 			if (err) {
@@ -41,6 +43,56 @@ var renderFile = function (res, fileName, contentType){
 		});
 	};
 
+var sortByName = function (){
+	return configs.configurations.sort(function(x, y) {
+		if (x.name.toLowerCase() < y.name.toLowerCase()){
+			return -1;
+		}
+		if (x.name.toLowerCase() > y.name.toLowerCase()){
+			return 1;
+		}
+		
+		return 0;
+	});
+}
+
+var sortByHostName = function (){
+	return configs.configurations.sort(function(x, y) {
+		if (x.hostname.toLowerCase() < y.hostname.toLowerCase()){
+			return -1;
+		}
+		if (x.hostname.toLowerCase() > y.hostname.toLowerCase()){
+			return 1;
+		}
+		
+		return 0;
+	});
+}
+
+var sortByPort = function (){
+	return configs.configurations.sort(function(x, y) {
+		if (x.port < y.port){
+			return -1;
+		}
+		if (x.port > y.port){
+			return 1;
+		}
+		
+		return 0;
+	});
+}
+var sortByUserName = function (){
+	return configs.configurations.sort(function(x, y) {
+		if (x.username.toLowerCase() < y.username.toLowerCase()){
+			return -1;
+		}
+		if (x.username.toLowerCase() > y.username.toLowerCase()){
+			return 1;
+		}
+		
+		return 0;
+	});
+}
 module.exports = {
 	getToken: function () {
 		//probably not the best thing to do, but this is just a sample app and its for unit testing.
@@ -80,12 +132,62 @@ module.exports = {
 					return;
 				}
 				
+				//IF contains ?page=x..
+				//then process page with pageSize--- default page size to 5??
+				//else get ALL
+				var page = url.parse(req.url, true).query.page;
+				var sortBy = url.parse(req.url, true).query.sortby;
+				
+				if (page && sortBy){
+					var sorted;
+					var sortedAndPaged = configs.configurations;
+					
+					if (sortBy.toLowerCase() === 'name'){
+						sorted = sortByName();
+					}
+					if (sortBy.toLowerCase() === 'hostname'){
+						sorted = sortByHostName();
+					}
+					if (sortBy.toLowerCase() === 'port'){
+						sorted = sortByPort();
+					}
+					if (sortBy.toLowerCase() === 'username'){
+						sorted = sortByUserName();
+					}
+					
+					if (sorted){
+						sortedAndPaged = sorted;
+					}
+					
+					if (configs.configurations.length > pageSize){
+						if (page > 1){
+							var startIndex = (pageSize * (page - 1));
+							var endIndex = configs.configurations.length;
+							
+							if (startIndex > endIndex){
+								sortedAndPaged = sorted.slice(startIndex, startIndex + pageSize);
+							} else {
+								sortedAndPaged = sorted.slice(startIndex,endIndex);
+							}
+						} else {
+							sortedAndPaged = sorted.slice(0, pageSize);
+							
+						}
+					} else {
+						sortedAndPaged = sorted.slice(0, pageSize);
+					}
+					
+					res.setHeader('Content-Type', 'application/json');
+					res.write(JSON.stringify(sortedAndPaged));
+					res.end();
+					return;
+				}
+				
 				res.setHeader('Content-Type', 'application/json');
-				res.write(JSON.stringify(configs));
+				res.write(JSON.stringify(configs.configurations));
 				res.end();
 				break;
 			case '/validateUser':
-				var qry = url.parse(req.url, true).query;
 				var authHeader = req.headers['authorization']; 
 				if (authHeader){
 					var auth = authHeader.split(' ')[1];
@@ -98,7 +200,7 @@ module.exports = {
 						var password = credentials[1];
 						
 						if (!validate(username, password)){
-							responseService.write401Unauthorized(res);
+							responseService.write401Unauthorized(res, contentType);
 							return;
 						} else {
 							token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
@@ -136,19 +238,17 @@ module.exports = {
 				});
 				
 				req.on('end', function(){
-					var addedConfig =  JSON.parse(data).config,
-						configurations = configs.configurations;
+					var addedConfig =  JSON.parse(data).config;
 
 					if (addedConfig){
-						if (!configurations){
-							configurations = { addedConfig };
+						if (!configs.configurations){
+							configs.configurations = { addedConfig };
 						} else {
-							configurations.push(addedConfig);
+							configs.configurations.push(addedConfig);
+							fs.writeFileSync(fileName, JSON.stringify(configs));
+							responseService.write204NoContentResponse(res);
+							return;
 						}
-						
-						fs.writeFileSync(fileName, JSON.stringify(configurations));
-						responseService.write204NoContentResponse(res);
-						return;
 					}
 				});
 				
@@ -175,18 +275,17 @@ module.exports = {
 			});
 			
 			req.on('end', function(){
-				var updatedConfig =  JSON.parse(data).config,
-					configurations = configs.configurations;
+				var updatedConfig =  JSON.parse(data).config;
 				
-				for (var i = 0; i < configurations.length; i++){
-					if (configurations[i].username === updatedConfig.username){
-						index = configurations.indexOf(configurations[i]);
+				for (var i = 0; i < configs.configurations.length; i++){
+					if (configs.configurations[i].username === updatedConfig.username){
+						index = configs.configurations.indexOf(configs.configurations[i]);
 					}
 				}
 				
 				if (index > -1){
-					configurations[index] = updatedConfig;
-					fs.writeFileSync(fileName, JSON.stringify(configurations));
+					configs.configurations[index] = updatedConfig;
+					fs.writeFileSync(fileName, JSON.stringify(configs));
 					responseService.write204NoContentResponse(res);
 					return;
 				}
@@ -197,10 +296,11 @@ module.exports = {
 	
 		responseService.write404NotFoundResponse(res, contentType);
 	},
-	handleDeleteRequest: function(res, reqUrl, contentType){
+	handleDeleteRequest: function(res, req, contentType){
 		var currentWorkingDir = process.cwd();
-		var id = url.parse(reqUrl, true).query;
-		var configurations = configs.configurations;
+		var id = url.parse(req.url, true).query.id;
+		
+		var uri = url.parse(req.url).pathname;
 		var fileName = currentWorkingDir + '\\src\\configurations.json';
 		
 		if (!isAuthorized()){
@@ -210,16 +310,16 @@ module.exports = {
 		
 		if (uri === '/configs'){
 			var index = null;
-			for (var i = 0; i < configurations.length; i++){
-				if (configurations[i].username === id){
-					index = configurations.indexOf(configurations[i]);
+			for (var i = 0; i < configs.configurations.length; i++){
+				if (configs.configurations[i].username === id){
+					index = configs.configurations.indexOf(configs.configurations[i]);
 				}
 			}
 			
 			if (index > -1){
-				configurations.splice(index, 1);
+				configs.configurations.splice(index, 1);
 				//overwrite file with new json object
-				fs.writeFileSync(fileName, JSON.stringify(configurations));
+				fs.writeFileSync(fileName, JSON.stringify(configs));
 				res.writeHead(204);
 				res.end();
 				return;
