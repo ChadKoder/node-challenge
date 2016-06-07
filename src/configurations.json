@@ -1,15 +1,1 @@
-{
-	"configurations": [
-	{
-		"name": "host1",
-		"hostname": "nessus-ntp.lab.com",
-		"port": 1241,
-		"username": "toto"
-	},
-	{
-		"name": "host2",
-		"hostname": "nessus-xml.lab.com",
-		"port": 3384,
-		"username": "admin"
-	}]
-}
+{"configurations":[{"name":"Bost1","hostname":"xessus-ntp.lab.com","port":1241,"username":"toto"},{"username":"bbb","name":"cdxd","hostname":"rrr","port":"ttt"},{"username":"asf","name":"fdsa","hostname":"pokf","port":"sdag"},{"name":"Thost","hostname":"Cenessus-xml.lab.com","port":223,"username":"admin"},{"name":"Xost7","hostname":"nessus-aml.lab.com","port":222,"username":"Badmin"},{"username":"xxx","name":"xxx","hostname":"xxx","port":"xx"},{"name":"Zost2","hostname":"sessus-xml.lab.com","port":3384,"username":"Yadmin"},{"username":"A","name":"A","hostname":"A","port":"A"}]}

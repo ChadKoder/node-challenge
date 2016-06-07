@@ -14,7 +14,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 			$scope.showSimpleToast('lougout failed... strange...');
 		});
 	};
-	
+
 	$scope.showSimpleToast = function (msg){
 		$mdToast.show(
 				$mdToast.simple()
@@ -42,20 +42,13 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			data: { test: $scope.selectedConfig }
-		};
-
-		var req = {
-			method: 'PUT',
-			url: '/configs',
-			headers: {
-				'Content-Type': 'application/json'
-			},
 			data: { config: $scope.selectedConfig }
 		};
 		$http(req).success(function(){
 			$scope.configs = $scope.getConfigs();
 			$scope.selectedConfig = null;
+			$scope.editing = false;
+			$scope.adding = false;
 			$scope.showSimpleToast('Configuration updated successfully');
 		}).error(function(){
 			$scope.showSimpleToast('Configuration failed to update');
@@ -63,7 +56,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 	};
 	
 	$scope.deleteConfig = function(){
-		var url =  '/configs/?' + $scope.selectedConfig.username;
+		var url =  '/configs?id=' + $scope.selectedConfig.username;
 		$http.delete(url)
 			.then(function (res) {
 				$scope.configs = $scope.getConfigs();
@@ -83,7 +76,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 		
 		var req = {
 			method: 'POST',
-			url: '/configs',
+			url: '/configs?page=' + $scope.page + '&sortby=' + $scope.sortby,
 			headers: {
 				'Content-Type': 'application/json'
 			},
@@ -107,10 +100,12 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 		$scope.adding = true;
 	};
 	
-	$scope.getConfigs = function() {
-		$http.get('/configs')
+	$scope.getPrev = function(){
+		var prevPage = $scope.page - 1;
+		$http.get('/configs?page=' + prevPage + '&sortby=' + $scope.sortValue)
 			.then(function (res) {
-				$scope.configs = res.data.configurations;
+				$scope.configs = res.data;
+				$scope.page = prevPage;
 			}, function (res){
 				if (res.status === 401){
 					$scope.showSimpleToast('Unauthorized user!');
@@ -120,11 +115,65 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 			});
 	};
 	
+	$scope.getNext = function(){
+		var nextPage = $scope.page + 1;
+		$http.get('/configs?page=' + nextPage + '&sortby=' + $scope.sortValue)
+			.then(function (res) {
+				$scope.configs = res.data;
+				$scope.page = nextPage;
+			}, function (res){
+				if (res.status === 401){
+					$scope.showSimpleToast('Unauthorized user!');
+				} else {
+					$scope.showSimpleToast('Unable to retrieve configs.');
+				}
+			});
+	};
+	
+	$scope.getConfigs = function(sortValue) {
+		if (sortValue){
+			$scope.sortValue = sortValue;
+			$http.get('/configs?page=1&sortby=' + sortValue)
+			.then(function (res) {
+				$scope.showSimpleToast('sorting by ' + sortValue + ' and displaying page 1');
+				$scope.configs = res.data;
+				$scope.page = 1;
+				$scope.sortby = 'name';
+			}, function (res){
+				if (res.status === 401){
+					$scope.showSimpleToast('Unauthorized user!');
+				} else {
+					$scope.showSimpleToast('Unable to retrieve configs.');
+				}
+			});
+		} else {
+			$http.get('/configs?page=1&sortby=name')
+			.then(function (res) {
+				$scope.showSimpleToast('sorting by ' + sortValue + ' and displaying page 1');
+				$scope.page = 1;
+				$scope.sortby = 'name';
+				$scope.configs = res.data;
+			}, function (res){
+				if (res.status === 401){
+					$scope.showSimpleToast('Unauthorized user!');
+				} else {
+					$scope.showSimpleToast('Unable to retrieve configs.');
+				}
+			});
+		}
+	};
+	
+	$scope.sort = function(sortBy){
+		$scope.getConfigs(sortBy);
+	};
+	
 	$scope.init = function(){
 		$scope.configs = $scope.getConfigs();
 		$scope.adding = false;
 		$scope.selectedConfig = null;
 		$scope.editing = false;
+		$scope.page = 1; 
+		$scope.sortValue = 'name';
 	};
 	
 	$scope.init();

@@ -42,15 +42,19 @@
 				<md-card ng-if="editing || adding" flex style="background-color: #C4C3C3;">
 					<md-card-content flex>
 						<md-subheader style="background-color: #C4C3C3;">
-							<h2 ng-if="editing">Edit Configuration for User {{ selectedConfig.name }}</h2>
+							<h2 ng-if="editing">Edit Configuration for User {{ selectedConfig.username }}</h2>
 							<h2 ng-if="adding">Add User Configuration</h2>
 							<md-divider style="background-color: black;"></md-divider>
 						</md-subheader>
 						
 						<form style="margin: 10px 0 0 15px;">
 							<div layout="column" style="margin-left: 15px;">
-								<label ng-show="adding"><b>name:</b></label>
-								<md-input-container ng-show="adding">
+								<label ng-show="adding"><b>username:</b></label>
+								<md-input-container  ng-show="adding">
+									<input aria-label="username" ng-model="selectedConfig.username" />
+								</md-input-container>
+								<label><b>name:</b></label>
+								<md-input-container>
 									<input aria-label="name" ng-model="selectedConfig.name" />
 								</md-input-container>
 								<label><b>hostname:</b></label>
@@ -61,11 +65,6 @@
 								<md-input-container>
 									<input aria-label="port" ng-model="selectedConfig.port" />
 								</md-input-container>
-								<label><b>username:</b></label>
-								<md-input-container>
-									<input aria-label="username" ng-model="selectedConfig.username" />
-								</md-input-container>
-							
 							</div>
 						</form>
 						<div layout="row">
@@ -78,29 +77,32 @@
 				</md-card>
 			 
 				<div ng-show="configs.length > 0" flex  style="background-color: #D4D4D4;">
-						<md-list>
-							<md-subheader style="background-color: #D4D4D4;"><h3>Configurations</h3></md-subheader>
-							<md-list-item ng-if="configs.length > 0" ng-click="editConfig(config)" ng-repeat="config in configs">
-								<div layout="column" flex layout-align="center">
-									<div layout="row" flex>
-										<span flex style="background-color: #D4D4D4;"><b>Name</b></span>
-										<span flex style="background-color: #D4D4D4;"><b>Host Name</b></span>
-										<span flex style="background-color: #D4D4D4;"><b>Port</b></span>
-										<span flex style="background-color: #D4D4D4;"><b>User Name</b></span>
-									</div>
-									<div layout="row" flex>
-										<span  flex>{{ config.name }}</span>
-										<span flex>{{ config.hostname }}</span>
-										 <span flex>{{ config.port }} </span>
-										 <span flex>{{ config.username }}</span>
-									</div>
+					<md-list>
+						<md-subheader style="background-color: #D4D4D4;"><h3>Configurations</h3></md-subheader>
+						<div layout="row" flex>
+							<span flex style="background-color: #D4D4D4;"><md-button  ng-click="sort('name')"><b>Name</b></md-button></span>
+							<span flex style="background-color: #D4D4D4;"><md-button  ng-click="sort('hostname')"><b>Host Name</b></md-button></span>
+							<span flex style="background-color: #D4D4D4;"><md-button  ng-click="sort('port')"><b>Port</b></md-button></span>
+							<span flex style="background-color: #D4D4D4;"><md-button  ng-click="sort('username')"><b>User Name</b></md-button></span>
+						</div>
+						<md-list-item ng-if="configs.length > 0" ng-click="editConfig(config)" ng-repeat="config in configs">
+							<div layout="column" flex layout-align="center">
+								<div layout="row" flex>
+									<span  flex>{{ config.name }}</span>
+									<span flex>{{ config.hostname }}</span>
+									 <span flex>{{ config.port }} </span>
+									 <span flex>{{ config.username }}</span>
 								</div>
-								<md-divider></md-divider>
-							</md-list-item>
-						</md-list>
+							</div>
+							<md-divider></md-divider>
+						</md-list-item>
+					</md-list>
 				</div>
 				<md-button class="md-raised" style="background-color: #00A5B5;" ng-click="showAdd()">Add new user config</md-button>
 			</md-content>
+			<span flex>	<md-button class="md-raised" style="background-color: #00A5B5;" ng-disabled="page===1" ng-click="getPrev()">Prev</md-button></span>
+			<span>Page: {{ page }}</span>
+			<span><md-button class="md-raised" style="background-color: #00A5B5;" ng-disabled="page>=configs.length - 1" ng-click="getNext()">Next</md-button></span>
 		 </div>
 	</body>
 </html>

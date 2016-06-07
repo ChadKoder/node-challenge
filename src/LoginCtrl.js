@@ -7,40 +7,38 @@ controller('LoginCtrl', function($scope, $http, $mdToast, $location) {
 	var redirectDelay = 1000;
 	
 	$scope.showSimpleToast = function (msg){
-		$mdToast.show(
-				$mdToast.simple()
-				.textContent(msg)
-				.position('right')
-				.hideDelay(redirectDelay)
-			);
+		/*$mdToast.simple()
+			.textContent(msg)
+			.position('right')
+			.hideDelay(redirectDelay)*/
+			$mdToast.showSimple(msg);
 	};
 	
 	$scope.login = function (){
 		if (!$scope.username || !$scope.password){
-			//alert('username and password are required.');
+			$scope.showSimpleToast('username and password are required!');
 			return;
 		}
 		
-		var url =  '/validateUser';
 		var encodedAuth = btoa($scope.username + ':' + $scope.password);
 		$http.defaults.headers.common.Authorization = 'Basic ' + encodedAuth;
 		
-		
-		//?username=' + $scope.username + '&password=' + $scope.password;
-		$http({
+		var req = {
 			method: 'GET',
-			url: url
-		}).then( function (res) { 
+			url: '/validateUser',
+			data: { config: $scope.selectedConfig }
+		};
+		
+		$http(req).success(function(){
 			$scope.showSimpleToast('Login Successful! redirecting...');
-		 
 			setTimeout(function(){
 				window.location.href = '/user-configurations';
 			}, redirectDelay);
-		}, function (res) {
-			if (res.status === 401){
+		}).error(function(res){
+			if (res === '401 Unauthorized'){
 				$scope.showSimpleToast('Unauthorized user!');
 			} else {
-				$scope.showSimpleToast('unknown error has occurred.');
+				$scope.showSimpleToast('an error has occurred.');
 			}
 		});
 	}
