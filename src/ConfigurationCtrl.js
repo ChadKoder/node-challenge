@@ -1,7 +1,17 @@
 angular.module('sampleApp.controllers', []).
 controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
+	var redirectDelay = 1000;
+	
 	$scope.logout = function (){
-		//window.location.href = '/';
+		$http({
+			method: 'POST',
+			url: '/logout'
+		}).then(function (res) {
+			$scope.showSimpleToast('Logging out...');
+			window.location.href = '/';
+		}, function (res) {
+			$scope.showSimpleToast('lougout failed... strange...');
+		});
 	};
 	
 	$scope.selectedConfig = null;
