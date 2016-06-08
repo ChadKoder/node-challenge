@@ -1,5 +1,5 @@
 angular.module('sampleApp.controllers', []).
-controller('LoginCtrl', function($scope, $http, $mdToast, $location) {
+controller('LoginCtrl', function($scope, $http, $mdToast, $window) {
 	$scope.title = 'Node.js Sample Application';
 	$scope.username = 'ChadK';
 	$scope.password = 'Tenable';
@@ -7,12 +7,14 @@ controller('LoginCtrl', function($scope, $http, $mdToast, $location) {
 	var redirectDelay = 1000;
 	
 	$scope.showSimpleToast = function (msg){
-		/*$mdToast.simple()
-			.textContent(msg)
-			.position('right')
-			.hideDelay(redirectDelay)*/
 			$mdToast.showSimple(msg);
 	};
+	
+	$scope.redir = function(url){
+		setTimeout(function(){
+				$window.location = url;
+			}, redirectDelay);
+	}
 	
 	$scope.login = function (){
 		if (!$scope.username || !$scope.password){
@@ -31,9 +33,7 @@ controller('LoginCtrl', function($scope, $http, $mdToast, $location) {
 		
 		$http(req).success(function(){
 			$scope.showSimpleToast('Login Successful! redirecting...');
-			setTimeout(function(){
-				window.location.href = '/user-configurations';
-			}, redirectDelay);
+			$scope.redir('/user-configurations');
 		}).error(function(res){
 			if (res === '401 Unauthorized'){
 				$scope.showSimpleToast('Unauthorized user!');
