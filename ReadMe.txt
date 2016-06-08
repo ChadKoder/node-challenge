@@ -1,6 +1,6 @@
 Tenable Backend Challenge - Microservices
 Description: 
-	- This application demonstrates the use of NodeJS as a web service 
+	- This application demonstrates the use of NodeJS as a RESTful API
 	- AUTHENTICATION, CONFIGURATIONS, and SORTING are demonstrated in this application
 		-> The details are at the bottom of this document that describe how the app demonstrates each
 	
