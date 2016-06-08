@@ -45,6 +45,7 @@ describe('LoginCtrl', function () {
 		beforeEach(function(){
 			$scope.username = 'a';
 			$scope.password = 'b';
+			
 			$httpBackend.expectGET('/validateUser').respond(response);
 			$scope.login();
 			 

@@ -22,10 +22,10 @@ NOTES:
 Authentication:
 - Pass 'Authentication' header for 'Basic' authentication with encoded "username:<username>,password:<password>"
 
-Server Unit Tests:
-NOTE: Must run 'launchForUnitTests.sh' before running 'runUnitTests.sh'.
-1. run 'launchForUnitTests.sh'
-2. Run 'runUnitTests.sh' to launch unit tests.
+Server Tests:
+NOTE: Must run 'serverTests/launchForServerTests.bat' before running 'runServerTests.sh'.
+1. run 'serverTests/launchForServerTests.bat'
+2. Run 'runServerTests.sh' to launch unit tests.
 
 Angular Unit Tests:
 - Navigate to 'tests' folder and open 'SpecRunner.html' in a browser. This will run all unit tests and display the results.

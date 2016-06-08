@@ -33,7 +33,7 @@ if (userArg){
 			console.log('iexplore does not exist, please manually launch your browser and navigate to "http://localhost:8888"');
 			browserToLaunch = '';
 		}
-	} else if (userArg === 'tests/') {
+	} else if (userArg === 'serverTests/') {
 		browserToLaunch = null;
 		return;
 	}
