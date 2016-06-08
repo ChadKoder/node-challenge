@@ -1,7 +1,7 @@
 angular.module('sampleApp.controllers', []).
 controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	var redirectDelay = 1000;
-	$scope.title = 'Node.js Sample Application';
+	$scope.title = 'Tenable Backend Challenge - Microservices';
 	
 	$scope.redir = function(url){
 		$window.location = url;
@@ -20,12 +20,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	};
 
 	$scope.showSimpleToast = function (msg){
-		$mdToast.show(
-				$mdToast.simple()
-				.textContent(msg)
-				.position('right')
-				.hideDelay(redirectDelay)
-			);
+		$mdToast.showSimple(msg);
 	};
 	
 	$scope.editConfig = function (config){
@@ -160,7 +155,6 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 				$scope.showSimpleToast('sorting by ' + sortValue + ' and displaying page 1');
 				$scope.totalDisplayed = $scope.pageSize;
 				$scope.totalConfigs = res.data.total;
-				$scope.totalConfigs = res.data.total;
 				$scope.configs = res.data.sorted;
 				$scope.page = 1;
 				$scope.sortby = 'name';
@@ -172,15 +166,14 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 				}
 			});
 		} else {
+			//todo: shouldn't need to sort by name, just get page 1 of the cfg
 			$http.get('/configs?page=1&sortby=name')
 			.then(function (res) {
 				$scope.page = 1;
 				$scope.totalDisplayed = $scope.pageSize;
-				$scope.totalConfigs = res.data.total;
 				$scope.sortby = 'name';
 				$scope.totalConfigs = res.data.total;
 				$scope.configs = res.data.sorted;
-				
 			}, function (res){
 				if (res.status === 401){
 					$scope.showSimpleToast('Unauthorized user!');
