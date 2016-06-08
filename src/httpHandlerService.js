@@ -132,9 +132,6 @@ module.exports = {
 					return;
 				}
 				
-				//IF contains ?page=x..
-				//then process page with pageSize--- default page size to 5??
-				//else get ALL
 				var page = url.parse(req.url, true).query.page;
 				var sortBy = url.parse(req.url, true).query.sortby;
 				
@@ -167,7 +164,11 @@ module.exports = {
 							if (startIndex > endIndex){
 								sortedAndPaged = sorted.slice(startIndex, startIndex + pageSize);
 							} else {
-								sortedAndPaged = sorted.slice(startIndex,endIndex);
+								if ((endIndex - startIndex) > 5){
+									endIndex = startIndex + 5;
+								}
+								
+								sortedAndPaged = sorted.slice(startIndex, endIndex);
 							}
 						} else {
 							sortedAndPaged = sorted.slice(0, pageSize);
@@ -176,15 +177,21 @@ module.exports = {
 					} else {
 						sortedAndPaged = sorted.slice(0, pageSize);
 					}
+					var returnObj = {};
+					returnObj.sorted = sortedAndPaged;
+					returnObj.total = configs.configurations.length;
 					
 					res.setHeader('Content-Type', 'application/json');
-					res.write(JSON.stringify(sortedAndPaged));
+					res.write(JSON.stringify(returnObj));
 					res.end();
 					return;
 				}
 				
+				var returnObj = {};
+				returnObj.sorted = configs.configurations;
+				returnObj.total = configs.configurations.length;
 				res.setHeader('Content-Type', 'application/json');
-				res.write(JSON.stringify(configs.configurations));
+				res.write(JSON.stringify(returnObj));
 				res.end();
 				break;
 			case '/validateUser':

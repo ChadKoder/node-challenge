@@ -104,8 +104,21 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 		var prevPage = $scope.page - 1;
 		$http.get('/configs?page=' + prevPage + '&sortby=' + $scope.sortValue)
 			.then(function (res) {
-				$scope.configs = res.data;
+				if (prevPage === 1){
+					$scope.totalDisplayed = $scope.pageSize;
+					$scope.totalConfigs = res.data.total;
+				} else {
+					if ($scope.totalDisplayed > $scope.totalConfigs){
+						$scope.totalDisplayed = $scope.totalDisplayed - $scope.totalConfigs;
+					} else {
+						$scope.totalDisplayed -= $scope.configs.length;
+					}
+				}
+				
+				$scope.configs = res.data.sorted;
+				$scope.totalConfigs = res.data.total;
 				$scope.page = prevPage;
+				
 			}, function (res){
 				if (res.status === 401){
 					$scope.showSimpleToast('Unauthorized user!');
@@ -113,14 +126,19 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 					$scope.showSimpleToast('Unable to retrieve configs.');
 				}
 			});
+			
 	};
 	
 	$scope.getNext = function(){
 		var nextPage = $scope.page + 1;
 		$http.get('/configs?page=' + nextPage + '&sortby=' + $scope.sortValue)
 			.then(function (res) {
-				$scope.configs = res.data;
+				//$scope.configs = res.data;
 				$scope.page = nextPage;
+				$scope.totalConfigs = res.data.total;
+				$scope.configs = res.data.sorted;
+				$scope.totalDisplayed += res.data.sorted.length;
+				
 			}, function (res){
 				if (res.status === 401){
 					$scope.showSimpleToast('Unauthorized user!');
@@ -128,6 +146,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 					$scope.showSimpleToast('Unable to retrieve configs.');
 				}
 			});
+			
 	};
 	
 	$scope.getConfigs = function(sortValue) {
@@ -136,7 +155,10 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 			$http.get('/configs?page=1&sortby=' + sortValue)
 			.then(function (res) {
 				$scope.showSimpleToast('sorting by ' + sortValue + ' and displaying page 1');
-				$scope.configs = res.data;
+				$scope.totalDisplayed = scope.pageSize;
+				$scope.totalConfigs = res.data.total;
+				$scope.totalConfigs = res.data.total;
+				$scope.configs = res.data.sorted;
 				$scope.page = 1;
 				$scope.sortby = 'name';
 			}, function (res){
@@ -149,10 +171,13 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 		} else {
 			$http.get('/configs?page=1&sortby=name')
 			.then(function (res) {
-				$scope.showSimpleToast('sorting by ' + sortValue + ' and displaying page 1');
 				$scope.page = 1;
+				$scope.totalDisplayed = $scope.pageSize;
+				$scope.totalConfigs = res.data.total;
 				$scope.sortby = 'name';
-				$scope.configs = res.data;
+				$scope.totalConfigs = res.data.total;
+				$scope.configs = res.data.sorted;
+				
 			}, function (res){
 				if (res.status === 401){
 					$scope.showSimpleToast('Unauthorized user!');
@@ -174,6 +199,8 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 		$scope.editing = false;
 		$scope.page = 1; 
 		$scope.sortValue = 'name';
+		$scope.pageSize = 5;
+		$scope.totalDisplayed = 0;
 	};
 	
 	$scope.init();
