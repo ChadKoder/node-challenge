@@ -133,7 +133,6 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 		var nextPage = $scope.page + 1;
 		$http.get('/configs?page=' + nextPage + '&sortby=' + $scope.sortValue)
 			.then(function (res) {
-				//$scope.configs = res.data;
 				$scope.page = nextPage;
 				$scope.totalConfigs = res.data.total;
 				$scope.configs = res.data.sorted;
