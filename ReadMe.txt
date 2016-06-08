@@ -36,32 +36,32 @@ NOTE: Had to separate controller tests because of the structure of the project.
 
 ***The follow features are available and can be seen in the UI. ***
 -- If you just want to see the code, check out the server.js file along with the 'src' folder (the proj stucture needs cleaned up a bit)
-	-> BACK END FILES: server.js (in root folder), httpHandlerService.js(src folder), responseService.js (src folder)
-	
-	AUTHENTICATION:
-	- Login with basic authentication
-		- valid users are:
-			- username: chadk password: Tenable
-			- username: admin password: 123xyzABC!@
-			- username: user password: pass
+-> BACK END FILES: server.js (in root folder), httpHandlerService.js(src folder), responseService.js (src folder)
 
-	- Logout option on the configurations page once you login(top right screen) 
-		- logging out clears the stored base64 value created from username and login. 
-			TODO: update to use something better than basic auth.
+AUTHENTICATION:
+- Login with basic authentication
+	- valid users are:
+		- username: chadk password: Tenable
+		- username: admin password: 123xyzABC!@
+		- username: user password: pass
 
-	CONFIGURATIONS:
-	- Create, Delete, Modify, and Add user configurations using JSON.
-	- 12 configurations exist now and are able to be modified and saved to json file in /src/ folder.
+- Logout option on the configurations page once you login(top right screen) 
+	- logging out clears the stored base64 value created from username and login. 
+		TODO: update to use something better than basic auth.
 
-	SORTING:
-	- Sort:
-		- Click on the column headers to sort by name, hostname, port, or user name
-		NOTE: Needs work, each column only sorts ascending right now.
-	- Pagination:
-		- User configurations are paged, currently displaying 5 configurations per page. 
-		- next/prev buttons available to navigate through the configurations
-		NOTE: When adding, editing, or sorting the page will refresh back to page 1. 
-			  This is not very desirable, but will work for this iteration.	  
+CONFIGURATIONS:
+- Create, Delete, Modify, and Add user configurations using JSON.
+- 12 configurations exist now and are able to be modified and saved to json file in /src/ folder.
+
+SORTING:
+- Sort:
+	- Click on the column headers to sort by name, hostname, port, or user name
+	NOTE: Needs work, each column only sorts ascending right now.
+- Pagination:
+	- User configurations are paged, currently displaying 5 configurations per page. 
+	- next/prev buttons available to navigate through the configurations
+	NOTE: When adding, editing, or sorting the page will refresh back to page 1. 
+		  This is not very desirable, but will work for this iteration.	  
 	 
 				
 			
