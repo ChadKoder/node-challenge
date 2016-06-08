@@ -267,7 +267,6 @@ module.exports = {
 					}
 				});
 				
-				//responseService.write404NotFoundResponse(res, contentType);
 				return;
 			default:
 				responseService.write404NotFoundResponse(res, contentType);

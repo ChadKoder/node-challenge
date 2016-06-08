@@ -2,7 +2,6 @@ describe('ConfigurationCtrl', function () {
     var ctrl,
         $rootScope,
         $scope,
-		//var newConfig = '{"config":{"username":"d","name":"g","hostname":"r","port":"c"}}';
 		responseNoSort = { sorted: [{a:'a'}] ,total: 7 },
 		responseSort = { sorted: [{a:'b'}] ,total: 23 },
 		$mdToast,
@@ -27,13 +26,7 @@ describe('ConfigurationCtrl', function () {
 		
 		$httpBackend.expectGET('/configs?page=1&sortby=name').respond(responseNoSort);
 	});
-	
-	/*afterEach(function() {
-		$httpBackend.flush();
-		$httpBackend.verifyNoOutstandingExpectation();
-		$httpBackend.verifyNoOutstandingRequest();
-	})*/;
-		 
+			 
 	describe('$scope.init()', function(){
 		beforeEach(function(){
 			spyOn($scope, 'getConfigs');
@@ -144,16 +137,4 @@ describe('ConfigurationCtrl', function () {
 		
 	});
 	
-	
-	//describe('$scope.logout', function(){
-		//it ('should make hhtp call GET /logout', function (){
-			//var ctrl = createController();
-			//$httpBackend.expectPOST('/logout').respond(response);
-			//$scope.logout();
-		//	//$httpBackend.flush();
-			//$httpBackend.verifyNoOutstandingRequest();
-			//$httpBackend.verifyNoOutstandingExpectation();
-		//});
-		
-	//});
 });

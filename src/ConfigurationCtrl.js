@@ -166,7 +166,6 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 				}
 			});
 		} else {
-			//todo: shouldn't need to sort by name, just get page 1 of the cfg
 			$http.get('/configs?page=1&sortby=name')
 			.then(function (res) {
 				$scope.page = 1;
