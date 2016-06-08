@@ -80,7 +80,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 		
 		var req = {
 			method: 'POST',
-			url: '/configs?page=' + $scope.page + '&sortby=' + $scope.sortby,
+			url: '/configs',
 			headers: {
 				'Content-Type': 'application/json'
 			},
@@ -158,7 +158,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 			$http.get('/configs?page=1&sortby=' + sortValue)
 			.then(function (res) {
 				$scope.showSimpleToast('sorting by ' + sortValue + ' and displaying page 1');
-				$scope.totalDisplayed = scope.pageSize;
+				$scope.totalDisplayed = $scope.pageSize;
 				$scope.totalConfigs = res.data.total;
 				$scope.totalConfigs = res.data.total;
 				$scope.configs = res.data.sorted;
