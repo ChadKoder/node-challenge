@@ -34,7 +34,6 @@ describe('LoginCtrl', function () {
     describe('$scope.showSimpleToast()', function () {
         beforeEach(function () {
 			$scope.showSimpleToast('test');
-			
         });
 
         it('should display toast message', function () {
@@ -44,6 +43,8 @@ describe('LoginCtrl', function () {
 	
 	describe('$scope.login()', function () {
 		beforeEach(function(){
+			$scope.username = 'a';
+			$scope.password = 'b';
 			$httpBackend.expectGET('/validateUser').respond(response);
 			$scope.login();
 			 

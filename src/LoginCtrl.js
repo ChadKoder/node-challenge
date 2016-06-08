@@ -1,8 +1,8 @@
 angular.module('sampleApp.controllers', []).
 controller('LoginCtrl', function($scope, $http, $mdToast, $window) {
 	$scope.title = 'Node.js Sample Application';
-	$scope.username = 'ChadK';
-	$scope.password = 'Tenable';
+	$scope.username = '';
+	$scope.password = '';
 		
 	var redirectDelay = 1000;
 	

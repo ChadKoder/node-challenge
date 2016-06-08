@@ -1,7 +1,11 @@
 angular.module('sampleApp.controllers', []).
-controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
+controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	var redirectDelay = 1000;
 	$scope.title = 'Node.js Sample Application';
+	
+	$scope.redir = function(url){
+		$window.location = url;
+	}
 	
 	$scope.logout = function (){
 		$http({
@@ -9,7 +13,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast) {
 			url: '/logout'
 		}).then(function (res) {
 			$scope.showSimpleToast('Logging out...');
-			window.location.href = '/';
+			$scope.redir('/');
 		}, function (res) {
 			$scope.showSimpleToast('lougout failed... strange...');
 		});
