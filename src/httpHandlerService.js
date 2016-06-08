@@ -16,9 +16,9 @@ var validate = function (userName, password){
 		if (userName.toLowerCase() === users[i].username.toLowerCase() && password === users[i].password){
 			return true;
 		}
-		
-		return false;
 	}
+	
+	return false;
 };
 
 var isAuthorized = function(){
@@ -29,7 +29,6 @@ var isAuthorized = function(){
 	return false;
 	
 };
-
 
 var renderFile = function (res, fileName, contentType){
 		fs.readFile(fileName, 'binary', function(err, file){
@@ -94,13 +93,6 @@ var sortByUserName = function (){
 	});
 }
 module.exports = {
-	getToken: function () {
-		//probably not the best thing to do, but this is just a sample app and its for unit testing.
-		return token;
-	},
-	setToken: function (newVal){
-		token = newVal;
-	},
 	handleGetRequest: function (res, req, url, contentType){
 		var currentWorkingDir = process.cwd();
 		var uri = url.parse(req.url).pathname;
@@ -177,6 +169,7 @@ module.exports = {
 					} else {
 						sortedAndPaged = sorted.slice(0, pageSize);
 					}
+					
 					var returnObj = {};
 					returnObj.sorted = sortedAndPaged;
 					returnObj.total = configs.configurations.length;
@@ -188,8 +181,10 @@ module.exports = {
 				}
 				
 				var returnObj = {};
+				
 				returnObj.sorted = configs.configurations;
 				returnObj.total = configs.configurations.length;
+				
 				res.setHeader('Content-Type', 'application/json');
 				res.write(JSON.stringify(returnObj));
 				res.end();
@@ -234,6 +229,7 @@ module.exports = {
 				responseService.write204NoContentResponse(res);
 				break;
 			case '/configs':
+				var addSuccess = false;
 				if (!isAuthorized()){
 					responseService.write401Unauthorized(res, contentType);
 					return;
@@ -245,25 +241,37 @@ module.exports = {
 				});
 				
 				req.on('end', function(){
-					var addedConfig =  JSON.parse(data).config;
-
-					if (addedConfig){
-						if (!configs.configurations){
-							configs.configurations = { addedConfig };
-						} else {
-							configs.configurations.push(addedConfig);
+					if (data.length > 0){
+						
+					
+						var addedConfig =  JSON.parse(data).config;
+						
+						if (addedConfig){
+							if (!configs.configurations){
+								configs.configurations = { addedConfig };
+								addSuccess = true;
+							} else {
+								configs.configurations.push(addedConfig);
+								addSuccess = true;
+							}
+						}
+						
+						if (addSuccess){
 							fs.writeFileSync(fileName, JSON.stringify(configs));
 							responseService.write204NoContentResponse(res);
+							return;
+						} else {
+							responseService.write500InternalErrorResponse(res, 'Internal Server Error', contentType);
 							return;
 						}
 					}
 				});
 				
+				//responseService.write404NotFoundResponse(res, contentType);
 				return;
 			default:
 				responseService.write404NotFoundResponse(res, contentType);
-			}
-		;
+			};
 	},
 	
 	handlePutRequest: function(res, req, contentType){
@@ -325,12 +333,13 @@ module.exports = {
 			
 			if (index > -1){
 				configs.configurations.splice(index, 1);
-				//overwrite file with new json object
 				fs.writeFileSync(fileName, JSON.stringify(configs));
 				res.writeHead(204);
 				res.end();
 				return;
 			}
+		} else {
+			responseService.write404NotFoundResponse(res, contentType);
 		}
 		
 		res.writeHead(404);
