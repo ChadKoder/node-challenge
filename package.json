@@ -19,7 +19,7 @@
     "angular-messages": "^1.5.5"
   },
   "scripts": {
-	"test" : "jasmine-node serverTests/server-auth.spec.js"
+	"test" : "jasmine-node serverTests/"
 	
   }
 }

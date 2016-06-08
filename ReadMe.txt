@@ -19,15 +19,15 @@ Manual Setup Instructions:
 Automated Setup Instructions:
 1. Install NodeJS: https://nodejs.org/en/download/
 2. Extract zip file to desired location.
-3. Open your preferred command line tool (I use Console Emulator: https://sourceforge.net/projects/conemu/) and navigate to the location of the extracted files.
-4. Run 'build.sh' from the extracted file location to install dependencies.
-5. Run 'launchChrome.sh' or 'launchInternetExplorer.sh' to run the server and launch the application from your browser of choice (currently only supports chrome/iexplore)
+3. Run 'build.bat' to install dependencies.
+4. Run 'launchChrome.bat' or 'launchInternetExplorer.bat' to run the server and launch the application from chrome or internet explorer
 
 
 Server Tests:
-NOTE: Must run 'serverTests/launchForServerTests.bat' before running 'runServerTests.sh'.
-1. run 'serverTests/launchForServerTests.bat'
-2. Run 'runServerTests.sh' to launch unit tests.
+NOTE: Must run 'serverTests/startServer.bat' before running 'runServerTests.bat'.
+	- Executing from the .bat file works, but does not display nicely. Previously I was using a bash script but wanted to use something more general
+1. run 'serverTests/startServer.bat'
+2. Run 'runServerTests.bat' to launch unit tests.
 
 Angular Unit Tests:
 - Navigate to 'tests' folder and open 'SpecRunner.html' in a browser. This will run all unit tests and display the results.
