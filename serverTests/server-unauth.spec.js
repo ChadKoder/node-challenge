@@ -14,16 +14,9 @@ describe('server', function() {
 					'Content-Type': 'application/json'
 				  }
 			};
-			var req = http.request(options, (res) => {
-			  console.log('STATUS: ' + res.statusCode);
-			  console.log('HEADERS:  ' + JSON.stringify(res.headers));
-			  res.setEncoding('utf8');
-			  res.on('data', (chunk) => {
-				console.log('BODY: ' + chunk);
-			  });
-			  res.on('end', () => {
-				console.log('No more data in response.')
-			  });
+			
+			//logout for tests to ensure unauthorized..
+			var req = http.request(options, function (res) {
 			});
 			
 			req.write('');
