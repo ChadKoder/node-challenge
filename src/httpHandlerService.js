@@ -4,14 +4,11 @@ var token = null,
 	url = require('url'),
 	configs = require('./configurations.json'),
 	responseService = require('./responseService.js'),
-	fs = require('fs');
+	fs = require('fs'),
+	usersJson = require('./users.json');
 	
 var validate = function (userName, password){
-	var users = [
-		{ username: 'ChadK', password: 'Tenable'},
-		{ username: 'Admin', password: '123xyzABC!@'},
-		{ username: 'user', password: 'pass'}];
-		 
+	var users = usersJson.users;	
 	for (var i = 0; i <= users.length - 1; i++){
 		if (userName.toLowerCase() === users[i].username.toLowerCase() && password === users[i].password){
 			return true;
