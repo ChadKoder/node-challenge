@@ -144,7 +144,6 @@ module.exports = {
 				responseService.write401Unauthorized(res, contentType);
 				break;
 			default:
-			console.log('HEEEERE');
 				responseService.write404NotFoundResponse(res, contentType);
 		}
 	},
