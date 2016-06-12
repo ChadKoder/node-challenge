@@ -1,2 +1,2 @@
-start npm test serverTests/
+start npm test
 pause

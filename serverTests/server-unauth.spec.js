@@ -1,26 +1,14 @@
 var supertest = require('supertest');
-var api = supertest('http://localhost:8888');
-var http = require('http');
-
-describe('server', function() {
-
-	beforeEach(function(){
-		var options = {
-			  hostname: 'http://localhost:8888',
-			  port: 8888,
-			  path: '/logout',
-			  method: 'POST',
-			  headers: {
-				'Content-Type': 'application/json'
-			  }
-		};
-		
-		//logout for tests to ensure unauthorized..
-		var req = http.request(options, function (res) {
-		});
-		
-		req.write('');
-		req.end();
+	var api = supertest('http://localhost:8888');
+	
+var logout = function (done) {
+		 api.post('/logout').expect(204, done);
+};
+	
+describe('server unauthorized', function() {
+	beforeEach(function(done){ 
+		//logout to ensure unauthorized..
+		logout(done);
 	});
 	
 	describe('http GET', function(){
@@ -56,7 +44,7 @@ describe('server', function() {
 	});
 	
 	describe('http DELETE', function(){
-		it('/configs should return status code 200 OK', function(done){
+		it('/configs should return status code 401 Unauthorized', function(done){
 		 api.delete('/configs')
 			.set('Accept', 'application/json')
 			.expect(401, done);
@@ -70,16 +58,12 @@ describe('server', function() {
 			.expect(401, done);
 		});
 	
-		it('/logout should return status code 200 OK', function(done){
+		it('/logout should return status code 204 No Content', function(done){
 			 api.post('/logout')
 				.set('Accept', 'application/json')
 				.expect(204, done);
 		});
 		
-		it('/logout should return status code 200 OK', function(done){
-			 api.post('/logout')
-				.set('Accept', 'application/json')
-				.expect(204, done);
-		});
+		
 	});
 });
