@@ -141,7 +141,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 				if (res.status === 401){
 					$scope.showSimpleToast('Unauthorized user!');
 				} else {
-					$scope.showSimpleToast('Unable to retrieve configs.');
+					$scope.showSimpleToast('Unable to retrieve configurations');
 				}
 			});
 			
@@ -196,6 +196,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 		$scope.sortValue = 'name';
 		$scope.pageSize = 5;
 		$scope.totalDisplayed = 0;
+		$scope.sortOrder = 'asc';
 	};
 	
 	$scope.init();
