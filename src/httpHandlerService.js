@@ -5,27 +5,8 @@ var token = null,
 	configs = require('./configurations.json'),
 	responseService = require('./responseService.js'),
 	fs = require('fs'),
-	usersJson = require('./users.json');
-	
-var validate = function (userName, password){
-	var users = usersJson.users;	
-	for (var i = 0; i <= users.length - 1; i++){
-		if (userName.toLowerCase() === users[i].username.toLowerCase() && password === users[i].password){
-			return true;
-		}
-	}
-	
-	return false;
-};
-
-var isAuthorized = function(){
-	if (token){
-		return true;
-	} 
-	
-	return false;
-	
-};
+	sorter = require('./sorter.js'),
+	authentication = require('./authentication.js');
 
 var renderFile = function (res, fileName, contentType){
 		fs.readFile(fileName, 'binary', function(err, file){
@@ -39,56 +20,6 @@ var renderFile = function (res, fileName, contentType){
 		});
 	};
 
-var sortByName = function (){
-	return configs.configurations.sort(function(x, y) {
-		if (x.name.toLowerCase() < y.name.toLowerCase()){
-			return -1;
-		}
-		if (x.name.toLowerCase() > y.name.toLowerCase()){
-			return 1;
-		}
-		
-		return 0;
-	});
-}
-
-var sortByHostName = function (){
-	return configs.configurations.sort(function(x, y) {
-		if (x.hostname.toLowerCase() < y.hostname.toLowerCase()){
-			return -1;
-		}
-		if (x.hostname.toLowerCase() > y.hostname.toLowerCase()){
-			return 1;
-		}
-		
-		return 0;
-	});
-}
-
-var sortByPort = function (){
-	return configs.configurations.sort(function(x, y) {
-		if (x.port < y.port){
-			return -1;
-		}
-		if (x.port > y.port){
-			return 1;
-		}
-		
-		return 0;
-	});
-}
-var sortByUserName = function (){
-	return configs.configurations.sort(function(x, y) {
-		if (x.username.toLowerCase() < y.username.toLowerCase()){
-			return -1;
-		}
-		if (x.username.toLowerCase() > y.username.toLowerCase()){
-			return 1;
-		}
-		
-		return 0;
-	});
-}
 module.exports = {
 	handleGetRequest: function (res, req, url, contentType){
 		var currentWorkingDir = process.cwd();
@@ -106,7 +37,7 @@ module.exports = {
 				renderFile(res, fileName, contentType);
 				break;
 			case '/user-configurations':
-				if (!isAuthorized()){
+				if (!authentication.isAuthorized(token)){
 					responseService.write401Unauthorized(res, contentType);
 					return;
 				}
@@ -116,29 +47,30 @@ module.exports = {
 				renderFile(res, fileName, contentType);
 				break;
 			case '/configs':
-				if (!isAuthorized()){
+				if (!authentication.isAuthorized(token)){
 					responseService.write401Unauthorized(res, contentType);
 					return;
 				}
 				
 				var page = url.parse(req.url, true).query.page;
 				var sortBy = url.parse(req.url, true).query.sortby;
+				var sortOrder = url.parse(req.url, true).query.sortOrder;
 				
 				if (page && sortBy){
 					var sorted;
 					var sortedAndPaged = configs.configurations;
 					
 					if (sortBy.toLowerCase() === 'name'){
-						sorted = sortByName();
+						sorted = sorter.sortByNameAsc();
 					}
 					if (sortBy.toLowerCase() === 'hostname'){
-						sorted = sortByHostName();
+						sorted = sorter.sortByHostNameAsc();
 					}
 					if (sortBy.toLowerCase() === 'port'){
-						sorted = sortByPort();
+						sorted = sorter.sortByPortAsc();
 					}
 					if (sortBy.toLowerCase() === 'username'){
-						sorted = sortByUserName();
+						sorted = sorter.sortByUserNameAsc();
 					}
 					
 					if (sorted){
@@ -198,7 +130,7 @@ module.exports = {
 						var username = credentials[0];
 						var password = credentials[1];
 						
-						if (!validate(username, password)){
+						if (!authentication.validateUser(username, password)){
 							responseService.write401Unauthorized(res, contentType);
 							return;
 						} else {
@@ -227,7 +159,7 @@ module.exports = {
 				break;
 			case '/configs':
 				var addSuccess = false;
-				if (!isAuthorized()){
+				if (!authentication.isAuthorized(token)){
 					responseService.write401Unauthorized(res, contentType);
 					return;
 				}
@@ -239,8 +171,6 @@ module.exports = {
 				
 				req.on('end', function(){
 					if (data.length > 0){
-						
-					
 						var addedConfig =  JSON.parse(data).config;
 						
 						if (addedConfig){
@@ -275,7 +205,7 @@ module.exports = {
 			fileName = currentWorkingDir + '\\src\\configurations.json';
 			uri = url.parse(req.url).pathname;
 		
-		if (!isAuthorized()){
+		if (!authentication.isAuthorized(token)){
 			responseService.write401Unauthorized(res, contentType);
 			return;
 		}
@@ -314,7 +244,7 @@ module.exports = {
 		var uri = url.parse(req.url).pathname;
 		var fileName = currentWorkingDir + '\\src\\configurations.json';
 		
-		if (!isAuthorized()){
+		if (!authentication.isAuthorized(token)){
 			responseService.write401Unauthorized(res, contentType);
 			return;
 		}
