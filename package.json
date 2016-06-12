@@ -1,11 +1,7 @@
 {
   "name": "sampleApp",
-  "version": "1.0.0a",
   "description": "NodeJS demonstration",
-  "main": "\"\"",  
-  "repository": "",
   "author": "Chad Keibler",
-  "readmeFilename": "README.html",
   "devDependencies": {
 	"jasmine-node": "latest",
 	"supertest": "latest"
@@ -19,7 +15,7 @@
     "angular-messages": "^1.5.5"
   },
   "scripts": {
-	"test" : "jasmine-node serverTests/"
+	"test" : "jasmine-node --captureExceptions --growl serverTests"
 	
   }
 }
