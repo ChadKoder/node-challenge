@@ -1,7 +1,7 @@
 var http = require('http'),
 	url = require('url'),
 	fs = require('fs'),
-	httpHandler = require('./src/httpHandlerService'),
+	httpHandler = require('./src/js/httpHandlerService'),
 	childProcess = require('child_process'),
 	browserToLaunch = '',
 	chrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',

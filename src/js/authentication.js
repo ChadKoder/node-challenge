@@ -1,4 +1,4 @@
-usersJson = require('./users.json');
+usersJson = require('../users.json');
 
 module.exports = {
 	validateUser: function(userName, password){

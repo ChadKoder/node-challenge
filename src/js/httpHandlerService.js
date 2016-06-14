@@ -1,7 +1,7 @@
 var token = null,
 	path = require('path'),
 	url = require('url'),
-	configs = require('./configurations.json'),
+	configs = require('../configurations.json'),
 	responseService = require('./responseService.js'),
 	fs = require('fs'),
 	configPageObjCreator = require('./configPageObjCreator'),
@@ -32,7 +32,7 @@ module.exports = {
 		
 		switch (uri){
 			case '/':
-				fileName += 'src/index.html';
+				fileName += 'src/views/index.html';
 				renderFile(res, fileName, contentType);
 				break;
 			case '/user-configurations':
@@ -41,7 +41,7 @@ module.exports = {
 					return;
 				}
 				
-				fileName = currentWorkingDir + "\\src\\" + "user-configurations.html";
+				fileName = currentWorkingDir + "\\src\\views\\" + "user-configurations.html";
 				
 				renderFile(res, fileName, contentType);
 				break;
