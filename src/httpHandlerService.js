@@ -4,7 +4,7 @@ var token = null,
 	configs = require('./configurations.json'),
 	responseService = require('./responseService.js'),
 	fs = require('fs'),
-	sorter = require('./sorter.js'),
+	configPageObjCreator = require('./configPageObjCreator'),
 	authentication = require('./authentication.js');
 
 var renderFile = function (res, fileName, contentType){
@@ -58,7 +58,7 @@ module.exports = {
 				
 				var returnObj = {};
 				
-				returnObj = sorter.getSortedPageObj(page, pageSize, sortBy, sortOrder);
+				returnObj = configPageObjCreator.getSortedPageObj(page, pageSize, sortBy, sortOrder);
 				
 				res.setHeader('Content-Type', 'application/json');
 				res.write(JSON.stringify(returnObj));
