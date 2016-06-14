@@ -1,58 +1,75 @@
 var userConfigs = require('./configurations.json'),
-	sorter = require('./sorter.js'),
-	pageSize = 5;
+	sorter = require('./sorter.js');
 
 module.exports = {
-	getSortedPageObj: function(page, sortBy, sortOrder){
-		var page, sortBy, sortOrder, sorted = null, finalConfigs = userConfigs.configurations;
-		if (!page){
-			page = 1;
+	getSortDesc: function (sortBy){
+		var sorted = null;
+		if (sortBy.toLowerCase() === 'hostname') {
+			sorted = this.sortByHostNameDesc();
+		} else if (sortBy.toLowerCase() === 'port') {
+			sorted = this.sortByPortDesc();
+		} else if (sortBy.toLowerCase() === 'username') {
+			sorted = this.sortByUserNameDesc();
+		} else {
+			//default - sort by name desc
+			sorted = this.sortByNameDesc();
 		}
 		
-		if (sortOrder && sortBy){
+		return sorted;
+	},
+	getSortAsc: function (sortBy) {
+		var sorted = null;
+		if (sortBy.toLowerCase() === 'hostname') {
+			sorted = this.sortByHostNameAsc();
+		} else if (sortBy.toLowerCase() === 'port') {
+			sorted = this.sortByPortAsc();
+		} else if (sortBy.toLowerCase() === 'username') {
+			sorted = this.sortByUserNameAsc();
+		} else {
+			//default - sort by name asc
+			sorted = this.sortByNameAsc();
+		}
+		
+		return sorted;
+	},
+	getSortedPageObj: function(pg, pageSize, sortBy, sortOrder){
+		var page, sorted = null, finalConfigs = userConfigs.configurations;
+		if (!pg){
+			page = 1;
+		} else {
+			page = pg;
+		}
+		
+		if (sortOrder){
 			if (sortOrder.toLowerCase() === 'desc') {
-				if (sortBy.toLowerCase() === 'hostname') {
-					sorted = this.sortByHostNameDesc();
-				} else if (sortBy.toLowerCase() === 'port') {
-					sorted = this.sortByPortDesc();
-				} else if (sortBy.toLowerCase() === 'username') {
-					sorted = this.sortByUserNameDesc();
-				} else {
-					//default - sort by name desc
-					sorted = this.sortByNameDesc();
-				}
+				sorted = this.getSortDesc(sortBy);
 			} else {
-				if (sortBy.toLowerCase() === 'hostname') {
-					sorted = this.sortByHostNameAsc();
-				} else if (sortBy.toLowerCase() === 'port') {
-					sorted = this.sortByPortAsc();
-				} else if (sortBy.toLowerCase() === 'username') {
-					sorted = this.sortByUserNameAsc();
-				} else {
-					//default - sort by name asc
-					sorted = this.sortByNameAsc();
-				}
+				sorted = this.getSortAsc(sortBy);
 			}
 		}
 		
 		if (sorted) {
-			if (userConfigs.configurations.length > pageSize) {
-				if (page > 1) {
-					var startIndex = (pageSize * (page - 1));
-					var endIndex = userConfigs.configurations.length;
-				
-					if (startIndex > endIndex) {
-						finalConfigs = sorted.slice(startIndex, startIndex + pageSize);
-					} else {
-						if ((endIndex - startIndex) > pageSize) {
-							endIndex = startIndex + pageSize;
+			if (pageSize) {
+				if (userConfigs.configurations.length > pageSize) {
+					if (page > 1) {
+						var startIndex = (pageSize * (page - 1));
+						var endIndex = userConfigs.configurations.length;
+					
+						if (startIndex > endIndex) {
+							finalConfigs = sorted.slice(startIndex, startIndex + pageSize);
+						} else { 
+							if ((endIndex - startIndex) > pageSize) {
+								endIndex = parseInt(startIndex) + parseInt(pageSize);
+							}
+							
+							finalConfigs = sorted.slice(startIndex, endIndex);
 						}
-						
-						finalConfigs = sorted.slice(startIndex, endIndex);
+					} else {
+					finalConfigs = sorted.slice(0, pageSize);
 					}
+				} else {
+					finalConfigs = sorted;
 				}
-			} else {
-				finalConfigs = sorted.slice(0, pageSize);
 			}
 		}
 		

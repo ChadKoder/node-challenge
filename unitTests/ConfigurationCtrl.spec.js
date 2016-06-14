@@ -24,7 +24,7 @@ describe('ConfigurationCtrl', function () {
 			});
         });
 		
-		$httpBackend.expectGET('/configs?page=1&sortby=name').respond(responseNoSort);
+		$httpBackend.expectGET('/configs?page=1&pagesize=5&sortby=name&sortorder=asc').respond(responseNoSort);
 	});
 			 
 	describe('$scope.init()', function(){
@@ -35,6 +35,12 @@ describe('ConfigurationCtrl', function () {
 		
 		it('should call $scope.getConfigs', function(){
 			expect($scope.getConfigs).toHaveBeenCalled();
+			expect($scope.adding).toBeFalsy();
+			expect($scope.selectedConfig).toBeFalsy();
+			expect($scope.editing).toBeFalsy();
+			expect($scope.page).toEqual(1);
+			expect($scope.sortBy).toBe('name');
+			expect($scope.pageSize).toEqual(5);
 		});
 		
 		it ('should default page, sortValue, totalDisplayed, and pageSize', function(){
@@ -74,7 +80,7 @@ describe('ConfigurationCtrl', function () {
 			$scope.totalDisplayed = 0;
 			$scope.totalConfigs = 0;
 			$scope.configs = null;
-			$httpBackend.expectGET('/configs?page=1&sortby=name').respond(responseNoSort);
+			$httpBackend.expectGET('/configs?page=1&pagesize=5&sortby=name&sortorder=asc').respond(responseNoSort);
 			$scope.getConfigs(null);
 		});
 		
@@ -99,7 +105,7 @@ describe('ConfigurationCtrl', function () {
 			$scope.totalConfigs = 0;
 			$scope.configs = null;
 			$scope.sortOrder = 'asc';
-			$httpBackend.expectGET('/configs?page=1&sortby=name&sortorder=asc').respond(responseSort);
+			$httpBackend.expectGET('/configs?page=1&pagesize=5&sortby=name&sortorder=asc').respond(responseSort);
 			$scope.getConfigs('name');
 		});
 		
@@ -107,7 +113,7 @@ describe('ConfigurationCtrl', function () {
 			$httpBackend.flush();
 			$httpBackend.verifyNoOutstandingExpectation();
 			$httpBackend.verifyNoOutstandingRequest();
-			expect($scope.sortValue).toBe('name'); 
+			expect($scope.sortBy).toBe('name'); 
 			expect($scope.totalDisplayed).toBe($scope.pageSize); 
 			expect($scope.page).toBe(1); 
 			expect($scope.totalConfigs).toBe(23); 
@@ -123,7 +129,7 @@ describe('ConfigurationCtrl', function () {
 			$scope.totalDisplayed = 0;
 			$scope.totalConfigs = 0;
 			$scope.configs = null;
-			$httpBackend.expectGET('/configs?page=1&sortby=name&sortorder=asc').respond(401);
+			$httpBackend.expectGET('/configs?page=1&pagesize=5&sortby=name&sortorder=asc').respond(401);
 			$scope.getConfigs('name');
 			
 		});

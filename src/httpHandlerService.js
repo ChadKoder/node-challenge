@@ -1,5 +1,4 @@
 var token = null,
-	//pageSize = 5,
 	path = require('path'),
 	url = require('url'),
 	configs = require('./configurations.json'),
@@ -53,12 +52,13 @@ module.exports = {
 				}
 				
 				var page = url.parse(req.url, true).query.page;
+				var pageSize = url.parse(req.url, true).query.pagesize;
 				var sortBy = url.parse(req.url, true).query.sortby;
 				var sortOrder = url.parse(req.url, true).query.sortorder;
 				
 				var returnObj = {};
 				
-				returnObj = sorter.getSortedPageObj(page, sortBy, sortOrder);
+				returnObj = sorter.getSortedPageObj(page, pageSize, sortBy, sortOrder);
 				
 				res.setHeader('Content-Type', 'application/json');
 				res.write(JSON.stringify(returnObj));
