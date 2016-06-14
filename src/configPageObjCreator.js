@@ -1,5 +1,6 @@
 var userConfigs = require('./configurations.json');
 var sorter = require('./sorter.js')(userConfigs);
+var paginator = require('./paginate.js')(userConfigs);
 
 module.exports = {
 	getSortedPageObj: function(pg, pageSize, sortBy, sortOrder){
@@ -20,26 +21,7 @@ module.exports = {
 		
 		if (sorted) {
 			if (pageSize) {
-				if (userConfigs.configurations.length > pageSize) {
-					if (page > 1) {
-						var startIndex = (pageSize * (page - 1));
-						var endIndex = userConfigs.configurations.length;
-					
-						if (startIndex > endIndex) {
-							finalConfigs = sorted.slice(startIndex, startIndex + pageSize);
-						} else { 
-							if ((endIndex - startIndex) > pageSize) {
-								endIndex = parseInt(startIndex) + parseInt(pageSize);
-							}
-							
-							finalConfigs = sorted.slice(startIndex, endIndex);
-						}
-					} else {
-					finalConfigs = sorted.slice(0, pageSize);
-					}
-				} else {
-					finalConfigs = sorted;
-				}
+				finalConfigs = paginator.paginateUserConfigs(sorted, pageSize, page);
 			}
 		}
 		
