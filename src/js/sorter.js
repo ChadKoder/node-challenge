@@ -49,19 +49,17 @@ function Sorter (userConfigs) {
 			}); 
 		},
 		getSortAsc: function (sortBy) {
-			var sorted = null;
-			if (sortBy.toLowerCase() === 'hostname') {
-				sorted = this.sortByHostNameAsc();
-			} else if (sortBy.toLowerCase() === 'port') {
-				sorted = this.sortByPortAsc();
-			} else if (sortBy.toLowerCase() === 'username') {
-				sorted = this.sortByUserNameAsc();
-			} else {
-				//default - sort by name asc
-				sorted = this.sortByNameAsc();
+			if (sortBy) {
+				if (sortBy.toLowerCase() === 'hostname') {
+					return this.sortByHostNameAsc();
+				} else if (sortBy.toLowerCase() === 'port') {
+					return this.sortByPortAsc();
+				} else if (sortBy.toLowerCase() === 'username') {
+					return this.sortByUserNameAsc();
+				}
 			}
 			
-			return sorted;
+			return this.sortByNameAsc();
 		},
 		sortByNameDesc: function (){
 			return userConfigs.configurations.sort(function(x, y) {
