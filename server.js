@@ -6,9 +6,11 @@ var http = require('http'),
 	browserToLaunch = '',
 	chrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
 	iexplore = 'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe',
-	arg = process.argv[2], userArg = null;
+	arg = process.argv[2], 
+	userArg = null;
 	
 const PORT = 8888;
+var serverAdd = 'http://localhost:' + PORT;
 
 if (arg){
 	userArg = arg.toLowerCase();
@@ -30,7 +32,7 @@ if (userArg){
 			fs.statSync(iexplore);
 			browserToLaunch = iexplore;
 		} catch(e) {
-			console.log('iexplore does not exist, please manually launch your browser and navigate to "http://localhost:8888"');
+			console.log('iexplore does not exist, please manually launch your browser and navigate to ' + serverAdd);
 			browserToLaunch = '';
 		}
 	} else if (userArg === 'serverTests/') {
@@ -40,7 +42,7 @@ if (userArg){
 }
 
 if (browserToLaunch){
-	childProcess.spawn(browserToLaunch, ['http://localhost:8888']);
+	childProcess.spawn(browserToLaunch, [serverAdd]);
 }
 
 var urlContains = function(url, str){
@@ -81,6 +83,6 @@ http.createServer(function (req, res) {
 		default:
 	}
 	 
-}).listen(parseInt(PORT, 10)); 
+}).listen(parseInt(PORT)); 
 
-console.log('Server running at --> http://localhost:' + PORT + '/\nCTRL+C to shutdown');
+console.log('Server running at --> ' + serverAdd + '/\nCTRL+C to shutdown');
