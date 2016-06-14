@@ -1,5 +1,5 @@
 var token = null,
-	pageSize = 5,
+	//pageSize = 5,
 	path = require('path'),
 	url = require('url'),
 	configs = require('./configurations.json'),
@@ -54,65 +54,11 @@ module.exports = {
 				
 				var page = url.parse(req.url, true).query.page;
 				var sortBy = url.parse(req.url, true).query.sortby;
-				var sortOrder = url.parse(req.url, true).query.sortOrder;
-				
-				if (page && sortBy){
-					var sorted;
-					var sortedAndPaged = configs.configurations;
-					
-					if (sortBy.toLowerCase() === 'name'){
-						sorted = sorter.sortByNameAsc();
-					}
-					if (sortBy.toLowerCase() === 'hostname'){
-						sorted = sorter.sortByHostNameAsc();
-					}
-					if (sortBy.toLowerCase() === 'port'){
-						sorted = sorter.sortByPortAsc();
-					}
-					if (sortBy.toLowerCase() === 'username'){
-						sorted = sorter.sortByUserNameAsc();
-					}
-					
-					if (sorted){
-						sortedAndPaged = sorted;
-					}
-					
-					if (configs.configurations.length > pageSize){
-						if (page > 1){
-							var startIndex = (pageSize * (page - 1));
-							var endIndex = configs.configurations.length;
-							
-							if (startIndex > endIndex){
-								sortedAndPaged = sorted.slice(startIndex, startIndex + pageSize);
-							} else {
-								if ((endIndex - startIndex) > 5){
-									endIndex = startIndex + 5;
-								}
-								
-								sortedAndPaged = sorted.slice(startIndex, endIndex);
-							}
-						} else {
-							sortedAndPaged = sorted.slice(0, pageSize);
-							
-						}
-					} else {
-						sortedAndPaged = sorted.slice(0, pageSize);
-					}
-					
-					var returnObj = {};
-					returnObj.sorted = sortedAndPaged;
-					returnObj.total = configs.configurations.length;
-					
-					res.setHeader('Content-Type', 'application/json');
-					res.write(JSON.stringify(returnObj));
-					res.end();
-					return;
-				}
+				var sortOrder = url.parse(req.url, true).query.sortorder;
 				
 				var returnObj = {};
 				
-				returnObj.sorted = configs.configurations;
-				returnObj.total = configs.configurations.length;
+				returnObj = sorter.getSortedPageObj(page, sortBy, sortOrder);
 				
 				res.setHeader('Content-Type', 'application/json');
 				res.write(JSON.stringify(returnObj));

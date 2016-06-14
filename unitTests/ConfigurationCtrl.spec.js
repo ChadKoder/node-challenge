@@ -98,7 +98,8 @@ describe('ConfigurationCtrl', function () {
 			$scope.totalDisplayed = 0;
 			$scope.totalConfigs = 0;
 			$scope.configs = null;
-			$httpBackend.expectGET('/configs?page=1&sortby=name').respond(responseSort);
+			$scope.sortOrder = 'asc';
+			$httpBackend.expectGET('/configs?page=1&sortby=name&sortorder=asc').respond(responseSort);
 			$scope.getConfigs('name');
 		});
 		
@@ -122,7 +123,7 @@ describe('ConfigurationCtrl', function () {
 			$scope.totalDisplayed = 0;
 			$scope.totalConfigs = 0;
 			$scope.configs = null;
-			$httpBackend.expectGET('/configs?page=1&sortby=name').respond(401);
+			$httpBackend.expectGET('/configs?page=1&sortby=name&sortorder=asc').respond(401);
 			$scope.getConfigs('name');
 			
 		});

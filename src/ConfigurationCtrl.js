@@ -101,7 +101,8 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	
 	$scope.getPrev = function(){
 		var prevPage = $scope.page - 1;
-		$http.get('/configs?page=' + prevPage + '&sortby=' + $scope.sortValue)
+		$http.get('/configs?page=' + prevPage + '&sortby=' + $scope.sortValue 
+			+ '&sortorder=' + $scope.sortOrder)
 			.then(function (res) {
 				if (prevPage === 1){
 					$scope.totalDisplayed = $scope.pageSize;
@@ -130,7 +131,8 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	
 	$scope.getNext = function(){
 		var nextPage = $scope.page + 1;
-		$http.get('/configs?page=' + nextPage + '&sortby=' + $scope.sortValue)
+		$http.get('/configs?page=' + nextPage + '&sortby=' + $scope.sortValue
+		 + '&sortorder=' + $scope.sortOrder)
 			.then(function (res) {
 				$scope.page = nextPage;
 				$scope.totalConfigs = res.data.total;
@@ -150,7 +152,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	$scope.getConfigs = function(sortValue) {
 		if (sortValue){
 			$scope.sortValue = sortValue;
-			$http.get('/configs?page=1&sortby=' + sortValue)
+			$http.get('/configs?page=1&sortby=' + sortValue + '&sortorder=' + $scope.sortOrder)
 			.then(function (res) {
 				$scope.showSimpleToast('sorting by ' + sortValue + ' and displaying page 1');
 				$scope.totalDisplayed = $scope.pageSize;
@@ -184,7 +186,16 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	};
 	
 	$scope.sort = function(sortBy){
+		$scope.toggleSortOrder();
 		$scope.getConfigs(sortBy);
+	};
+	
+	$scope.toggleSortOrder = function (){
+		if ($scope.sortOrder === 'asc'){
+			$scope.sortOrder = 'desc';
+		} else {
+			$scope.sortOrder = 'asc';
+		}
 	};
 	
 	$scope.init = function(){
