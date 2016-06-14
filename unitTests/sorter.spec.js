@@ -62,6 +62,40 @@ describe ('Sorter', function (){
 		});
 	});
 	
+	describe('getSortDesc', function(){
+		beforeEach(function(){
+			spyOn(sorter, 'sortByHostNameDesc');
+			spyOn(sorter, 'sortByPortDesc');
+			spyOn(sorter, 'sortByUserNameDesc');
+			spyOn(sorter, 'sortByNameDesc');
+		});
+				
+		it('should call sortByHostNameAsc when sortBy = "hostname"', function (){
+			sorter.getSortDesc('hostname');
+			expect(sorter.sortByHostNameDesc).toHaveBeenCalled();
+		});
+		
+		it('should call sortByPortAsc when sortBy = "port"', function (){
+			sorter.getSortDesc('port');
+			expect(sorter.sortByPortDesc).toHaveBeenCalled();
+		});
+		
+		it('should call sortByUserNameAsc when sortBy = "username"', function (){
+			sorter.getSortDesc('username');
+			expect(sorter.sortByUserNameDesc).toHaveBeenCalled();
+		});
+		
+		it('should call sortByUserNameAsc when no sortBy is defined', function (){
+			sorter.getSortDesc(null);
+			expect(sorter.sortByNameDesc).toHaveBeenCalled();
+		});
+		
+		it('sortBy parameter should not be case sensitive', function (){
+			sorter.getSortDesc('NaMe');
+			expect(sorter.sortByNameDesc).toHaveBeenCalled();
+		});
+	});
+	
 	describe('getSortAsc', function(){
 		beforeEach(function(){
 			spyOn(sorter, 'sortByHostNameAsc');
@@ -89,15 +123,39 @@ describe ('Sorter', function (){
 			sorter.getSortAsc(null);
 			expect(sorter.sortByNameAsc).toHaveBeenCalled();
 		});
+		
+		it('sortBy parameter should not be case sensitive', function (){
+			sorter.getSortAsc('NaMe');
+			expect(sorter.sortByNameAsc).toHaveBeenCalled();
+		});
 	});
 	
 	describe('sortByNameDesc', function(){
 		it('should sort by name descending', function (){
-			var sorter = new Sorter(userConfigs);
 			sorter.sortByNameDesc();
 			expect(userConfigs.configurations[0].name).toBe('zack');
 			expect(userConfigs.configurations[1].name).toBe('john');
 			expect(userConfigs.configurations[2].name).toBe('anthony');
 		});
 	});
+	
+	describe('sortByHostNameDesc', function(){
+		it('should sort by host name descending', function (){
+			sorter.sortByHostNameDesc();
+			expect(userConfigs.configurations[0].hostname).toBe('zzz');
+			expect(userConfigs.configurations[1].hostname).toBe('ggg');
+			expect(userConfigs.configurations[2].hostname).toBe('aaa');
+		});
+	});
+	
+	describe('sortByPortDesc', function(){
+		it('should sort by port descending', function (){
+			sorter.sortByPortDesc();
+			expect(userConfigs.configurations[0].port).toBe(7777);
+			expect(userConfigs.configurations[1].port).toBe(1235);
+			expect(userConfigs.configurations[2].port).toBe(1234);
+		});
+	});
+	
+	 
 });

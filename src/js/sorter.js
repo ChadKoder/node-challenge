@@ -1,3 +1,5 @@
+
+/*TODO: add better support for sorting by a url (ex: hostname)*/
 function Sorter (userConfigs) {
 	return {
 		sortByHostNameAsc: function(){
@@ -110,19 +112,17 @@ function Sorter (userConfigs) {
 			});
 		},
 		getSortDesc: function (sortBy){
-			var sorted = null;
-			if (sortBy.toLowerCase() === 'hostname') {
-				sorted = this.sortByHostNameDesc();
-			} else if (sortBy.toLowerCase() === 'port') {
-				sorted = this.sortByPortDesc();
-			} else if (sortBy.toLowerCase() === 'username') {
-				sorted = this.sortByUserNameDesc();
-			} else {
-				//default - sort by name desc
-				sorted = this.sortByNameDesc();
+			if (sortBy) {
+				if (sortBy.toLowerCase() === 'hostname') {
+					return this.sortByHostNameDesc();
+				} else if (sortBy.toLowerCase() === 'port') {
+					return this.sortByPortDesc();
+				} else if (sortBy.toLowerCase() === 'username') {
+					return this.sortByUserNameDesc();
+				}
 			}
-			
-			return sorted;
+						
+			return this.sortByNameDesc();
 		}
 	}
 }
