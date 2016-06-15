@@ -1,7 +1,6 @@
-usersJson = require('../users.json');
-
-module.exports = {
-	validateUser: function(userName, password){
+function Authentication(usersJson) {
+	return {
+		validateUser: function(userName, password){
 		var users = usersJson.users;
 		for (var i = 0; i <= users.length - 1; i++){
 			if (userName.toLowerCase() === users[i].username.toLowerCase() && password === users[i].password){
@@ -18,4 +17,7 @@ module.exports = {
 			
 			return false;
 		}
-};
+	}
+}
+
+module.exports = Authentication;

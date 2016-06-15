@@ -1,13 +1,19 @@
 var http = require('http'),
 	url = require('url'),
 	fs = require('fs'),
-	httpHandler = require('./src/js/httpHandlerService'),
 	childProcess = require('child_process'),
 	browserToLaunch = '',
 	chrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
 	iexplore = 'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe',
 	arg = process.argv[2], 
-	userArg = null;
+	userArg = null,
+	users = require('./src/users.json'),
+	responseService = require('./src/js/responseService.js'),
+	userConfigs = require('./src/configurations.json');
+	
+	var authentication = require('./src/js/authentication.js')(users);
+	
+var httpHandler = require('./src/js/httpHandlerService')(userConfigs, fs, authentication, responseService, process.cwd());
 	
 const PORT = 8888;
 var serverAdd = 'http://localhost:' + PORT;
@@ -64,12 +70,12 @@ var setContentType = function (url) {
 };
 
 http.createServer(function (req, res) {
-	var contentType, 
+	var contentType, uri = url.parse(req.url).pathname,
 	contentType = setContentType(req.url);
 	
 	switch (req.method){
 		case 'GET':
-			httpHandler.handleGetRequest(res, req, url, contentType);
+			httpHandler.handleGetRequest(res, req, uri, contentType);
 			break;
 		case 'POST':
 			httpHandler.handlePostRequest(res, req, contentType);

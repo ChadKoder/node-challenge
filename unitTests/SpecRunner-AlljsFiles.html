@@ -16,30 +16,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-mocks.js"></script> 
    <!-- SOURCE FILES -->
     <script src="../src/js/sorter.js"></script> 
+	<script src="../src/js/httpHandlerService.js"></script> 
     <!-- SPECS -->
     <script src="sorter.spec.js"></script> 
+	<script src="httpHandler.spec.js"></script> 
 </head>
 
 <body>
-	<script type="text/javascript">
-		require.config({
-  //  urlArgs: 'cb=' + Math.random(),
-    paths: {
-        jquery: 'lib/jquery',
-        //jasmine: 'node_modules/jasmine/',
-        //'jasmine-html': 'lib/jasmine/lib/jasmine-html',
-        spec: './'
-    },
-    shim: {
-        jasmine: {
-            exports: 'jasmine'
-        },
-        'jasmine-html': {
-            deps: ['jasmine'],
-            exports: 'jasmine'
-        }
-    }
-});
-	</script>
- </body>
+</body>
 </html>
