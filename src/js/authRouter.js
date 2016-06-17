@@ -1,4 +1,5 @@
-var token = null;
+var token = null,
+	userConfigurationHtml = 'src/views/user-configurations.html';
 
 function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreator, authentication, responseService, configs) {
 	return {
@@ -20,7 +21,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 							return;
 						} else {
 							token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
-							responseService.write200SuccessResponse(res, null, contentType, token);
+							responseService.write200SuccessResponse(res, null, fileName, contentType, token);
 							return;
 						}
 					}
@@ -36,9 +37,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 				
 				switch (uri){
 				case '/user-configurations':
-					
-					
-					fileName = currentWorkingDir + "\\src\\views\\" + "user-configurations.html";
+					fileName = path.join(currentWorkingDir, userConfigurationHtml);
 					
 					this.renderFile(res, fileName, contentType);
 					break;
@@ -178,7 +177,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					return;
 				}
 				
-				responseService.write200SuccessResponse(res, file, contentType, token);
+				responseService.write200SuccessResponse(res, file, fileName, contentType);
 			});
 		}
 	}

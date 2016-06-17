@@ -7,7 +7,6 @@ function Router(path, fileSystem, responseService, authRouter) {
 					this.renderFile(res, fileName, contentType);
 					break;
 				default:
-					//responseService.write404NotFoundResponse(res, contentType);
 					authRouter.routeGet(fileName, uri, res, req, contentType);
 			}
 		},
@@ -17,7 +16,7 @@ function Router(path, fileSystem, responseService, authRouter) {
 		renderFile: function (res, fileName, contentType){
 			fileSystem.readFile(fileName, 'binary', function(err, file){
 				if (err) {
-					console.log('error for file : ' + fileName + ' err: ' + err);
+					console.log('error rendering file : ' + fileName + ' err: ' + err);
 					responseService.write500InternalErrorResponse(res, err, contentType);
 					return;
 				}

@@ -1,6 +1,6 @@
 function ResponseService() {
 	return {
-		write200SuccessResponse: function (res, file, contentType){
+		write200SuccessResponse: function (res, file, fileName, contentType){
 		/*	if (token) {
 				if (file){
 					res.writeHeader(200, {'Content-Type': contentType},
@@ -17,9 +17,9 @@ function ResponseService() {
 				
 				res.end();
 				return;
-			} else {*/
+			} else { 
 				if (file){
-					res.writeHead(200);
+					res.writeHeader(200, {'Content-Type': contentType});
 					res.write(file, 'binary');
 					res.end();
 					return;
@@ -29,7 +29,21 @@ function ResponseService() {
 					res.end();
 					return;
 				}
-			/*}*/
+			 }*/
+			 
+			 	if (file){
+					res.writeHeader(200, {'Content-Type': contentType});
+					res.write(file, 'binary');
+					res.end();
+					return;
+				} else {
+					res.writeHead(200);
+					res.write('200 OK');
+					res.end();
+					return;
+				}
+				//res.end();
+				//return;
 		},
 		write204NoContentResponse: function (res){
 			res.writeHead(204);
