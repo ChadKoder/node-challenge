@@ -36,10 +36,10 @@ describe('server unauthorized', function() {
 				.expect(200, done);
 		});
 		
-		it('/invalidUrl should return status code 404 Not Found', function(done){
+		it('/invalidUrl should return status code 401 Unauthorized', function(done){
 			 api.get('/invalidUrl')
 				.set('Accept', 'application/json')
-				.expect(404, done);
+				.expect(401, done);
 		});
 	});
 	

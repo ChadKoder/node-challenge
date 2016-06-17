@@ -1,222 +1,35 @@
-var token = null,
-	path = require('path'),
-	url = require('url'),
-	//responseService = require('./responseService.js'),
-	configPageObjCreator = require('./configPageObjCreator');
-	//authentication;
- 
-
-function HttpHandler (configs, fileSystem, authentication, responseService, currentWorkingDir) {
-//	authentication = require('./authentication.js')(usersJson);
+function HttpHandler (path, url, currentWorkingDir, configs, fileSystem, authentication, router, authRouter, responseService, currentWorkingDir) {
+	var userConfigsFileName = path.join(currentWorkingDir, 'src/configurations.json');
+	
 	return {
-		renderFile: function (res, fileName, contentType){
-			fileSystem.readFile(fileName, 'binary', function(err, file){
-				if (err) {
-					console.log('error for file : ' + fileName + ' err: ' + err);
-					responseService.write500InternalErrorResponse(res, err, contentType);
-					return;
-				}
-				
-				responseService.write200SuccessResponse(res, file, contentType, token);
-			});
-		},
-		handleGetRequest: function (res, req, uri, contentType){
-			//var currentWorkingDir = process.cwd();
-			//var uri = url.parse(req.url).pathname;
-			//var fileName = path.join(currentWorkingDir, uri);
-			var fileName = currentWorkingDir + '\\' + uri;//path.join(currentWorkingDir, uri);
-				
+		handleGetRequest: function (res, req, contentType){
+			var uri = url.parse(req.url).pathname;
+			var fileName = path.join(currentWorkingDir, uri);
+			
 			if ((uri.indexOf('node_modules') > -1) || uri.indexOf('src') > -1){
-				this.renderFile(res, fileName, contentType);
+				router.loadDependencies(res, fileName, contentType);
 				return;
 			}
 			
-			switch (uri){
-				case '/':
-					fileName += 'src/views/index.html';
-					this.renderFile(res, fileName, contentType);
-					break;
-				case '/user-configurations':
-					if (!authentication.isAuthorized(token)){
-						responseService.write401Unauthorized(res, contentType);
-						return;
-					}
-					
-					fileName = currentWorkingDir + "\\src\\views\\" + "user-configurations.html";
-					
-					this.renderFile(res, fileName, contentType);
-					break;
-				case '/configs':
-					if (!authentication.isAuthorized(token)){
-						responseService.write401Unauthorized(res, contentType);
-						return;
-					}
-					
-					var page = url.parse(req.url, true).query.page;
-					var pageSize = url.parse(req.url, true).query.pagesize;
-					var sortBy = url.parse(req.url, true).query.sortby;
-					var sortOrder = url.parse(req.url, true).query.sortorder;
-					
-					var returnObj = {};
-					
-					returnObj = configPageObjCreator.getSortedPageObj(page, pageSize, sortBy, sortOrder);
-					
-					res.setHeader('Content-Type', 'application/json');
-					res.write(JSON.stringify(returnObj));
-					res.end();
-					break;
-				case '/validateUser':
-					var authHeader = req.headers['authorization']; 
-					if (authHeader){
-						var auth = authHeader.split(' ')[1];
-						var credString = new Buffer(auth, 'base64').toString();
-						  
-						var credentials = credString.split(':');
-						  
-						if (credentials){
-							var username = credentials[0];
-							var password = credentials[1];
-							
-							if (!authentication.validateUser(username, password)){
-								responseService.write401Unauthorized(res, contentType);
-								return;
-							} else {
-								token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
-								responseService.write200SuccessResponse(res, null, contentType, token);
-								return;
-							}
-						}
-					}
-					
-					responseService.write401Unauthorized(res, contentType);
-					break;
-				default:
-					responseService.write404NotFoundResponse(res, contentType);
-			}
+			router.routeGet(fileName, uri, res, req, contentType);
+			return;
 		},
 		handlePostRequest: function (res, req, contentType){
-			var currentWorkingDir = process.cwd(),
-			fileName = currentWorkingDir + '\\src\\configurations.json',
 			uri = url.parse(req.url).pathname;
-		
-			switch (uri) {
-				case '/logout':
-					token = null;
-					responseService.write204NoContentResponse(res);
-					break;
-				case '/configs':
-					var addSuccess = false;
-					if (!authentication.isAuthorized(token)){
-						responseService.write401Unauthorized(res, contentType);
-						return;
-					}
-					
-					var data = '';
-					req.on('data', function(chunk){
-						data += chunk;
-					});
-					
-					req.on('end', function(){
-						if (data.length > 0){
-							var addedConfig =  JSON.parse(data).config;
-							
-							if (addedConfig){
-								if (!configs.configurations){
-									configs.configurations = { addedConfig };
-									addSuccess = true;
-								} else {
-									configs.configurations.push(addedConfig);
-									addSuccess = true;
-								}
-							}
-							
-							if (addSuccess){
-								fileSystem.writeFileSync(fileName, JSON.stringify(configs));
-								responseService.write204NoContentResponse(res);
-								return;
-							} else {
-								responseService.write500InternalErrorResponse(res, 'Internal Server Error', contentType);
-								return;
-							}
-						}
-					});
-					
-					return;
-				default:
-					responseService.write404NotFoundResponse(res, contentType);
-				};
+			authRouter.routePost(userConfigsFileName, uri, res, req, contentType);
+			return;
 		},
 		
 		handlePutRequest: function(res, req, contentType){
-			var data = '', index = null, currentWorkingDir = process.cwd(),
-				fileName = currentWorkingDir + '\\src\\configurations.json';
+			var data = '', index = null;
 				uri = url.parse(req.url).pathname;
-			
-			if (!authentication.isAuthorized(token)){
-				responseService.write401Unauthorized(res, contentType);
-				return;
-			}
-				
-			if (uri === '/configs'){
-				req.on('data', function(chunk){
-					data += chunk;
-				});
-				
-				req.on('end', function(){
-					var updatedConfig =  JSON.parse(data).config;
-					
-					for (var i = 0; i < configs.configurations.length; i++){
-						if (configs.configurations[i].username === updatedConfig.username){
-							index = configs.configurations.indexOf(configs.configurations[i]);
-						}
-					}
-					
-					if (index > -1){
-						configs.configurations[index] = updatedConfig;
-						fileSystem.writeFileSync(fileName, JSON.stringify(configs));
-						responseService.write204NoContentResponse(res);
-						return;
-					}
-				});
-				
-				return;
-			}
-		
-			responseService.write404NotFoundResponse(res, contentType);
+			authRouter.routePut(userConfigsFileName, uri, res, req, contentType);
+			return;
 		},
 		handleDeleteRequest: function(res, req, contentType){
-			var currentWorkingDir = process.cwd();
 			var id = url.parse(req.url, true).query.id;
-			
 			var uri = url.parse(req.url).pathname;
-			var fileName = currentWorkingDir + '\\src\\configurations.json';
-			
-			if (!authentication.isAuthorized(token)){
-				responseService.write401Unauthorized(res, contentType);
-				return;
-			}
-			
-			if (uri === '/configs'){
-				var index = null;
-				for (var i = 0; i < configs.configurations.length; i++){
-					if (configs.configurations[i].username === id){
-						index = configs.configurations.indexOf(configs.configurations[i]);
-					}
-				}
-				
-				if (index > -1){
-					configs.configurations.splice(index, 1);
-					fileSystem.writeFileSync(fileName, JSON.stringify(configs));
-					res.writeHead(204);
-					res.end();
-					return;
-				}
-			} else {
-				responseService.write404NotFoundResponse(res, contentType);
-			}
-			
-			res.writeHead(404);
-			res.end();
+			authRouter.routeDelete(userConfigsFileName, uri, res, req, contentType, id);
 			return;
 		}
 	}

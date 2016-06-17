@@ -1,4 +1,4 @@
-module.exports = function(userConfigs) {
+function Paginator(userConfigs){
 	return {
 		paginateUserConfigs: function (sorted, pageSize, page){
 			var paginatedConfigs = null;
@@ -12,7 +12,7 @@ module.exports = function(userConfigs) {
 					} else { 
 						if ((parseInt(endIndex) - parseInt(startIndex)) > parseInt(pageSize)) {
 							endIndex = parseInt(startIndex) + parseInt(pageSize);
-						}
+						} 
 						
 						paginatedConfigs = sorted.slice(startIndex, endIndex);
 					}
@@ -26,4 +26,6 @@ module.exports = function(userConfigs) {
 			return paginatedConfigs;
 		}
 	}
-};
+}
+
+module.exports = Paginator;

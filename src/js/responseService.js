@@ -1,7 +1,7 @@
 function ResponseService() {
 	return {
-		write200SuccessResponse: function (res, file, contentType, token){
-			if (token) {
+		write200SuccessResponse: function (res, file, contentType){
+		/*	if (token) {
 				if (file){
 					res.writeHeader(200, {'Content-Type': contentType},
 				{'Authorization': 'Basic ' + token});
@@ -17,7 +17,7 @@ function ResponseService() {
 				
 				res.end();
 				return;
-			} else {
+			} else {*/
 				if (file){
 					res.writeHead(200);
 					res.write(file, 'binary');
@@ -29,7 +29,7 @@ function ResponseService() {
 					res.end();
 					return;
 				}
-			}
+			/*}*/
 		},
 		write204NoContentResponse: function (res){
 			res.writeHead(204);

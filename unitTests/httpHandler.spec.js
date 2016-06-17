@@ -1,6 +1,12 @@
-var fileSystem,
+/*describe('httpHandler', function(){
+	var fileSystem,
 	httpHandler,
-	authentication,
+	auth,
+	p,
+	u,
+	configPgObjCreator,
+	res = {},
+	req,
 	responseService,
 		users = {
 			"users": [{
@@ -8,7 +14,7 @@ var fileSystem,
 					"password": "pass1"
 				}]
 		},
-		userConfigs = {
+	userConfigs = {
 		"configurations": [{
 				"name": "zack",
 				"hostname": "aaa",
@@ -28,51 +34,33 @@ var fileSystem,
 				"username": "uname"
 			}]
 	};
-	
-describe ('HttpHandler', function (){
-	beforeEach(function(){
-		module('HttpHandler');
-		require(['../src/js/authentication.js', '../src/js/responseService.js'], function (auth, resService) {
-			//fileSystem = fs;
-			//authentication = auth;
-			//responseService = resService;
 
-		});
-		
-		httpHandler = new HttpHandler(userConfigs, fileSystem, authentication, responseService, 'currWorkDir');
-	//	spyOn(authentication, 'isAuthorized');
-		//spyOn(fileSystem, 'readFile');
-		//spyOn(fileSystem, 'writeFileSync');
-		
-	});
+	res.write = function() {};
+	res.writeHead = function() {};
+	res.end = function() {};
 	
-	describe('handleGetRequest', function(){
-		beforeEach(function(){
-			spyOn(httpHandler, 'renderFile');
-			//spyOn(responseService, 'write401Unauthorized');
-		});
-		
-		it ('should render files for node_modules folders', function(){
-			var req = { url: '/' };
-			httpHandler.handleGetRequest(null, req, 'node_modules', 'application/json');
-			expect(httpHandler.renderFile).toHaveBeenCalled();
-			
-		});
-		
-		it ('should render files for src folders', function(){
-			var req = { url: '/' };
-			httpHandler.handleGetRequest('res', req, 'src', 'application/json');
-			expect(httpHandler.renderFile).toHaveBeenCalledWith('res', 'currWorkDir\\src', 'application/json');
-			
-		});
-	});
 	
-	/*describe('renderFile', function(){
-		it ('should call fs.readFile()', function(){
-			httpHandler.renderFile();
-			//httpHandler.renderFile();
-			expect(fileSystem.readFile).toHaveBeenCalled();
-		});
-	});*/
-	 
-});
+define(['require'],function(require){
+	require(['path', 'url', 'fs'], function (path, url, fs){
+		p = path;
+		u = url;
+		fileSystem = fs;
+		responseService = new ResponseService();
+		auth = new Authentication();
+		sorter = new Sorter();
+		paginator = new Paginator();
+		configPgObjCreator = new ConfigPageObjCreator();
+	
+	
+	});	 
+		
+}); 
+	
+		it ('should render node_modules', function(){	
+		httpHandler = new HttpHandler(p, u, configPgObjCreator, userConfigs, fileSystem, auth, responseService, 'c:\\workingdir');
+		
+			req = { url: 'node_modules/' };
+			httpHandler.handleGetRequest(res, req, 'application/json');
+			expect(1).toEqual(2);
+		}); 
+});*/

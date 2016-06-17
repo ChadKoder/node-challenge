@@ -1,34 +1,39 @@
-var userConfigs = require('../configurations.json');
+/*var userConfigs = require('../configurations.json');
 var sorter = require('./sorter.js')(userConfigs);
 var paginator = require('./paginate.js')(userConfigs);
+*/
 
-module.exports = {
-	getSortedPageObj: function(pg, pageSize, sortBy, sortOrder){
-		var page, sorted = null, finalConfigs = userConfigs.configurations;
-		if (!pg){
-			page = 1;
-		} else {
-			page = pg;
-		}
-		
-		if (sortOrder){
-			if (sortOrder.toLowerCase() === 'desc') {
-				sorted = sorter.getSortDesc(sortBy);
+function ConfigPageObjCreator (userConfigs, sorter, paginator){
+	return {
+		getSortedPageObj: function(pg, pageSize, sortBy, sortOrder){
+			var page, sorted = null, finalConfigs = userConfigs.configurations;
+			if (!pg){
+				page = 1;
 			} else {
-				sorted = sorter.getSortAsc(sortBy);
+				page = pg;
 			}
-		}
-		
-		if (sorted) {
-			if (pageSize) {
-				finalConfigs = paginator.paginateUserConfigs(sorted, pageSize, page);
+			
+			if (sortOrder){
+				if (sortOrder.toLowerCase() === 'desc') {
+					sorted = sorter.getSortDesc(sortBy);
+				} else {
+					sorted = sorter.getSortAsc(sortBy);
+				}
 			}
-		}
-		
-		var sortedReturnObj = {};
-		sortedReturnObj.sorted = finalConfigs;
-		sortedReturnObj.total = userConfigs.configurations.length;
-		
-		return sortedReturnObj;
-	} 
-};
+			
+			if (sorted) {
+				if (pageSize) {
+					finalConfigs = paginator.paginateUserConfigs(sorted, pageSize, page);
+				}
+			}
+			
+			var sortedReturnObj = {};
+			sortedReturnObj.sorted = finalConfigs;
+			sortedReturnObj.total = userConfigs.configurations.length;
+			
+			return sortedReturnObj;
+		} 
+	}
+}
+
+module.exports = ConfigPageObjCreator;

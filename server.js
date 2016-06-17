@@ -1,5 +1,7 @@
 var http = require('http'),
 	url = require('url'),
+	path = require('path'),
+	//configPageObjCreator = require('./configPageObjCreator'),
 	fs = require('fs'),
 	childProcess = require('child_process'),
 	browserToLaunch = '',
@@ -11,9 +13,15 @@ var http = require('http'),
 	responseService = require('./src/js/responseService.js'),
 	userConfigs = require('./src/configurations.json');
 	
-	var authentication = require('./src/js/authentication.js')(users);
-	
-var httpHandler = require('./src/js/httpHandlerService')(userConfigs, fs, authentication, responseService, process.cwd());
+
+currentWorkingDir = process.cwd();
+var authentication = require('./src/js/authentication.js')(users);
+var sorter = require('./src/js/sorter.js')(userConfigs);
+var paginator = require('./src/js/paginator.js')(userConfigs);
+var configPageObjCreator = require('./src/js/configPageObjCreator')(userConfigs, sorter, paginator);
+var authRouter = require('./src/js/authRouter.js')(path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs);
+var router = require('./src/js/router.js')(path, fs, responseService, authRouter);
+var httpHandler = require('./src/js/httpHandlerService')(path, url, currentWorkingDir, userConfigs, fs, authentication, router, authRouter, responseService, currentWorkingDir);
 	
 const PORT = 8888;
 var serverAdd = 'http://localhost:' + PORT;
@@ -70,12 +78,12 @@ var setContentType = function (url) {
 };
 
 http.createServer(function (req, res) {
-	var contentType, uri = url.parse(req.url).pathname,
+	var contentType,
 	contentType = setContentType(req.url);
 	
 	switch (req.method){
 		case 'GET':
-			httpHandler.handleGetRequest(res, req, uri, contentType);
+			httpHandler.handleGetRequest(res, req, contentType);
 			break;
 		case 'POST':
 			httpHandler.handlePostRequest(res, req, contentType);
