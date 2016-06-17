@@ -22,7 +22,6 @@ describe ('Sorter', function (){
 	};
 	
 	beforeEach(function(){
-		module('Sorter');
 		sorter = new Sorter(userConfigs);
 	});
 	
