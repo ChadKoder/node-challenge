@@ -1,7 +1,6 @@
 var http = require('http'),
 	url = require('url'),
 	path = require('path'),
-	//configPageObjCreator = require('./configPageObjCreator'),
 	fs = require('fs'),
 	childProcess = require('child_process'),
 	browserToLaunch = '',
