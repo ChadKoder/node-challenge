@@ -6,7 +6,6 @@ describe('httpHandler', function(){
 	authRouter,
 	path = { join: function (a, b) { return a + b; } },
 	workingDir = "C:\\",
-	configPgObjCreator,
 	res = {},
 	req,
 	responseService,
@@ -60,7 +59,7 @@ describe('httpHandler', function(){
 		
 			req = { url: 'node_modules/' };
 			httpHandler.handleGetRequest(res, req, 'application/json');
-			expect(router.loadDependencies).toHaveBeenCalled();
+			expect(router.loadDependencies).toHaveBeenCalledWith(res, 'C:\\node_modules', 'application/json');
 			expect(router.routeGet).not.toHaveBeenCalled();
 		}); 
 		
@@ -70,7 +69,7 @@ describe('httpHandler', function(){
 		
 			req = { url: 'src/' };
 			httpHandler.handleGetRequest(res, req, 'application/json');
-			expect(router.loadDependencies).toHaveBeenCalled();
+			expect(router.loadDependencies).toHaveBeenCalledWith(res, 'C:\\src', 'application/json');
 			expect(router.routeGet).not.toHaveBeenCalled();
 		});
 		
@@ -81,19 +80,51 @@ describe('httpHandler', function(){
 			req = { url: 'configs/' };
 			httpHandler.handleGetRequest(res, req, 'application/json');
 			expect(router.loadDependencies).not.toHaveBeenCalled();
-			expect(router.routeGet).toHaveBeenCalled();
-			
-			url = { parse: function (a) { return { pathname: 'anything' }; } };
-			httpHandler = new HttpHandler(path, url, workingDir, userConfigs, auth, router, authRouter, responseService);
-		
-			req = { url: 'anything/' };
-			httpHandler.handleGetRequest(res, req, 'application/json');
-			expect(router.loadDependencies).not.toHaveBeenCalled();
-			expect(router.routeGet).toHaveBeenCalled();
+			expect(router.routeGet).toHaveBeenCalledWith('C:\\configs', 'configs', res, req, 'application/json');
 		});
 	});
 	
+	describe('handlePostRequest', function() {
+		it ('should call authRouter.routePost', function () {
+			url = { parse: function (a) { return { pathname: 'src' }; } };
+			httpHandler = new HttpHandler(path, url, workingDir, userConfigs, auth, router, authRouter, responseService);
+			
+			spyOn(authRouter, 'routePost');
+			req = { url: 'configs/' };
+			
+			httpHandler.handlePostRequest(res, req, 'application/json');
+			
+			expect(authRouter.routePost).toHaveBeenCalled();
+		});
+	});
+	
+	describe('handlePutRequest', function() {
+		it ('should call authRouter.routePut', function () {
+			url = { parse: function (a) { return { pathname: 'src' }; } };
+			httpHandler = new HttpHandler(path, url, workingDir, userConfigs, auth, router, authRouter, responseService);
+			
+			spyOn(authRouter, 'routePut');
+			req = { url: 'configs/' };
+			
+			httpHandler.handlePutRequest(res, req, 'application/json');
+			
+			expect(authRouter.routePut).toHaveBeenCalled();
+		});
+	});
 
+	describe('handleDeleteRequest', function() {
+		it ('should call authRouter.routeDelete', function () {
+			url = { parse: function (a, b) { return { query: { id: '' } }; } };
+			httpHandler = new HttpHandler(path, url, workingDir, userConfigs, auth, router, authRouter, responseService);
+			
+			spyOn(authRouter, 'routeDelete');
+			req = { url: 'configs/' };
+			
+			httpHandler.handleDeleteRequest(res, req, 'application/json');
+			
+			expect(authRouter.routeDelete).toHaveBeenCalled();
+		});
+	});
 	
 	
 });
