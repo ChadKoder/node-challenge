@@ -1,4 +1,4 @@
-function HttpHandler (path, url, currentWorkingDir, configs, fileSystem, authentication, router, authRouter, responseService, currentWorkingDir) {
+function HttpHandler (path, url, currentWorkingDir, configs, authentication, router, authRouter, responseService) {
 	var userConfigsFileName = path.join(currentWorkingDir, 'src/configurations.json');
 	
 	return {

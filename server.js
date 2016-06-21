@@ -20,7 +20,7 @@ var paginator = require('./src/js/paginator.js')(userConfigs);
 var configPageObjCreator = require('./src/js/configPageObjCreator')(userConfigs, sorter, paginator);
 var authRouter = require('./src/js/authRouter.js')(path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs);
 var router = require('./src/js/router.js')(path, fs, responseService, authRouter);
-var httpHandler = require('./src/js/httpHandlerService')(path, url, currentWorkingDir, userConfigs, fs, authentication, router, authRouter, responseService, currentWorkingDir);
+var httpHandler = require('./src/js/httpHandlerService')(path, url, currentWorkingDir, userConfigs, authentication, router, authRouter, responseService);
 	
 const PORT = 8888;
 var serverAdd = 'http://localhost:' + PORT;

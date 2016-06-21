@@ -1,9 +1,11 @@
-/*describe('httpHandler', function(){
+describe('httpHandler', function(){
 	var fileSystem,
 	httpHandler,
 	auth,
-	p,
-	u,
+	router,
+	authRouter,
+	path = { join: function (a, b) { return a + b; } },
+	workingDir = "C:\\",
 	configPgObjCreator,
 	res = {},
 	req,
@@ -34,33 +36,64 @@
 				"username": "uname"
 			}]
 	};
-
+	
 	res.write = function() {};
 	res.writeHead = function() {};
 	res.end = function() {};
 	
-	
-define(['require'],function(require){
-	require(['path', 'url', 'fs'], function (path, url, fs){
-		p = path;
-		u = url;
-		fileSystem = fs;
-		responseService = new ResponseService();
-		auth = new Authentication();
-		sorter = new Sorter();
-		paginator = new Paginator();
-		configPgObjCreator = new ConfigPageObjCreator();
-	
-	
-	});	 
+	responseService = new ResponseService();
+	router = new Router();
+	authRouter = new AuthRouter();
+	auth = new Authentication();
+	sorter = new Sorter();
+	paginator = new Paginator();
+
+	describe('handleGetRequest', function (){
+		beforeEach(function(){
+			spyOn(router, 'loadDependencies');
+			spyOn(router, 'routeGet');
+		});
 		
-}); 
-	
-		it ('should render node_modules', function(){	
-		httpHandler = new HttpHandler(p, u, configPgObjCreator, userConfigs, fileSystem, auth, responseService, 'c:\\workingdir');
+		it ('should call router.loadDependencies to render node_modules', function(){			
+			url = { parse: function (a) { return { pathname: 'node_modules' }; } };
+			httpHandler = new HttpHandler(path, url, workingDir, userConfigs, auth, router, authRouter, responseService);
 		
 			req = { url: 'node_modules/' };
 			httpHandler.handleGetRequest(res, req, 'application/json');
-			expect(1).toEqual(2);
+			expect(router.loadDependencies).toHaveBeenCalled();
+			expect(router.routeGet).not.toHaveBeenCalled();
 		}); 
-});*/
+		
+		it ('should call router.loadDependencies to render src', function () {
+			url = { parse: function (a) { return { pathname: 'src' }; } };
+			httpHandler = new HttpHandler(path, url, workingDir, userConfigs, auth, router, authRouter, responseService);
+		
+			req = { url: 'src/' };
+			httpHandler.handleGetRequest(res, req, 'application/json');
+			expect(router.loadDependencies).toHaveBeenCalled();
+			expect(router.routeGet).not.toHaveBeenCalled();
+		});
+		
+		it('should call router.routeGet when route is not node_modules or src', function () {
+			url = { parse: function (a) { return { pathname: 'configs' }; } };
+			httpHandler = new HttpHandler(path, url, workingDir, userConfigs, auth, router, authRouter, responseService);
+		
+			req = { url: 'configs/' };
+			httpHandler.handleGetRequest(res, req, 'application/json');
+			expect(router.loadDependencies).not.toHaveBeenCalled();
+			expect(router.routeGet).toHaveBeenCalled();
+			
+			url = { parse: function (a) { return { pathname: 'anything' }; } };
+			httpHandler = new HttpHandler(path, url, workingDir, userConfigs, auth, router, authRouter, responseService);
+		
+			req = { url: 'anything/' };
+			httpHandler.handleGetRequest(res, req, 'application/json');
+			expect(router.loadDependencies).not.toHaveBeenCalled();
+			expect(router.routeGet).toHaveBeenCalled();
+		});
+	});
+	
+
+	
+	
+});
