@@ -17,21 +17,21 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 						var password = credentials[1];
 						
 						if (!authentication.validateUser(username, password)){
-							responseService.write401Unauthorized(res, contentType);
+							responseService.write401Unauthorized(res);
 							return;
 						} else {
 							token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
-							responseService.write200SuccessResponse(res, null, fileName, contentType, token);
+							responseService.write200Success(res, null, fileName, contentType, token);
 							return;
 						}
 					}
 				}
 				
-				responseService.write401Unauthorized(res, contentType);
+				responseService.write401Unauthorized(res);
 				return;
 			} else {
 				if (!authentication.isAuthorized(token)){
-					responseService.write401Unauthorized(res, contentType);
+					responseService.write401Unauthorized(res);
 					return;
 				}
 				
@@ -55,7 +55,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					res.end();
 					break;
 				default:
-					responseService.write404NotFoundResponse(res, contentType);
+					responseService.write404NotFound(res);
 				}
 			}
 		},
@@ -63,13 +63,13 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 			switch (uri) {
 				case '/logout':
 					token = null;
-					responseService.write204NoContentResponse(res);
+					responseService.write204NoContent(res);
 					break;
 				case '/configs':
 					var addSuccess = false;
 					var data = '';
 					if (!authentication.isAuthorized(token)){
-						responseService.write401Unauthorized(res, contentType);
+						responseService.write401Unauthorized(res);
 						return;
 					}
 					
@@ -93,10 +93,10 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 							
 							if (addSuccess){
 								fileSystem.writeFileSync(fileName, JSON.stringify(configs));
-								responseService.write204NoContentResponse(res);
+								responseService.write204NoContent(res);
 								return;
 							} else {
-								responseService.write500InternalErrorResponse(res, 'Internal Server Error', contentType);
+								responseService.write500InternalError(res, 'Internal Server Error');
 								return;
 							}
 						}
@@ -104,12 +104,12 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					
 					return;
 				default:
-					responseService.write404NotFoundResponse(res, contentType);
+					responseService.write404NotFound(res);
 				};
 		},
 		routePut: function (fileName, uri, res, req, contentType) {
 			if (!authentication.isAuthorized(token)){
-				responseService.write401Unauthorized(res, contentType);	
+				responseService.write401Unauthorized(res);	
 				return;
 			}
 			
@@ -132,18 +132,18 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 						if (index > -1){
 							configs.configurations[index] = updatedConfig;
 							fileSystem.writeFileSync(fileName, JSON.stringify(configs));
-							responseService.write204NoContentResponse(res);
+							responseService.write204NoContent(res);
 							return;
 						}
 					});
 					break;
 				default:
-					responseService.write404NotFoundResponse(res, contentType);
+					responseService.write404NotFound(res);
 			}
 		},
 		routeDelete: function (fileName, uri, res, req, contentType, id) {
 			if (!authentication.isAuthorized(token)){
-				responseService.write401Unauthorized(res, contentType);
+				responseService.write401Unauthorized(res);
 				return;
 			}
 			
@@ -166,18 +166,18 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					
 					break;
 				default: 
-				responseService.write404NotFoundResponse(res, contentType);
+				responseService.write404NotFound(res);
 			}
 		},
 		renderFile: function (res, fileName, contentType){
 			fileSystem.readFile(fileName, 'binary', function(err, file){
 				if (err) {
 					console.log('error for file : ' + fileName + ' err: ' + err);
-					responseService.write500InternalErrorResponse(res, err, contentType);
+					responseService.write500InternalError(res, err);
 					return;
 				}
 				
-				responseService.write200SuccessResponse(res, file, fileName, contentType);
+				responseService.write200Success(res, file, fileName, contentType);
 			});
 		}
 	}

@@ -1,74 +1,41 @@
 function ResponseService() {
 	return {
-		write200SuccessResponse: function (res, file, fileName, contentType){
-		/*	if (token) {
-				if (file){
-					res.writeHeader(200, {'Content-Type': contentType},
-				{'Authorization': 'Basic ' + token});
-					res.write(file, 'binary');
-					res.end();
-					return;
-				} else {
-					res.writeHead(200);
-					res.write('200 OK');
-					res.end();
-					return;
-				}
-				
-				res.end();
-				return;
-			} else { 
-				if (file){
-					res.writeHeader(200, {'Content-Type': contentType});
-					res.write(file, 'binary');
-					res.end();
-					return;
-				} else {
-					res.writeHead(200);
-					res.write('200 OK');
-					res.end();
-					return;
-				}
-			 }*/
-			 
+		write200Success: function (res, file, fileName, contentType){ 
 			 	if (file){
 					res.writeHeader(200, {'Content-Type': contentType});
 					res.write(file, 'binary');
 					res.end();
 					return;
 				} else {
-					res.writeHead(200);
+					res.writeHeader(200);
 					res.write('200 OK');
 					res.end();
 					return;
 				}
-				//res.end();
-				//return;
 		},
-		write204NoContentResponse: function (res){
-			res.writeHead(204);
+		write204NoContent: function (res){
+			res.writeHeader(204);
 			res.write('204 No Content');
 			res.end();
 		},
-		write401Unauthorized: function (res, contentType){
-			res.writeHead(401);
+		write401Unauthorized: function (res){
+			res.writeHeader(401);
 			res.write('401 Unauthorized');
 			res.end();
 		},
-		write404NotFoundResponse: function (res, contentType){
-			res.writeHead(404, {'Content-Type': contentType });
+		write404NotFound: function (res){
+			res.writeHeader(404);
 			res.write('404 Not Found');
 			res.end();
 		},
-		write405MethodNotAllowed: function (res, contentType){
-			res.writeHead(405, {'Content-Type': contentType},
-			{'Allow': 'GET'});
-		res.write('405 Method Not Allowed');
-		res.end();
+		write405MethodNotAllowed: function (res){
+			res.writeHeader(405, {'Allow': 'GET'});
+			res.write('405 Method Not Allowed');
+			res.end();
 		},
-		write500InternalErrorResponse: function (res, err, contentType){
-			res.writeHead(500, {'Content-Type': contentType});
-			res.write(err + '\n');
+		write500InternalError: function (res, err){
+			res.writeHeader(500);
+			res.write('500 Internal Server Error: ' + err + '\n');
 			res.end();
 		}
 	}

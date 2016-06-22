@@ -2,10 +2,10 @@ describe('AuthRouter', function (){
 	var authRouter, path, responseService, 
 	currentWorkingDir = 'c:\\',
 	configPageObjCreator, auth,
-	res = { write: function () {}, writeHead: function () {}, end: function() {} }, req = { headers: []},  url  = '',
+	res,
+	req = { headers: []},  url  = '',
 	path = { join: function(a, b) { return a + '/' + b; } };
-	var c = function (err, file) { if (err) { return 'error'; } return 'noError' ; };
-	var fs = { readFile: function(a, b, readFileError) { return; } };
+	var fs = { readFile: jasmine.createSpy('fs.readFile') };
 	var userConfigs = {
 		"configurations": [{
 				"name": "zack",
@@ -28,6 +28,12 @@ describe('AuthRouter', function (){
 	};
 	
 	beforeEach(function() {
+		res = { 
+			writeHeader: jasmine.createSpy('res.writeHeader'),
+			write: jasmine.createSpy('res.write'),
+			end: jasmine.createSpy('res.end')
+		};
+		
 		responseService = new ResponseService();
 		configPageObjCreator = new ConfigPageObjCreator();
 		auth = new Authentication();

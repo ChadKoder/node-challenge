@@ -1,9 +1,8 @@
 describe('Router', function (){
 	var router, path, responseService, authRouter, 
 	res = {}, req = {}, 
-	path = { join: function(a, b) { return a + '/' + b; } };
-	var c = function (err, file) { if (err) { return 'error'; } return 'noError' ; };
-	var fs = { readFile: function(a, b, readFileError) { return; } };
+	path = { join: function(a, b) { return a + '/' + b; } },
+	fs = { readFile: jasmine.createSpy('fs.readFile') };
 	
 	beforeEach(function() {
 		responseService = new ResponseService();
@@ -14,7 +13,6 @@ describe('Router', function (){
 	
 	describe('routeGet', function () {
 		beforeEach(function() {
-			fs = { readFile: function(a, b, c) { return; } };
 			spyOn(router, 'renderFile');
 		});
 		it ('"/configs" should call auth.routeGet', function(){
@@ -50,9 +48,6 @@ describe('Router', function (){
 	});
 	
 	it ('renderFile should call fileSystem.readFile', function() {
-		var readFileError = c(true, 'file'); 
-		var fs = { readFile: function(a, b, c) { return; } };
-		spyOn(fs, 'readFile');
 		router = new Router(path, fs, responseService, authRouter);
 		router.renderFile(res, 'fileName2', 'text/html');
 		expect(fs.readFile).toHaveBeenCalled();

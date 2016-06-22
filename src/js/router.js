@@ -17,11 +17,11 @@ function Router(path, fileSystem, responseService, authRouter) {
 			fileSystem.readFile(fileName, 'binary', function(err, file){
 				if (err) {
 					console.log('error rendering file : ' + fileName + ' err: ' + err);
-					responseService.write500InternalErrorResponse(res, err, contentType);
+					responseService.write500InternalError(res, err);
 					return;
 				}
 				
-				responseService.write200SuccessResponse(res, file, contentType);
+				responseService.write200Success(res, file, contentType);
 			});
 		}
 	}
