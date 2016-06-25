@@ -1,11 +1,7 @@
 describe ('ResponseService', function (){
 	var responseService = new ResponseService();
-	var res = { 
-			writeHeader: jasmine.createSpy('res.writeHeader'),
-			write: jasmine.createSpy('res.write'),
-			end: jasmine.createSpy('res.end')
-		},
-		contentType = 'application/json';
+	var unitTestMocks = new UnitTestMocks();
+	var res = unitTestMocks.response;
 	
 	it('write204NoContent should call res.write with 204 No Content', function(){
 		responseService.write204NoContent(res);
