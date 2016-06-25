@@ -1,14 +1,15 @@
 describe('Router', function (){
-	var router, path, responseService, authRouter, 
-	res = {}, req = {}, 
-	path = { join: function(a, b) { return a + '/' + b; } },
-	fs = { readFile: jasmine.createSpy('fs.readFile') };
+	var unitTestMocks = new UnitTestMocks(),
+		path = unitTestMocks.path,
+		res = unitTestMocks.response,
+		fs = unitTestMocks.fileSystem,
+		req,
+		authRouter = new AuthRouter(),
+		responseService = new ResponseService(),
+		router = new Router(path, fs, responseService, authRouter);
 	
 	beforeEach(function() {
-		responseService = new ResponseService();
-		authRouter = new AuthRouter();
 		spyOn(authRouter, 'routeGet');
-		router = new Router(path, fs, responseService, authRouter);
 	});
 	
 	describe('routeGet', function () {

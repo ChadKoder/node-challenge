@@ -1,30 +1,8 @@
 describe ('Sorter', function (){
-	var sorter,
-		userConfigs = {
-		"configurations": [{
-				"name": "zack",
-				"hostname": "aaa",
-				"port": 7777,
-				"username": "bname"
-			},
-			{
-				"name": "anthony",
-				"hostname": "zzz",
-				"port": 1234,
-				"username": "zname"
-			},
-			{
-				"name": "john",
-				"hostname": "ggg",
-				"port": 1235,
-				"username": "uname"
-			}]
-	};
-	
-	beforeEach(function(){
-		sorter = new Sorter(userConfigs);
-	});
-	
+	var unitTestData = new UnitTestData(),
+		userConfigs = unitTestData.userConfigs,
+		sorter = new Sorter(unitTestData.userConfigs);
+		
 	describe('sortByHostNameAsc', function(){
 		it('should sort by host name ascending', function (){
 			sorter.sortByHostNameAsc();

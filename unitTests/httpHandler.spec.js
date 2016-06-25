@@ -52,12 +52,10 @@ describe('httpHandler', function(){
 	
 	describe('handlePostRequest', function() {
 		it ('should call authRouter.routePost', function () {
-			//url = { parse: function (a) { return { pathname: 'src' }; } }
 			req = unitTestMocks.request(null, 'src');
 			httpHandler = new HttpHandler(unitTestMocks.path, unitTestMocks.url, workingDir, userConfigs, auth, router, authRouter, responseService);
 			
 			spyOn(authRouter, 'routePost');
-			//req = { url: 'configs/' };
 			
 			httpHandler.handlePostRequest(unitTestMocks.response, req, 'application/json');
 			
@@ -67,12 +65,10 @@ describe('httpHandler', function(){
 	
 	describe('handlePutRequest', function() {
 		it ('should call authRouter.routePut', function () {
-			//url = { parse: function (a) { return { pathname: 'src' }; } };
 			req = unitTestMocks.request(null, 'configs');
 			httpHandler = new HttpHandler(unitTestMocks.path, unitTestMocks.url, workingDir, userConfigs, auth, router, authRouter, responseService);
 			
 			spyOn(authRouter, 'routePut');
-			//req = { url: 'configs/' };
 			
 			httpHandler.handlePutRequest(unitTestMocks.response, req, 'application/json');
 			
@@ -82,12 +78,10 @@ describe('httpHandler', function(){
 
 	describe('handleDeleteRequest', function() {
 		it ('should call authRouter.routeDelete', function () {
-			//url = { parse: function (a, b) { return { query: { id: '' } }; } };
 			req = unitTestMocks.request(null, 'configs');
 			httpHandler = new HttpHandler(unitTestMocks.path, unitTestMocks.url, workingDir, userConfigs, auth, router, authRouter, responseService);
 			
 			spyOn(authRouter, 'routeDelete');
-			//req = { url: 'configs/' };
 			
 			httpHandler.handleDeleteRequest(unitTestMocks.response, req, 'application/json');
 			

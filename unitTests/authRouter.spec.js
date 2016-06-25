@@ -25,5 +25,15 @@ describe('AuthRouter', function (){
 			});
 		});
 		
+		/*describe('when uri is /validateUser and no authorization header is provided', function () {
+			it('should return 401 Unauthorized', function() {
+				var authHeader = {'authorization': 'Basic 123'};
+				spyOn(responseService, 'write401Unauthorized');
+				spyOn(auth, 'validateUser').and.returnValue(true);
+				authRouter.routeGet('fName', '/validateUser', unitTestMocks.response, unitTestMocks.request(authHeader, '/validateUser'), 'contentType');
+				//expect(auth.validateUser).not.toHaveBeenCalled();
+				// f expect(responseService.write401Unauthorized).toHaveBeenCalled();
+			});
+		});*/
 	});
 });
