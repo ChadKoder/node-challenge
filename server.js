@@ -18,7 +18,7 @@ var authentication = require('./src/js/authentication.js')(users);
 var sorter = require('./src/js/sorter.js')(userConfigs);
 var paginator = require('./src/js/paginator.js')(userConfigs);
 var configPageObjCreator = require('./src/js/configPageObjCreator')(userConfigs, sorter, paginator);
-var authRouter = require('./src/js/authRouter.js')(path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs);
+var authRouter = require('./src/js/authRouter.js')( path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs, Buffer);
 var router = require('./src/js/router.js')(path, fs, responseService, authRouter);
 var httpHandler = require('./src/js/httpHandlerService')(path, url, currentWorkingDir, userConfigs, authentication, router, authRouter, responseService);
 	

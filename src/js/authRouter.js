@@ -1,20 +1,16 @@
 var token = null,
 	userConfigurationHtml = 'src/views/user-configurations.html';
 
-function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreator, authentication, responseService, configs) {
+function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreator, authentication, responseService, configs, Buffer) {
 	return {
 		routeGet: function (fileName, uri, res, req, contentType){
-			if (uri === '/validateUser'){
-				console.log('heere111: ' + JSON.stringify(req));
-				var authHeader = req.headers['authorization']; 				
+			if (uri.trim().toLowerCase() === '/validateuser'){
+				var authHeader = req.headers['authorization']; 
 				if (authHeader){
-					console.log('heere222');
-					 
 					var auth = authHeader.split(' ')[1];
-					var credString = new Buffer(auth, 'base64').toString();
-					  
+					var credString = Buffer(auth, 'base64').toString();
 					var credentials = credString.split(':');
-					  console.log('heere333');
+					  
 					if (credentials){
 						var username = credentials[0];
 						var password = credentials[1];
@@ -23,7 +19,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 							responseService.write401Unauthorized(res);
 							return;
 						} else {
-							token = new Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
+							token = Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
 							responseService.write200Success(res, null, fileName, contentType, token);
 							return;
 						}
