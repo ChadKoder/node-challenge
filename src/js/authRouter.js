@@ -5,13 +5,16 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 	return {
 		routeGet: function (fileName, uri, res, req, contentType){
 			if (uri === '/validateUser'){
-				var authHeader = req.headers['authorization']; 
+				console.log('heere111: ' + JSON.stringify(req));
+				var authHeader = req.headers['authorization']; 				
 				if (authHeader){
+					console.log('heere222');
+					 
 					var auth = authHeader.split(' ')[1];
 					var credString = new Buffer(auth, 'base64').toString();
 					  
 					var credentials = credString.split(':');
-					  
+					  console.log('heere333');
 					if (credentials){
 						var username = credentials[0];
 						var password = credentials[1];
