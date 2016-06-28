@@ -8,9 +8,17 @@ function UnitTestMocks() {
 		},
 		fileSystem: {
 			readFile: jasmine.createSpy('fs.readFile')
+		}, 
+		reqFunction: function (chunk) {
+			
 		},
 		request: function (headers, url){
-			var req = { headers: {}, url: url};
+			var req = { headers: {}, 
+				url: url, 
+				on: function (a, reqFunction) {
+					return false;
+				} 
+			};
 			
 			if (headers) {
 				for (var i = 0; i < headers.length; i++){

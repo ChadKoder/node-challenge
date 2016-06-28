@@ -110,4 +110,27 @@ describe('AuthRouter', function (){
 		authRouter.routePost('fName',  unitTestMocks.response, unitTestMocks.request(null, '/logout'), 'contentType');
 		expect(responseService.write204NoContent).toHaveBeenCalled();
 	});
+	
+	describe('routePost /configs', function() {
+		it ('should call responseService.write401Unauthorized when authentication fails', function(){
+			spyOn(auth, 'isAuthorized').and.returnValue(false);
+			spyOn(responseService, 'write401Unauthorized');
+			var req = unitTestMocks.request(null, '/configs');
+			authRouter.routePost('fName',  unitTestMocks.response, req, 'contentType');
+			
+			expect(responseService.write401Unauthorized).toHaveBeenCalled();
+			
+		});
+		
+		it ('should call ???????????', function(){
+			var req = unitTestMocks.request(null, '/configs');
+			spyOn(auth, 'isAuthorized').and.returnValue(true);
+			spyOn(responseService, 'write204NoContent');
+			spyOn(req, 'on');
+			authRouter.routePost('fName', unitTestMocks.response, req, 'contentType');
+			expect(req.on).toHaveBeenCalled();
+			//expect(responseService.write204NoContent).toHaveBeenCalled();
+			
+		});
+	});
 });
