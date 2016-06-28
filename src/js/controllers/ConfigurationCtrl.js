@@ -1,7 +1,7 @@
 angular.module('sampleApp.controllers', []).
 controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	var redirectDelay = 1000;
-	$scope.title = 'Tenable Backend Challenge - Microservices';
+	$scope.title = 'NodeJS Sample Application';
 	
 	$scope.redir = function(url){
 		$window.location = url;
