@@ -11,7 +11,7 @@ describe('httpHandler', function(){
 	users = unitTestData.users,
 	fileSystem,
 	httpHandler,
-	workingDir = "C:\\",
+	workingDir = "C:/",
 	req,
 	responseService;
 	 
@@ -21,39 +21,21 @@ describe('httpHandler', function(){
 			spyOn(router, 'loadDependencies');
 			spyOn(router, 'routeGet');
 		});
-			
-		it ('should call router.loadDependencies to render node_modules', function(){
-			req = unitTestMocks.request(null, 'node_modules');
-			httpHandler = new HttpHandler(unitTestMocks.path, unitTestMocks.url, workingDir, userConfigs, auth, router, authRouter, responseService);
-		
-			httpHandler.handleGetRequest(unitTestMocks.response, req, 'application/json');
-			expect(router.loadDependencies).toHaveBeenCalledWith(unitTestMocks.response, 'C:\\node_modules', 'application/json');
-			expect(router.routeGet).not.toHaveBeenCalled();
-		}); 
-		
-		it ('should call router.loadDependencies to render src', function () {
-			httpHandler = new HttpHandler(unitTestMocks.path, unitTestMocks.url, workingDir, userConfigs, auth, router, authRouter, responseService);
-		
-			req = unitTestMocks.request(null, 'src');
-			httpHandler.handleGetRequest(unitTestMocks.response, req, 'application/json');
-			expect(router.loadDependencies).toHaveBeenCalledWith(unitTestMocks.response, 'C:\\src', 'application/json');
-			expect(router.routeGet).not.toHaveBeenCalled();
-		});
 		
 		it('should call router.routeGet when route is not node_modules or src', function () {
-			req = unitTestMocks.request(null, 'configs');
-			httpHandler = new HttpHandler(unitTestMocks.path, unitTestMocks.url, workingDir, userConfigs, auth, router, authRouter, responseService);
+			req = unitTestMocks.request(null, 'src');
+			httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, authRouter, responseService);
 		
 			httpHandler.handleGetRequest(unitTestMocks.response, req, 'application/json');
 			expect(router.loadDependencies).not.toHaveBeenCalled();
-			expect(router.routeGet).toHaveBeenCalledWith('C:\\configs', 'configs', unitTestMocks.response, req, 'application/json');
+			expect(router.routeGet).toHaveBeenCalledWith('C:/', unitTestMocks.response, req, 'application/json');
 		});
 	});
 	
 	describe('handlePostRequest', function() {
 		it ('should call authRouter.routePost', function () {
 			req = unitTestMocks.request(null, 'src');
-			httpHandler = new HttpHandler(unitTestMocks.path, unitTestMocks.url, workingDir, userConfigs, auth, router, authRouter, responseService);
+			httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, authRouter, responseService);
 			
 			spyOn(authRouter, 'routePost');
 			
@@ -66,7 +48,7 @@ describe('httpHandler', function(){
 	describe('handlePutRequest', function() {
 		it ('should call authRouter.routePut', function () {
 			req = unitTestMocks.request(null, 'configs');
-			httpHandler = new HttpHandler(unitTestMocks.path, unitTestMocks.url, workingDir, userConfigs, auth, router, authRouter, responseService);
+			httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, authRouter, responseService);
 			
 			spyOn(authRouter, 'routePut');
 			
@@ -79,7 +61,7 @@ describe('httpHandler', function(){
 	describe('handleDeleteRequest', function() {
 		it ('should call authRouter.routeDelete', function () {
 			req = unitTestMocks.request(null, 'configs');
-			httpHandler = new HttpHandler(unitTestMocks.path, unitTestMocks.url, workingDir, userConfigs, auth, router, authRouter, responseService);
+			httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, authRouter, responseService);
 			
 			spyOn(authRouter, 'routeDelete');
 			

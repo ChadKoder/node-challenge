@@ -3,25 +3,28 @@ function UnitTestMocks() {
 		response: {
 			writeHeader: jasmine.createSpy('res.writeHeader'),
 			write: jasmine.createSpy('res.write'),
-			end: jasmine.createSpy('res.end')
+			end: jasmine.createSpy('res.end'),
+			setHeader: jasmine.createSpy('res.setHeader')
 		},
 		fileSystem: {
 			readFile: jasmine.createSpy('fs.readFile')
 		},
 		request: function (headers, url){
-			var headerList = [], url;
+			var req = { headers: {}, url: url};
 			
-			if (headers){
+			if (headers) {
 				for (var i = 0; i < headers.length; i++){
-					headerList.push(headers[i]);
+					req.headers[headers[i].header] = headers[i].value; 
 				}
 			}
-			
-			return { headers: headerList, url: url };
+				
+			return req;
 		},
 		path: {
 			join: function (a, b) {
-				return a.toString() + b.toString();
+				if (a && b){
+					return a.toString() + b.toString();
+				}
 			}
 		},
 		url: {

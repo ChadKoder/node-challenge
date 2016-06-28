@@ -6,7 +6,8 @@ describe('Router', function (){
 		req,
 		authRouter = new AuthRouter(),
 		responseService = new ResponseService(),
-		router = new Router(path, fs, responseService, authRouter);
+		url = unitTestMocks.url, 
+		router = new Router(path, fs, responseService, authRouter, url);
 	
 	beforeEach(function() {
 		spyOn(authRouter, 'routeGet');
@@ -16,28 +17,48 @@ describe('Router', function (){
 		beforeEach(function() {
 			spyOn(router, 'renderFile');
 		});
+	
+		it('"node_modules" should call router.loadDependencies', function() {
+			spyOn(router, 'loadDependencies');
+			req = unitTestMocks.request(null, 'node_modules');
+			router.routeGet('fName', res, req, 'contentType');
+			expect(router.loadDependencies).toHaveBeenCalled();
+		});
+		
+		it('"src" should call router.loadDependencies', function() {
+			spyOn(router, 'loadDependencies');
+			req = unitTestMocks.request(null, 'src');
+			router.routeGet('fName', res, req, 'contentType');
+			expect(router.loadDependencies).toHaveBeenCalled();
+		});
+		
 		it ('"/configs" should call auth.routeGet', function(){
-			router.routeGet('testFileName', '/configs', res, req, 'text/html');
+			req = unitTestMocks.request(null, '/configs');
+			router.routeGet('dir', res, req, 'text/html');
 			expect(authRouter.routeGet).toHaveBeenCalled();
 		});
 		
 		it ('"/validateUser" should call auth.routeGet', function(){
-			router.routeGet('testFileName', '/validateUser', res, req, 'text/html');
+			req = unitTestMocks.request(null, 'validateUser');
+			router.routeGet('dir', res, req, 'contentType');
 			expect(authRouter.routeGet).toHaveBeenCalled();
 		});
 		
 		it ('"/user-configurations" should call auth.routeGet', function(){
-			router.routeGet('testFileName', '/user-configurations', res, req, 'text/html');
+			req = unitTestMocks.request(null, '/user-configurations');
+			router.routeGet('dir', res, req, 'contentType');
 			expect(authRouter.routeGet).toHaveBeenCalled();
 		});
 		
 		it ('"/invalid" should call auth.routeGet', function(){
-			router.routeGet('testFileName', '/invalid', res, req, 'text/html');
+			req = unitTestMocks.request(null, '/invalid');
+			router.routeGet('testFileName', res, req, 'contentType');
 			expect(authRouter.routeGet).toHaveBeenCalled();
 		});
 		
 		it ('"/" should render index.html', function(){
-			router.routeGet('c:/', '/', res, req, 'text/html');
+			req = unitTestMocks.request(null, '/');
+			router.routeGet('c:', res, req, 'text/html');
 			expect(router.renderFile).toHaveBeenCalledWith(res, 'c:/src/views/index.html', 'text/html');			
 		});
 	});

@@ -3,14 +3,16 @@ var token = null,
 
 function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreator, authentication, responseService, configs, Buffer) {
 	return {
-		routeGet: function (fileName, uri, res, req, contentType){
+		routeGet: function (fileName, res, req, contentType){
+			var uri = url.parse(req.url).pathname;
 			if (uri.trim().toLowerCase() === '/validateuser'){
 				var authHeader = req.headers['authorization']; 
 				if (authHeader){
 					var auth = authHeader.split(' ')[1];
+					
 					var credString = Buffer(auth, 'base64').toString();
 					var credentials = credString.split(':');
-					  
+					
 					if (credentials){
 						var username = credentials[0];
 						var password = credentials[1];
@@ -48,7 +50,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					
 					var returnObj = {};
 					returnObj = configPageObjCreator.getSortedPageObj(page, pageSize, sortBy, sortOrder);
-					
+					//TODO: move to responseService
 					res.setHeader('Content-Type', 'application/json');
 					res.write(JSON.stringify(returnObj));
 					res.end();
@@ -58,7 +60,8 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 				}
 			}
 		},
-		routePost: function (fileName, uri, res, req, contentType) {
+		routePost: function (fileName, res, req, contentType) {
+			var uri = url.parse(req.url).pathname;
 			switch (uri) {
 				case '/logout':
 					token = null;
@@ -106,9 +109,10 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					responseService.write404NotFound(res);
 				};
 		},
-		routePut: function (fileName, uri, res, req, contentType) {
+		routePut: function (fileName, res, req, contentType) {
+			var uri = url.parse(req.url).pathname;
 			if (!authentication.isAuthorized(token)){
-				responseService.write401Unauthorized(res);	
+				responseService.write401Unauthorized(res);
 				return;
 			}
 			
@@ -140,7 +144,10 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					responseService.write404NotFound(res);
 			}
 		},
-		routeDelete: function (fileName, uri, res, req, contentType, id) {
+		routeDelete: function (fileName, res, req, contentType) {
+			var id = url.parse(req.url, true).query.id;
+			var uri = url.parse(req.url).pathname;
+			
 			if (!authentication.isAuthorized(token)){
 				responseService.write401Unauthorized(res);
 				return;
