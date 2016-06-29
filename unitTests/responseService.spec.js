@@ -38,6 +38,13 @@ describe ('ResponseService', function (){
 		expect(res.end).toHaveBeenCalled();
 	});
 	
+	it('write400BadRequest should call res.writeHeader with 400 Bad Request', function() {
+		responseService.write400BadRequest(res);
+		expect(res.writeHeader).toHaveBeenCalledWith(400);
+		expect(res.write).toHaveBeenCalledWith('400 Bad Request');
+		expect(res.end).toHaveBeenCalled();
+	});
+	
 	describe('write200Success', function () {
 		var	file = 'file', 
 			fileName = 'fileName',

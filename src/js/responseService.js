@@ -18,6 +18,11 @@ function ResponseService() {
 			res.write('204 No Content');
 			res.end();
 		},
+		write400BadRequest: function (res) {
+			res.writeHeader(400);
+			res.write('400 Bad Request');
+			res.end();
+		},
 		write401Unauthorized: function (res){
 			res.writeHeader(401);
 			res.write('401 Unauthorized');

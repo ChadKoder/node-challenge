@@ -70,19 +70,21 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 				case '/configs':
 					var addSuccess = false;
 					var data = '';
+					
 					if (!authentication.isAuthorized(token)){
 						responseService.write401Unauthorized(res);
 						return;
 					}
 					
 					req.on('data', function(chunk){
-						data += chunk;
+						if (chunk) {
+							data += chunk;
+						}
 					});
-					
+				
 					req.on('end', function(){
 						if (data.length > 0){
 							var addedConfig =  JSON.parse(data).config;
-							
 							if (addedConfig){
 								if (!configs.configurations){
 									configs.configurations = { addedConfig };
@@ -101,6 +103,8 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 								responseService.write500InternalError(res, 'Internal Server Error');
 								return;
 							}
+						} else {
+							responseService.write400BadRequest(res);
 						}
 					});
 					
@@ -120,23 +124,30 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 				case '/configs':
 					var data = '';
 					req.on('data', function(chunk){
-						data += chunk;
+						if (chunk) {
+							data += chunk;
+						}
 					});
 					
 					req.on('end', function(){
-						var updatedConfig =  JSON.parse(data).config;
-						
-						for (var i = 0; i < configs.configurations.length; i++){
-							if (configs.configurations[i].username === updatedConfig.username){
-								index = configs.configurations.indexOf(configs.configurations[i]);
+						if (data.length > 0){
+							var index;
+							var updatedConfig =  JSON.parse(data).config;
+							
+							for (var i = 0; i < configs.configurations.length; i++){
+								if (configs.configurations[i].username === updatedConfig.username){								
+									index = configs.configurations.indexOf(configs.configurations[i]);
+								}
 							}
-						}
-						
-						if (index > -1){
-							configs.configurations[index] = updatedConfig;
-							fileSystem.writeFileSync(fileName, JSON.stringify(configs));
-							responseService.write204NoContent(res);
-							return;
+							
+							if (index > -1){
+								configs.configurations[index] = updatedConfig;
+								fileSystem.writeFileSync(fileName, JSON.stringify(configs));
+								responseService.write204NoContent(res);
+								return;
+							}
+						} else {
+							responseService.write400BadRequest(res);
 						}
 					});
 					break;

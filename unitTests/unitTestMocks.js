@@ -7,16 +7,23 @@ function UnitTestMocks() {
 			setHeader: jasmine.createSpy('res.setHeader')
 		},
 		fileSystem: {
-			readFile: jasmine.createSpy('fs.readFile')
-		}, 
-		reqFunction: function (chunk) {
-			
+			readFile: jasmine.createSpy('fs.readFile'),
+			writeFileSync: jasmine.createSpy('fs.writeFileSync')
 		},
-		request: function (headers, url){
+		request: function (headers, url, mockData){
 			var req = { headers: {}, 
 				url: url, 
 				on: function (a, reqFunction) {
-					return false;
+					if (a === 'data'){
+						if (mockData === undefined) {
+							reqFunction(null);
+						} else {
+							reqFunction(JSON.stringify(mockData));
+						}
+					} 
+					if (a === 'end'){
+						reqFunction();
+					}
 				} 
 			};
 			
