@@ -70,6 +70,7 @@ describe('Router', function (){
 	});
 	
 	it ('renderFile should call fileSystem.readFile', function() {
+		spyOn(unitTestMocks.fileSystem, 'readFile');
 		router = new Router(path, fs, responseService, authRouter);
 		router.renderFile(res, 'fileName2', 'text/html');
 		expect(fs.readFile).toHaveBeenCalled();

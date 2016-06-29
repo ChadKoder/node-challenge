@@ -176,7 +176,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					if (index > -1){
 						configs.configurations.splice(index, 1);
 						fileSystem.writeFileSync(fileName, JSON.stringify(configs));
-						res.writeHead(204);
+						res.writeHeader(204);
 						res.end();
 						return;
 					}
@@ -193,7 +193,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					responseService.write500InternalError(res, err);
 					return;
 				}
-				
+								
 				responseService.write200Success(res, file, fileName, contentType);
 			});
 		}

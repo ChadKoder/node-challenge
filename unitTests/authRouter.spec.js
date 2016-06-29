@@ -265,9 +265,70 @@ describe('AuthRouter', function (){
 			authRouter.routePut('fname', unitTestMocks.response, req, 'application/json');
 			expect(responseService.write404NotFound).toHaveBeenCalled();
 		});
-		
-	
 	});
+	
+	it('routeDelete /configs should call responseService.write401Unauthorized if authentication fails', function() {
+		spyOn(auth, 'isAuthorized').and.returnValue(false);
+		spyOn(responseService, 'write401Unauthorized');
+		var req = unitTestMocks.request(null, '/configs');
+		authRouter.routeDelete('fname', unitTestMocks.response, req, 'application/json');
+		expect(responseService.write401Unauthorized).toHaveBeenCalled();
+	});
+	
+	it('routeDelete /configs should delete the configuration if provided and authorized', function(){
+		spyOn(auth, 'isAuthorized').and.returnValue(true);
+		var header = { header: 'Content-Type', value: 'application/json' };
+			var mockDeletedConfig = {
+				config: { 
+					username: 'bname', 
+					name: 'chad', 
+					port: '1234', 
+					hostname: 'hostname' 
+					}
+				};
+		var req = unitTestMocks.request([header], '/configs', mockDeletedConfig);
+		authRouter.routeDelete('fname', unitTestMocks.response, req, 'application/json');
+		expect(unitTestMocks.fileSystem.writeFileSync).toHaveBeenCalled();
+		expect(userConfigs.configurations.length).toEqual(3);
+		
+		var deletedConfig;
+		for (var i = 0; i < userConfigs.configurations.length; i++){
+			if (userConfigs.configurations[i].username === 'bname'){
+				deletedConfig = userConfigs.configurations[i];
+			}
+		}
+		
+		expect(deletedConfig).toBeFalsy();
+		expect(unitTestMocks.response.writeHeader).toHaveBeenCalledWith(204);
+		expect(unitTestMocks.response.end).toHaveBeenCalled();
+	});
+	
+	it('routeDelete /invalidUri should call responseService.write404NotFound', function() {
+			spyOn(auth, 'isAuthorized').and.returnValue(true);
+			spyOn(responseService, 'write404NotFound');
+			var req = unitTestMocks.request(null, '/invalidUri');
+			authRouter.routeDelete('fname', unitTestMocks.response, req, 'application/json');
+			expect(responseService.write404NotFound).toHaveBeenCalled();
+	});
+	
+	describe('renderFile', function() {
+		it('should call responseService.write500InternalError when readfile throws error', function() {
+			spyOn(unitTestMocks.fileSystem, 'readFile');
+			unitTestMocks.fileSystem.setFileReadError(true);
+			authRouter.renderFile(unitTestMocks.response, 'fname', 'contentType');
+			expect(unitTestMocks.fileSystem.readFile).toHaveBeenCalled();
+		});
+		
+		it('should call responseService.write200Success when readfile has no error', function() {
+			spyOn(responseService, 'write200Success');
+			unitTestMocks.fileSystem.setFileReadError(false);
+			authRouter.renderFile(unitTestMocks.response, 'fname', 'contentType');
+			
+			expect(responseService.write200Success).toHaveBeenCalled();
+		});
+	});
+	
+	
 	
 });
 

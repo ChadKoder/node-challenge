@@ -1,4 +1,5 @@
 function UnitTestMocks() {
+	var readFileError = false;
 	return {
 		response: {
 			writeHeader: jasmine.createSpy('res.writeHeader'),
@@ -7,7 +8,17 @@ function UnitTestMocks() {
 			setHeader: jasmine.createSpy('res.setHeader')
 		},
 		fileSystem: {
-			readFile: jasmine.createSpy('fs.readFile'),
+			//readFile: jasmine.createSpy('fs.readFile'),
+			readFile: function (fileName, type, callback){
+				if (readFileError){
+					callback('ERROR', 'file');
+				} else {
+					callback();
+				}
+			},
+			setFileReadError: function (val) {
+				readFileError = val;
+			},
 			writeFileSync: jasmine.createSpy('fs.writeFileSync')
 		},
 		request: function (headers, url, mockData){
