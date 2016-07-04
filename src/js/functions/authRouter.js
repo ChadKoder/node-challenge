@@ -51,24 +51,25 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 				responseService.write401Unauthorized(res);
 				return;
 			} //else {
-				//if (!authentication.isAuthorized(token)){
-					//responseService.write401Unauthorized(res);
-					//return;
-				//}
+			//	if (!authentication.isAuthorized(token)){
+				//	responseService.write401Unauthorized(res);
+				//	return;
+			//	}
+		//	}
 				
 				
 			
 				
-			/*	switch (uri){
-				//case '/user-configurations':
-					//fileName += 'src/views/index.html';
-					//fileName = path.join(currentWorkingDir, 'src/views/index.html');
-					//this.renderFile(res, fileName, contentType);
-					//break;
-					//fileName = userConfigurationHtml;
-					//this.renderFile(res, fileName, contentType);
-					//break;
-				/case '/configs':
+				switch (uri){
+				case '/user-configurations':
+					if (!authentication.isAuthorized(token)){
+						responseService.write401Unauthorized(res);
+						return;
+					}
+					fileName = 'src/views/index.html';
+					this.renderFile(res, fileName, contentType);
+					break;
+				case '/configs':
 					var page = url.parse(req.url, true).query.page;
 					var pageSize = url.parse(req.url, true).query.pagesize;
 					var sortBy = url.parse(req.url, true).query.sortby;
@@ -86,11 +87,9 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					fileName = 'src/views/index.html';
 					this.renderFile(res, fileName, contentType);
 					break;
-				}*/
-				fileName = 'src/views/index.html';
-				this.renderFile(res, fileName, contentType);
+				}
+				 
 				return;
-			//}
 		},
 		routePost: function (fileName, res, req, contentType) {
 			var uri = url.parse(req.url).pathname;
