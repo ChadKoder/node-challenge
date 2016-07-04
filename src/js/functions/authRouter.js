@@ -19,12 +19,6 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 		routeGet: function (fileName, res, req, contentType){
 			var uri = url.parse(req.url).pathname;
 			
-			/*if (uri.trim().toLowerCase() === '/user-configurations') {
-				fileName = 'src/views/index.html';
-				this.renderFile(res, fileName, contentType);
-				return;
-			}*/
-			
 			if (uri.trim().toLowerCase() === '/validateuser'){
 				var authHeader = req.headers.authorization;
 				if (authHeader){
@@ -50,17 +44,9 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 				
 				responseService.write401Unauthorized(res);
 				return;
-			} //else {
-			//	if (!authentication.isAuthorized(token)){
-				//	responseService.write401Unauthorized(res);
-				//	return;
-			//	}
-		//	}
-				
-				
+			} 
 			
-				
-				switch (uri){
+			switch (uri){
 				case '/user-configurations':
 					if (!authentication.isAuthorized(token)){
 						responseService.write401Unauthorized(res);
