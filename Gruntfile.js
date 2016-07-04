@@ -222,7 +222,7 @@ module.exports = function(grunt) {
                 }
 		},
 		uglify: uglifyConfig,
-		sync: {
+		/*sync: {
                 main: {
                     files: [
                         {
@@ -252,7 +252,7 @@ module.exports = function(grunt) {
 						}
                     ]
                 }
-            }
+            }*/
 	});
 
     grunt.loadNpmTasks('grunt-karma');
@@ -265,5 +265,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-clean');
 	
-	grunt.registerTask('default', ['clean', 'concat', 'uglify', 'sync']);
+	grunt.registerTask('default', ['clean', 'concat', 'uglify']);
 };

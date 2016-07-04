@@ -2,15 +2,18 @@ var app = angular.module('photoSaver', ['ngMaterial', 'ngRoute', 'photoSaver.con
 app.config(function ($routeProvider, $locationProvider) {
 	$locationProvider.html5Mode(true);
 	$routeProvider
+	.when('/', {
+		templateUrl:'src/views/login.html',
+		controller: 'LoginCtrl',
+		controllerAs: 'vm'
+	})
 	.when('/user-configurations', {
 		templateUrl: 'src/views/user-configurations.html',
 		controller: 'ConfigurationCtrl',
 		controllerAs: 'vm'
-	})
+	})	
 	.otherwise({
-		templateUrl:'src/views/login.html',
-		controller: 'LoginCtrl',
-		controllerAs: 'vm'
+		templateUrl:'src/views/index.html'
 	});
 });
 

@@ -4,13 +4,13 @@ function Router(path, fileSystem, responseService, authRouter, url) {
 			var uri = url.parse(req.url).pathname;
 			
 			var fileName = path.join(currentWorkingDir, uri);
-			console.log('=============------BEGIN------==============');
-			console.log('LOADING FILE: ' + fileName);			
+				
 			if ((uri.indexOf('node_modules') > -1) || uri.indexOf('src') > -1){
-				this.loadDependencies(res, fileName, contentType);
+				//this.loadDependencies(res, fileName, contentType);
+				this.renderFile(res, fileName, contentType);
 				return;
 			}
-			
+						
 			authRouter.routeGet(fileName, res, req, contentType);
 			//fileName += 'src/views/index.html';
 			//this.renderFile(res, fileName, contentType);
@@ -26,7 +26,7 @@ function Router(path, fileSystem, responseService, authRouter, url) {
 		//	}
 		},
 		loadDependencies: function (res, fileName, contentType) {
-			this.renderFile(res, fileName, contentType);
+			
 		},
 		renderFile: function (res, fileName, contentType){
 			fileSystem.readFile(fileName, 'binary', function(err, file){
@@ -35,8 +35,8 @@ function Router(path, fileSystem, responseService, authRouter, url) {
 					responseService.write500InternalError(res, err);
 					return;
 				}
-				
-				responseService.write200Success(res, file, contentType);
+				console.log('Rendering File111: ' + fileName);
+				responseService.write200Success(res, file, fileName, contentType);
 			});
 		}
 	};

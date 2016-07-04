@@ -4,10 +4,28 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 	//var userConfigurationHtml = path.join(currentWorkingDir, 'src/views/user-configurations.html');
 	
 	return {
+		renderFile: function (res, fileName, contentType){
+			fileSystem.readFile(fileName, 'binary', function(err, file){
+				if (err) {
+					console.log('error for file : ' + fileName + ' err: ' + err);
+					responseService.write500InternalError(res, err);
+					return;
+				}
+				
+				console.log('Rendering File2222: ' + fileName);
+				responseService.write200Success(res, file, fileName, contentType);
+			});
+		},
 		routeGet: function (fileName, res, req, contentType){
 			var uri = url.parse(req.url).pathname;
+			
+			/*if (uri.trim().toLowerCase() === '/user-configurations') {
+				fileName = 'src/views/index.html';
+				this.renderFile(res, fileName, contentType);
+				return;
+			}*/
+			
 			if (uri.trim().toLowerCase() === '/validateuser'){
-				//var authHeader = req.headers['authorization']; 
 				var authHeader = req.headers.authorization;
 				if (authHeader){
 					var auth = authHeader.split(' ')[1];
@@ -199,18 +217,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 				default: 
 				responseService.write404NotFound(res);
 			}
-		},
-		renderFile: function (res, fileName, contentType){
-			fileSystem.readFile(fileName, 'binary', function(err, file){
-				if (err) {
-					console.log('error for file : ' + fileName + ' err: ' + err);
-					responseService.write500InternalError(res, err);
-					return;
-				}
-								
-				responseService.write200Success(res, file, fileName, contentType);
-			});
-		}
+		}		
 	};
 }
 
