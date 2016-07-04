@@ -1,8 +1,7 @@
 //js/controllers/ConfigurationCtrl.js
-angular.module('photoSaver.controllers', []).controller('ConfigurationCtrl', ['$http', '$mdToast', '$location',
+angular.module('ConfigurationCtrl', []).controller('ConfigurationCtrl', ['$http', '$mdToast', '$location',
  function ($http, $mdToast, $location) {
    	var vm = this;
-	vm.testTitle  = 'TITLE123';
 	var redirectDelay = 1000;
 	vm.title = 'NodeJS Sample Application';
 	

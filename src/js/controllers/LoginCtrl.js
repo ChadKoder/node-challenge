@@ -1,5 +1,5 @@
 //js/controllers/LoginCtrl.js
-angular.module('photoSaver.controllers', []).controller('LoginCtrl', ['$http', '$mdToast', '$location',
+angular.module('LoginCtrl', []).controller('LoginCtrl', ['$http', '$mdToast', '$location',
  function ($http, $mdToast, $location) {
 	var vm = this;
 	vm.title = 'NodeJS Sample Application';
