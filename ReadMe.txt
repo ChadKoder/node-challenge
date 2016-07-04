@@ -1,4 +1,15 @@
-Tenable Backend Challenge - Microservices
+NOTE:  
+- This branch was created to work on making this app a true single page application. 
+- My intent is to transform this app into a tool for personal use, possibly and ios app.
+
+
+
+
+
+
+
+
+
 Description: 
 	- This application demonstrates the use of NodeJS as a RESTful API
 	- AUTHENTICATION, CONFIGURATIONS, and SORTING are demonstrated in this application
@@ -40,10 +51,7 @@ NOTE: Had to separate controller tests because of the structure of the project.
 
 AUTHENTICATION:
 - Login with basic authentication
-	- valid users are:
-		- username: chadk password: Tenable
-		- username: admin password: 123xyzABC!@
-		- username: user password: pass
+	- valid users are: (not disclosed)
 
 - Logout option on the configurations page once you login(top right screen) 
 	- logging out clears the stored base64 value created from username and login. 
