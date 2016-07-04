@@ -1,2 +1,6 @@
+dist/
+npm-debug.log
+web/
+www/
 node_modules/
 Thumbs.db
