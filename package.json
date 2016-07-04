@@ -3,19 +3,32 @@
   "description": "NodeJS demonstration",
   "author": "Chad Keibler",
   "devDependencies": {
-	"jasmine-node": "latest",
-	"supertest": "latest"
-},
+    "jasmine-node": "latest",
+    "supertest": "latest"
+  },
   "dependencies": {
     "angular": "^1.5.7",
-    "angular-route": "^1.5.7",
     "angular-animate": "^1.5.7",
     "angular-aria": "^1.5.7",
     "angular-material": "^1.0.9",
-    "angular-messages": "^1.5.5"
+    "angular-messages": "^1.5.5",
+    "angular-route": "^1.5.7",
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-jasmine": "^0.9.2",
+    "grunt-contrib-jshint": "^0.11.3",
+    "grunt-contrib-less": "^1.0.1",
+    "grunt-contrib-nodeunit": "~0.4.1",
+    "grunt-contrib-qunit": "^0.7.0",
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-karma": "^0.12.1",
+    "karma": "^0.13.11",
+	"karma-jasmine": "^0.3.6",
+    "karma-junit-reporter": "^0.3.7",
+    "karma-phantomjs-launcher": "^0.2.1"
   },
   "scripts": {
-	"test" : "jasmine-node --captureExceptions --growl serverTests"
-	
+    "test": "jasmine-node --captureExceptions --growl serverTests"
   }
 }

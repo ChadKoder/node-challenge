@@ -20,7 +20,7 @@ function HttpHandler (path, currentWorkingDir, configs, authentication, router, 
 			authRouter.routeDelete(userConfigsFileName, res, req, contentType);
 			return;
 		}
-	}
+	};
 }
 
 module.exports = HttpHandler;

@@ -5,7 +5,7 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	
 	$scope.redir = function(url){
 		$window.location = url;
-	}
+	};
 	
 	$scope.logout = function (){
 		$http({
@@ -101,8 +101,8 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	
 	$scope.getPrev = function(){
 		var prevPage = $scope.page - 1;
-		$http.get('/configs?page=' + prevPage + '&pagesize=' + $scope.pageSize + '&sortby=' + $scope.sortValue 
-			+ '&sortorder=' + $scope.sortOrder)
+		$http.get('/configs?page=' + prevPage + '&pagesize=' + $scope.pageSize + '&sortby=' + $scope.sortValue +
+			 '&sortorder=' + $scope.sortOrder)
 			.then(function (res) {
 				if (prevPage === 1){
 					$scope.totalDisplayed = $scope.pageSize;
@@ -131,8 +131,8 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	
 	$scope.getNext = function(){
 		var nextPage = $scope.page + 1;
-		$http.get('/configs?page=' + nextPage + '&pagesize=' + $scope.pageSize + '&sortby=' + $scope.sortValue
-		 + '&sortorder=' + $scope.sortOrder)
+		$http.get('/configs?page=' + nextPage + '&pagesize=' + $scope.pageSize + '&sortby=' + $scope.sortValue +
+		  '&sortorder=' + $scope.sortOrder)
 			.then(function (res) {
 				$scope.page = nextPage;
 				$scope.totalConfigs = res.data.total;

@@ -1,4 +1,3 @@
-
 /*TODO: add better support for sorting by a url (ex: hostname)*/
 function Sorter (userConfigs) {
 	return {
@@ -124,7 +123,7 @@ function Sorter (userConfigs) {
 						
 			return this.sortByNameDesc();
 		}
-	}
+	};
 }
 
 module.exports = Sorter;

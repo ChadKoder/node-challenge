@@ -1,3 +1,4 @@
+/*jshint esnext: true */
 var token = null,
 	userConfigurationHtml = 'src/views/user-configurations.html';
 
@@ -6,7 +7,8 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 		routeGet: function (fileName, res, req, contentType){
 			var uri = url.parse(req.url).pathname;
 			if (uri.trim().toLowerCase() === '/validateuser'){
-				var authHeader = req.headers['authorization']; 
+				//var authHeader = req.headers['authorization']; 
+				var authHeader = req.headers.authorization;
 				if (authHeader){
 					var auth = authHeader.split(' ')[1];
 					
@@ -111,7 +113,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					return;
 				default:
 					responseService.write404NotFound(res);
-				};
+				}
 		},
 		routePut: function (fileName, res, req, contentType) {
 			var uri = url.parse(req.url).pathname;
@@ -197,7 +199,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 				responseService.write200Success(res, file, fileName, contentType);
 			});
 		}
-	}
+	};
 }
 
 module.exports = AuthRouter;

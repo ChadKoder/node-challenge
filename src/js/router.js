@@ -32,7 +32,7 @@ function Router(path, fileSystem, responseService, authRouter, url) {
 				responseService.write200Success(res, file, contentType);
 			});
 		}
-	}
+	};
 }
 
 module.exports = Router;

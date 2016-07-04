@@ -14,7 +14,7 @@ controller('LoginCtrl', function($scope, $http, $mdToast, $window) {
 		setTimeout(function(){
 				$window.location = url;
 			}, redirectDelay);
-	}
+	};
 	
 	$scope.login = function (){
 		if (!$scope.username || !$scope.password){
@@ -41,5 +41,5 @@ controller('LoginCtrl', function($scope, $http, $mdToast, $window) {
 				$scope.showSimpleToast('an error has occurred.');
 			}
 		});
-	}
+	};
 });

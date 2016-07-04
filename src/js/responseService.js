@@ -43,7 +43,7 @@ function ResponseService() {
 			res.write('500 Internal Server Error: ' + err + '\n');
 			res.end();
 		}
-	}
+	};
 }
 
 module.exports = ResponseService();

@@ -26,7 +26,7 @@ function UnitTestData() {
 					"password": "pass1"
 				}]
 		}
-	}
+	};
 }
 
 //module.exports = UnitTestData;

@@ -33,7 +33,7 @@ function ConfigPageObjCreator (userConfigs, sorter, paginator){
 			
 			return sortedReturnObj;
 		} 
-	}
+	};
 }
 
 module.exports = ConfigPageObjCreator;

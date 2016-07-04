@@ -4,26 +4,45 @@
         <meta charset="UTF-8">
         <base href="/">	
 		
-		<title>Sample Application</title>
+		<title>Photo Saver</title>
 		<link rel="icon" href="https://nodejs.org/static/favicon.ico" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-		 		
+        <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.css"> -->
+        <! --<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/> -->
+		 <link rel="stylesheet" href="node_m/angular-material/angular-material.css">
+		 
 		<script src="node_modules/angular/angular.min.js"></script>
 		<script src="node_modules/angular-route/angular-route.min.js"></script> 
 		<script src="node_modules/angular-animate/angular-animate.min.js"></script>
 		<script src="node_modules/angular-aria/angular-aria.min.js"></script>
 		<script src="node_modules/angular-messages/angular-messages.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.js"></script>
+		<script src="node_modules/angular-material/angular-material.min.js"></script>
+		<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.js"></script> -->
 		
 		<script src="src/js/controllers/ConfigurationCtrl.js"></script>
 		<script src="src/js/controllers/LoginCtrl.js"></script>
+		<script src="src/js/app/app.js"></script>
     </head>
-	<body ng-app="sampleApp" ng-cloak layout="column" style="background-color: #D4D4D4;">
+	
+	<body ng-app="photoSaver">
+		<div ng-view flex></div>
+	</body>
+	<!--<body ng-app="sampleApp" ng-cloak layout="column" style="background-color: #D4D4D4;">
 		<script type="text/javascript">
 		var sampleApp = angular.module('sampleApp', ['ngMaterial', 'ngRoute', 'sampleApp.controllers']);
 		sampleApp.config(function ($locationProvider) {
 			$locationProvider.html5Mode(true);
+			
+
+		  function onDeviceReady() {
+			if (navigator.connection.type == Connection.NONE) {
+			  navigator.notification.alert('An internet connection is required to continue');
+			} else {
+			alert('oops');
+			 // window.location="http://www.";
+			}
+		  }
+		  document.addEventListener("deviceready", onDeviceReady, false);
+
 		});
 		</script>
 		<md-content style="background-color: #D4D4D4;" flex>
@@ -39,7 +58,7 @@
 					</div>
 			</div>
 		</md-content>
-	</body>
+	</body> -->
 </html>
 
 

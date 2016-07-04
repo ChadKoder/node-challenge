@@ -17,7 +17,7 @@ function Authentication(usersJson) {
 			
 			return false;
 		}
-	}
+	};
 }
 
 module.exports = Authentication;

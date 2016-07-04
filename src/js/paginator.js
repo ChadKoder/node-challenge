@@ -25,7 +25,7 @@ function Paginator(userConfigs){
 			
 			return paginatedConfigs;
 		}
-	}
+	};
 }
 
 module.exports = Paginator;
