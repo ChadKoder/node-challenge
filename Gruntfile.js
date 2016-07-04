@@ -1,134 +1,269 @@
+var fs = require('fs');
+
 module.exports = function(grunt) {
 
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    concat: {
-      options: {
-        separator: ';'
-      },
-      dist: {       	 
-          src: ['node_modules/angular/*.js',
-              'node_modules/angular-route/*.js',
-              'node_modules/angular-resource/*.js',
-              'node_modules/angular-animate/*.js',
-              'node_modules/jquery/*.js',
-              'node_modules/underscore/*.js',
-              'node_modules/bootstrap/*.js',
-              'node_modules/angular-bootstrap/*.js',
-              'src/js/**/*.js',
-            //  'config/*.js'
-        ],	 
-        dest: 'dist/<%= pkg.name %>.js'
-      }
-    },
-    uglify: {
-      options: {
-          bare_returns: true,
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
-      },
-      dist: {
-        files: {
-          'dist/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
-        }
-      }
-    },
-    less: {
-        // production config is also available
-        dev: {
-            options: {
-                // Specifies directories to scan for @import directives when parsing. 
-                // Default value is the directory of the source, which is probably what you want.
-                paths: ["public/css/"],
-            },
-            files: {
-                // compilation.css  :  source.less
-                "public/css/style.css": "public/css/styles.less"
+ // build a list of all module names based off of the directories.
+    var modules = (function () {
+        var dir = 'src/js',
+            files = fs.readdirSync(dir),
+            stat, file, i,
+            result = [];
+        for (i = 0; i < files.length; i++) {
+            file = files[i];
+            stat = fs.statSync(dir + '/' + file);
+            if (stat.isDirectory()) {
+                result.push(file);
             }
-        },
-    },
-    //qunit: {
-//      files: ['public/**/*.html']
-  //  },
-    jshint: {
-      files: ['Gruntfile.js', 'src/js/**/*.js','config/*.js', 'app/*.js'],
-      options: {
-        // options here to override JSHint defaults
-        globals: {
-          jQuery: true,
-          console: true,
-          module: true,
-          document: true  
         }
-      }
-    },
-    //watch: {
-    //  files: ['<%= jshint.files %>'],
-      //  tasks: ['jshint']//, 'qunit']
-    watch: {
-        scripts: {
-            files: [
-                'src/js/*.js',
-                'unitTests/**/*.spec.js'
-            ],
-            tasks: ['default']
-        },
-        /*less: {
-            files: ['public/css/*.less'],
-            tasks: ['less:dev']
-        },*/
-        templates: {
-            files: [
-                'src/views/**/*.html'
-            ]
-        }
-    },
-    karma: {
-        unit: {
-            options: {
-                colors: true,
-                frameworks: ['jasmine'],
-                singleRun: true,
-                browsers: ['PhantomJS'],
-                files: [
-                'node_modules/angular/angular.js',
-                'node_modules/angular-mocks/angular-mocks.js',
-                'node_modules/angular-route/angular-route.js',
-                'node_modules/angular-resource/angular-resource.js',
-                'node_modules/underscore/underscore.js',
-                'public/js/**/*.js',
-                'unitTests/**/*.js',
-               // 'config/*.js' ,
-                'node_modules/angular-bootstrap/ui-bootstrap.js'
-                ],
-                plugins: [
-                'karma-phantomjs-launcher',
-                'karma-jasmine',
-                'karma-junit-reporter'
-                ],
-                reporters: ['dots', 'junit'],
-                junitReporter: {
-                    outputFile: '../test-results.xml'
+        return result;
+    })();
+	
+	var pkg = grunt.file.readJSON('package.json'),
+		build = grunt.template.today('yyyymmdd_HHMMss_1');
+	
+	var requiredJsFiles = [
+		'node_modules/angular/angular.js',
+		'node_modules/angular-cookies/angular-cookies.js',
+        'node_modules/angular-resource/angular-resource.js',
+		'node_modules/angular-route/angular-route.js',
+		'node_modules/angular-animate/angular-animate.js',
+		'node_modules/angular-messages/angular-messages.js'
+	],
+	concatConfig = {
+		requirements: {
+			options: {
+				sourceMap: false,
+				banner: '/*\n' + 
+				  ' * Requirements v <%=pkg.version%> (build <%=build%>)\n' +
+				  ' */\n\n'
+			},
+			dest: 'web/js/requirements.js',
+			src: requiredJsFiles,
+			nonull: true
+		}
+	},
+	jshintFiles = ['src/js/**/*.js'],
+	 
+	uglifyConfig = {
+		requirements: {
+			options: {
+				banner: '/*\n' +
+					' * Requirements v <%=pkg.version%> (build <%=build%>)\n' +
+					' */\n\n'
+			},
+			files: {
+				'web/js/requirements.min.js': 'web/js/requirements.js'
+			}
+		}
+	};
+		
+		
+		
+	function createBannerTemplate(name) {
+        return '/*\n' +
+            ' * ' + name + ' v <%=pkg.version%> (build <%=build%>)\n' +
+            ' * Copyright (c) <%=grunt.template.today("yyyy")%>\n' +
+            ' * <%=pkg.author %> - All Rights Reserved\n' +
+            ' * Unauthorized use of this file is strictly prohibited.\n' +
+            ' * See EULA for details: <%=pkg.eulaUrl%>\n' +
+            ' */\n\n';
+    };
+	
+	 //builds the config options.
+    (function () {
+        for (var i = 0; i < modules.length; i++) {
+            var module = modules[i],
+                scriptsdir = 'web/js/',
+                concatenatedFile = scriptsdir + module + '.js',
+                minified = scriptsdir + module + '.min.js',
+                moduledir = 'src/js/' + module + '/',
+                bannerTemplate = createBannerTemplate(module);
+
+            // Push pre-concat version to jshint first so we get accurate file names / line numbers.
+            jshintFiles.push(moduledir + '/**/*.js');
+
+            concatConfig[module] = {
+                options: {
+                    banner: bannerTemplate,
+                    sourceMap: false
                 },
-                logLevel: 'LOG_DISABLE'
-            }
+                dest: concatenatedFile,
+                src: [
+                   // 'src/intro.js',
+                        moduledir + module + '.js',
+                        moduledir + '/**/*.js'//,
+                   // 'src/outro.js'
+                ]
+            };
+            uglifyConfig[module] = {
+                options: {
+                    banner: bannerTemplate
+                },
+                files: {}
+            };
+
+            uglifyConfig[module].files[minified] = [concatenatedFile];
+
+            //push first party post-concat modules to ensure nothing went wrong with concat.
+            jshintFiles.push(concatenatedFile);
+
+           // karmaConfig.debug.options.files.push(concatenatedFile);
+            //karmaConfig.continuousDev.options.files.push(concatenatedFile);
+            //karmaConfig.continuousDev.options.preprocessors[concatenatedFile] = ['coverage'];
+            //karmaConfig.continuousBuild.options.files.push(concatenatedFile);
+            //karmaConfig.continuousBuild.options.preprocessors[concatenatedFile] = ['coverage'];
         }
-    }
-  });
 
-  //if (grunt.option('debug')){
-    // console.log(grunt.config('jshint.files'));
-  //}
+        //Push remaining web/js files that may not have been caught.
+        jshintFiles.push('!web/js/angular-ui.js');
+    })();	
+	 
+	grunt.initConfig({
+		clean:{
+			options: {
+				'no-write': false,
+				'force': true
+			},
+			all: ['../output/_PublishedWebsites/PhotoSaver/', './www', 'web/js']
+		},
+		//connect: {
+			//server: {
+				//port: 8888,
+				//base: '../output/_PublishedWebsites/PhotoSaver',
+				//keepalive: false,
+				//open: {
+//					target: 'http://localhost:8888/#'
+				//}
+//			}
+		//},
+		pkg: pkg,
+		build: build,
+		concat: concatConfig,
+		jshint: {
+			files: {
+				src: jshintFiles
+			},
+			 options: {
+                    trailing: true,
+                    quotmark: 'single',
+                    bitwise: true,
+                    forin: true,
+                    browser: true,
+                    "bitwise": true,
+                    "camelcase": true,
+                    "curly": true,
+                    "eqeqeq": true,
+                    "esversion": 6,
+                    "forin": true,
+                    "freeze": true,
+                    "immed": true,
+                    "indent": 4,
+                    "latedef": "nofunc",
+                    "newcap": true,
+                    "noarg": true,
+                    "noempty": true,
+                    "nonbsp": true,
+                    "nonew": true,
+                    "plusplus": false,
+                    "undef": true,
+                    "unused": false,
+                    "strict": false,
+                    "maxparams": 10,
+                    "maxdepth": 5,
+                    "maxstatements": 40,
+                    "maxcomplexity": 8,
+                    "maxlen": 320,
+                    "asi": false,
+                    "boss": false,
+                    "debug": false,
+                    "eqnull": true,
+                    "esnext": false,
+                    "evil": false,
+                    "expr": false,
+                    "funcscope": false,
+                    "globalstrict": false,
+                    "iterator": false,
+                    "lastsemic": false,
+                    "laxbreak": false,
+                    "laxcomma": false,
+                    "loopfunc": true,
+                    "maxerr": 50,
+                    "moz": false,
+                    "multistr": false,
+                    "notypeof": false,
+                    "proto": false,
+                    "scripturl": false,
+                    "shadow": false,
+                    "sub": true,
+                    "supernew": false,
+                    "validthis": false,
+                    "noyield": false,
+                    "node": true,
 
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-less');
-  grunt.loadNpmTasks('grunt-karma');
-  // grunt.loadNpmTasks('karma-jasmine');
-  // grunt.registerTask('test', ['jshint']);//, 'qunit']);
+                    globals: {
+                        angular: false,
+                        controller: false,
+                        cordova: false,
+                        //testing
+                        jasmine: false,
+                        module: false,
+                        describe: false,
+                        it: false,
+                        xit: false,
+                        expect: false,
+                        beforeEach: false,
+                        afterEach: false,
+                        runs: false,
+                        waits: false,
+                        //mocks
+                        inject: false,
+                        spyOn: false
+                    }
+                }
+		},
+		uglify: uglifyConfig,
+		sync: {
+                main: {
+                    files: [
+                        {
+                            expand: true,
+                            cwd: 'node_modules/angular-material',
+                            src: ['angular-material.css', 'angular-material.min.css'],
+                            dest: './web/css/'
+                        },
+                        {
+                            expand: true,
+                            cwd: 'node_modules/angular-material',
+                            src: ['angular-material.css', 'angular-material.min.css'],
+                            dest: './www/css/'
+                        },
+						{
+							expand: true,
+							cwd: 'src/views',
+							src: ['index.html'],
+							dest: './web/views'
+						}
+						,
+						{
+							expand: true,
+							cwd: 'src/js',
+							src: ['*.js'],
+							dest: './web/js'
+						}
+                    ]
+                }
+            }
+	});
 
-  grunt.registerTask('default', ['jshint', 'karma', 'concat', 'less', 'less:dev', 'uglify']);
-  grunt.registerTask('dev', ['default', 'watch']);
-
+    grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+	
+	grunt.registerTask('default', ['clean', 'concat', 'uglify', 'sync']);
 };

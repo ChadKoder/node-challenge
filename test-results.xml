@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<testsuite name="PhantomJS 1.9.8 (Windows 8 0.0.0)" package="" timestamp="2016-07-04T11:27:56" id="0" hostname="CHAD-DESKTOP10" tests="14" errors="1" failures="14" time="0.011">
+<testsuite name="PhantomJS 1.9.8 (Windows 8 0.0.0)" package="" timestamp="2016-07-04T12:03:18" id="0" hostname="CHAD-DESKTOP10" tests="14" errors="1" failures="14" time="0.015">
   <properties>
     <property name="browser.fullName" value="Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.8 Safari/534.34"/>
   </properties>
-  <testcase name="should call $scope.getConfigs" time="0.004" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).ConfigurationCtrl">
+  <testcase name="should call $scope.getConfigs" time="0.003" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).ConfigurationCtrl">
     <failure type="">ReferenceError: Can't find variable: module
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/ConfigurationCtrl.spec.js:11
 </failure>
@@ -42,7 +42,7 @@
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/ConfigurationCtrl.spec.js:58
 </failure>
   </testcase>
-  <testcase name="should call $scope.getConfigs" time="0" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).ConfigurationCtrl">
+  <testcase name="should call $scope.getConfigs" time="0.001" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).ConfigurationCtrl">
     <failure type="">ReferenceError: Can't find variable: module
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/ConfigurationCtrl.spec.js:11
 </failure>
@@ -56,7 +56,7 @@
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/ConfigurationCtrl.spec.js:71
 </failure>
   </testcase>
-  <testcase name="should set the sort value and pageSize" time="0" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).ConfigurationCtrl">
+  <testcase name="should set the sort value and pageSize" time="0.001" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).ConfigurationCtrl">
     <failure type="">ReferenceError: Can't find variable: module
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/ConfigurationCtrl.spec.js:11
 </failure>
@@ -70,7 +70,7 @@
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/ConfigurationCtrl.spec.js:88
 </failure>
   </testcase>
-  <testcase name="should set the sort value and pageSize" time="0.002" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).ConfigurationCtrl">
+  <testcase name="should set the sort value and pageSize" time="0.001" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).ConfigurationCtrl">
     <failure type="">ReferenceError: Can't find variable: module
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/ConfigurationCtrl.spec.js:11
 </failure>
@@ -84,7 +84,7 @@
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/ConfigurationCtrl.spec.js:113
 </failure>
   </testcase>
-  <testcase name="should show error msg" time="0" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).ConfigurationCtrl">
+  <testcase name="should show error msg" time="0.001" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).ConfigurationCtrl">
     <failure type="">ReferenceError: Can't find variable: module
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/ConfigurationCtrl.spec.js:11
 </failure>
@@ -98,7 +98,7 @@
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/ConfigurationCtrl.spec.js:138
 </failure>
   </testcase>
-  <testcase name="should display toast message" time="0.001" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).LoginCtrl">
+  <testcase name="should display toast message" time="0.002" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).LoginCtrl">
     <failure type="">ReferenceError: Can't find variable: module
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/LoginCtrl.spec.js:12
 </failure>
@@ -126,13 +126,13 @@
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/LoginCtrl.spec.js:55
 </failure>
   </testcase>
-  <testcase name="encountered a declaration exception" time="0.002" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).AuthRouter">
+  <testcase name="encountered a declaration exception" time="0.003" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).AuthRouter">
     <failure type="">ReferenceError: Can't find variable: ResponseService
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/authRouter.spec.js:3
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/authRouter.spec.js:333
 </failure>
   </testcase>
-  <testcase name="encountered a declaration exception" time="0" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).httpHandler">
+  <testcase name="encountered a declaration exception" time="0.001" classname="PhantomJS_1_9_8_(Windows_8_0_0_0).httpHandler">
     <failure type="">ReferenceError: Can't find variable: ResponseService
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/httpHandler.spec.js:2
     at C:/Users/Chad/Desktop/node-challenge-1/unitTests/httpHandler.spec.js:75

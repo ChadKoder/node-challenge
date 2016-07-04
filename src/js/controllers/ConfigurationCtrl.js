@@ -1,75 +1,78 @@
-angular.module('sampleApp.controllers', []).
-controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
+//js/controllers/ConfigurationCtrl.js
+angular.module('photoSaver.controllers', []).controller('ConfigurationCtrl', ['$http', '$mdToast', '$location',
+ function ($http, $mdToast, $location) {
+   	var vm = this;
 	var redirectDelay = 1000;
-	$scope.title = 'NodeJS Sample Application';
+	vm.title = 'NodeJS Sample Application';
 	
-	$scope.redir = function(url){
-		$window.location = url;
+	vm.redir = function(url){
+		//$window.location = url;
+		$location.path(url);
 	};
 	
-	$scope.logout = function (){
+	vm.logout = function (){
 		$http({
 			method: 'POST',
 			url: '/logout'
 		}).then(function (res) {
-			$scope.showSimpleToast('Logging out...');
-			$scope.redir('/');
+			vm.showSimpleToast('Logging out...');
+			vm.redir('/');
 		}, function (res) {
-			$scope.showSimpleToast('lougout failed... strange...');
+			vm.showSimpleToast('lougout failed... strange...');
 		});
 	};
 
-	$scope.showSimpleToast = function (msg){
+	vm.showSimpleToast = function (msg){
 		$mdToast.showSimple(msg);
 	};
 	
-	$scope.editConfig = function (config){
-		$scope.selectedConfig = config;
-		$scope.editing = true;
+	vm.editConfig = function (config){
+		vm.selectedConfig = config;
+		vm.editing = true;
 	};
 	
-	$scope.cancelEdit = function(){
-		$scope.selectedConfig = null;
-		$scope.editing = false;
-		$scope.adding = false;
+	vm.cancelEdit = function(){
+		vm.selectedConfig = null;
+		vm.editing = false;
+		vm.adding = false;
 	};
 	
-	$scope.updateConfig = function(){
+	vm.updateConfig = function(){
 		var req = {
 			method: 'PUT',
 			url: '/configs',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			data: { config: $scope.selectedConfig }
+			data: { config: vm.selectedConfig }
 		};
 		$http(req).success(function(){
-			$scope.configs = $scope.getConfigs();
-			$scope.selectedConfig = null;
-			$scope.editing = false;
-			$scope.adding = false;
-			$scope.showSimpleToast('Configuration updated successfully');
+			vm.configs = vm.getConfigs();
+			vm.selectedConfig = null;
+			vm.editing = false;
+			vm.adding = false;
+			vm.showSimpleToast('Configuration updated successfully');
 		}).error(function(){
-			$scope.showSimpleToast('Configuration failed to update');
+			vm.showSimpleToast('Configuration failed to update');
 		});
 	};
 	
-	$scope.deleteConfig = function(){
-		var url =  '/configs?id=' + $scope.selectedConfig.username;
+	vm.deleteConfig = function(){
+		var url =  '/configs?id=' + vm.selectedConfig.username;
 		$http.delete(url)
 			.then(function (res) {
-				$scope.configs = $scope.getConfigs();
-				$scope.selectedConfig = null;
-				$scope.editing = false;
-				$scope.showSimpleToast('Configuration deleted');
+				vm.configs = vm.getConfigs();
+				vm.selectedConfig = null;
+				vm.editing = false;
+				vm.showSimpleToast('Configuration deleted');
 			}, function () {
-				$scope.showSimpleToast('Deletion failed');
+				vm.showSimpleToast('Deletion failed');
 			});
 	};
 	
-	$scope.addConfig = function(){
-		if (!$scope.selectedConfig.name || !$scope.selectedConfig.hostname || !$scope.selectedConfig.port || !$scope.selectedConfig.username){
-			$scope.showSimpleToast('All values are required.');
+	vm.addConfig = function(){
+		if (!vm.selectedConfig.name || !vm.selectedConfig.hostname || !vm.selectedConfig.port || !vm.selectedConfig.username){
+			vm.showSimpleToast('All values are required.');
 			return;
 		}
 		
@@ -79,119 +82,119 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			data: { config: $scope.selectedConfig }
+			data: { config: vm.selectedConfig }
 		};
 		
 		$http(req).success(function(){
-			$scope.configs = $scope.getConfigs();
-			$scope.selectedConfig = null;
-			$scope.adding = false;
+			vm.configs = vm.getConfigs();
+			vm.selectedConfig = null;
+			vm.adding = false;
 			
-			$scope.showSimpleToast('Configuration updated successfully');
+			vm.showSimpleToast('Configuration updated successfully');
 			
 		}).error(function(){
-			$scope.showSimpleToast('Configuration failed to update');
+			vm.showSimpleToast('Configuration failed to update');
 		});
 	};
 	
-	$scope.showAdd = function(){
-		$scope.selectedConfig = {};
-		$scope.adding = true;
+	vm.showAdd = function(){
+		vm.selectedConfig = {};
+		vm.adding = true;
 	};
 	
-	$scope.getPrev = function(){
-		var prevPage = $scope.page - 1;
-		$http.get('/configs?page=' + prevPage + '&pagesize=' + $scope.pageSize + '&sortby=' + $scope.sortValue +
-			 '&sortorder=' + $scope.sortOrder)
+	vm.getPrev = function(){
+		var prevPage = vm.page - 1;
+		$http.get('/configs?page=' + prevPage + '&pagesize=' + vm.pageSize + '&sortby=' + vm.sortValue +
+			 '&sortorder=' + vm.sortOrder)
 			.then(function (res) {
 				if (prevPage === 1){
-					$scope.totalDisplayed = $scope.pageSize;
-					$scope.totalConfigs = res.data.total;
+					vm.totalDisplayed = vm.pageSize;
+					vm.totalConfigs = res.data.total;
 				} else {
-					if ($scope.totalDisplayed > $scope.totalConfigs){
-						$scope.totalDisplayed = $scope.totalDisplayed - $scope.totalConfigs;
+					if (vm.totalDisplayed > vm.totalConfigs){
+						vm.totalDisplayed = vm.totalDisplayed - vm.totalConfigs;
 					} else {
-						$scope.totalDisplayed -= $scope.configs.length;
+						vm.totalDisplayed -= vm.configs.length;
 					}
 				}
 				
-				$scope.configs = res.data.sorted;
-				$scope.totalConfigs = res.data.total;
-				$scope.page = prevPage;
+				vm.configs = res.data.sorted;
+				vm.totalConfigs = res.data.total;
+				vm.page = prevPage;
 				
 			}, function (res){
 				if (res.status === 401){
-					$scope.showSimpleToast('Unauthorized user!');
+					vm.showSimpleToast('Unauthorized user!');
 				} else {
-					$scope.showSimpleToast('Unable to retrieve configs.');
+					vm.showSimpleToast('Unable to retrieve configs.');
 				}
 			});
 			
 	};
 	
-	$scope.getNext = function(){
-		var nextPage = $scope.page + 1;
-		$http.get('/configs?page=' + nextPage + '&pagesize=' + $scope.pageSize + '&sortby=' + $scope.sortValue +
-		  '&sortorder=' + $scope.sortOrder)
+	vm.getNext = function(){
+		var nextPage = vm.page + 1;
+		$http.get('/configs?page=' + nextPage + '&pagesize=' + vm.pageSize + '&sortby=' + vm.sortValue +
+		  '&sortorder=' + vm.sortOrder)
 			.then(function (res) {
-				$scope.page = nextPage;
-				$scope.totalConfigs = res.data.total;
-				$scope.configs = res.data.sorted;
-				$scope.totalDisplayed += res.data.sorted.length;
+				vm.page = nextPage;
+				vm.totalConfigs = res.data.total;
+				vm.configs = res.data.sorted;
+				vm.totalDisplayed += res.data.sorted.length;
 				
 			}, function (res){
 				if (res.status === 401){
-					$scope.showSimpleToast('Unauthorized user!');
+					vm.showSimpleToast('Unauthorized user!');
 				} else {
-					$scope.showSimpleToast('Unable to retrieve configurations');
+					vm.showSimpleToast('Unable to retrieve configurations');
 				}
 			});
 			
 	};
 	
-	$scope.getConfigs = function() {
-		$http.get('/configs?page=1' + '&pagesize=' + $scope.pageSize + '&sortby=' + $scope.sortBy + '&sortorder=' + $scope.sortOrder)
+	vm.getConfigs = function() {
+		$http.get('/configs?page=1' + '&pagesize=' + vm.pageSize + '&sortby=' + vm.sortBy + '&sortorder=' + vm.sortOrder)
 		.then(function (res) {
-			$scope.showSimpleToast('sorting by ' + $scope.sortBy + ' ' + $scope.sortOrder + ' and displaying page 1');
-			$scope.totalDisplayed = $scope.pageSize;
-			$scope.totalConfigs = res.data.total;
-			$scope.configs = res.data.sorted;
-			$scope.page = 1;
-			//$scope.sortby = 'name';
+			vm.showSimpleToast('sorting by ' + vm.sortBy + ' ' + vm.sortOrder + ' and displaying page 1');
+			vm.totalDisplayed = vm.pageSize;
+			vm.totalConfigs = res.data.total;
+			vm.configs = res.data.sorted;
+			vm.page = 1;
+			//vm.sortby = 'name';
 		}, function (res){
 			if (res.status === 401){
-				$scope.showSimpleToast('Unauthorized user!');
+				vm.showSimpleToast('Unauthorized user!');
 			} else {
-				$scope.showSimpleToast('Unable to retrieve configs.');
+				vm.showSimpleToast('Unable to retrieve configs.');
 			}
 		});
 	};
 	
-	$scope.sort = function(sortBy){
-		$scope.sortBy = sortBy;
-		$scope.toggleSortOrder();
-		$scope.getConfigs(sortBy);
+	vm.sort = function(sortBy){
+		vm.sortBy = sortBy;
+		vm.toggleSortOrder();
+		vm.getConfigs(sortBy);
 	};
 	
-	$scope.toggleSortOrder = function (){
-		if ($scope.sortOrder === 'asc'){
-			$scope.sortOrder = 'desc';
+	vm.toggleSortOrder = function (){
+		if (vm.sortOrder === 'asc'){
+			vm.sortOrder = 'desc';
 		} else {
-			$scope.sortOrder = 'asc';
+			vm.sortOrder = 'asc';
 		}
 	};
 	
-	$scope.init = function(){
-		$scope.adding = false;
-		$scope.selectedConfig = null;
-		$scope.editing = false;
-		$scope.page = 1; 
-		$scope.sortBy = 'name';
-		$scope.pageSize = 5;
-		$scope.totalDisplayed = 0;
-		$scope.sortOrder = 'asc';
-		$scope.configs = $scope.getConfigs();
+	vm.init = function(){
+		vm.adding = false;
+		vm.selectedConfig = null;
+		vm.editing = false;
+		vm.page = 1; 
+		vm.sortBy = 'name';
+		vm.pageSize = 5;
+		vm.totalDisplayed = 0;
+		vm.sortOrder = 'asc';
+		vm.configs = vm.getConfigs();
 	};
 	
-	$scope.init();
-});
+	vm.init();
+}]);

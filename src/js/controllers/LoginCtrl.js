@@ -1,45 +1,48 @@
-angular.module('sampleApp.controllers', []).
-controller('LoginCtrl', function($scope, $http, $mdToast, $window) {
-	$scope.title = 'NodeJS Sample Application';
-	$scope.username = '';
-	$scope.password = '';
+//js/controllers/LoginCtrl.js
+angular.module('photoSaver.controllers', []).controller('LoginCtrl', ['$http', '$mdToast', '$window', '$location',
+ function ($http, $mdToast, $window, $location) {
+	var vm = this;
+	vm.title = 'NodeJS Sample Application';
+	vm.username = '';
+	vm.password = '';
 		
 	var redirectDelay = 1000;
 	
-	$scope.showSimpleToast = function (msg){
+	vm.showSimpleToast = function (msg){
 			$mdToast.showSimple(msg);
 	};
 	
-	$scope.redir = function(url){
+	vm.redir = function(url){
 		setTimeout(function(){
-				$window.location = url;
+				//$window.location = url;
+				$location.path(url);
 			}, redirectDelay);
 	};
 	
-	$scope.login = function (){
-		if (!$scope.username || !$scope.password){
-			$scope.showSimpleToast('username and password are required!');
+	vm.login = function (){
+		if (!vm.username || !vm.password){
+			vm.showSimpleToast('username and password are required!');
 			return;
 		}
 		
-		var encodedAuth = btoa($scope.username + ':' + $scope.password);
+		var encodedAuth = btoa(vm.username + ':' + vm.password);
 		$http.defaults.headers.common.Authorization = 'Basic ' + encodedAuth;
 		
 		var req = {
 			method: 'GET',
 			url: '/validateUser',
-			data: { config: $scope.selectedConfig }
+			data: { config: vm.selectedConfig }
 		};
 		
 		$http(req).success(function(){
-			$scope.showSimpleToast('Login Successful! redirecting...');
-			$scope.redir('/user-configurations');
+			vm.showSimpleToast('Login Successful! redirecting...');
+			vm.redir('/user-configurations');
 		}).error(function(res){
 			if (res === '401 Unauthorized'){
-				$scope.showSimpleToast('Unauthorized user!');
+				vm.showSimpleToast('Unauthorized user!');
 			} else {
-				$scope.showSimpleToast('an error has occurred.');
+				vm.showSimpleToast('an error has occurred.');
 			}
 		});
 	};
-});
+}]);

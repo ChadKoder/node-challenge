@@ -9,21 +9,22 @@ var http = require('http'),
 	arg = process.argv[2], 
 	userArg = null,
 	users = require('./src/users.json'),
-	responseService = require('./src/js/responseService.js'),
+	responseService = require('./src/js/functions/responseService.js'),
 	userConfigs = require('./src/configurations.json');
 	
 
 currentWorkingDir = process.cwd();
-var authentication = require('./src/js/authentication.js')(users);
-var sorter = require('./src/js/sorter.js')(userConfigs);
-var paginator = require('./src/js/paginator.js')(userConfigs);
-var configPageObjCreator = require('./src/js/configPageObjCreator')(userConfigs, sorter, paginator);
-var authRouter = require('./src/js/authRouter.js')( path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs, Buffer);
-var router = require('./src/js/router.js')(path, fs, responseService, authRouter, url);
-var httpHandler = require('./src/js/httpHandlerService')(path, currentWorkingDir, userConfigs, authentication, router, authRouter, responseService);
+var authentication = require('./src/js/functions/authentication.js')(users);
+var sorter = require('./src/js/functions/sorter.js')(userConfigs);
+var paginator = require('./src/js/functions/paginator.js')(userConfigs);
+var configPageObjCreator = require('./src/js/functions/configPageObjCreator')(userConfigs, sorter, paginator);
+var authRouter = require('./src/js/functions/authRouter.js')( path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs, Buffer);
+var router = require('./src/js/functions/router.js')(path, fs, responseService, authRouter, url);
+var httpHandler = require('./src/js/functions/httpHandlerService')(path, currentWorkingDir, userConfigs, authentication, router, authRouter, responseService);
 	
 const PORT = 8888;
 var serverAdd = 'http://localhost:' + PORT;
+
 
 if (arg){
 	userArg = arg.toLowerCase();
@@ -97,5 +98,7 @@ http.createServer(function (req, res) {
 	}
 	 
 }).listen(parseInt(PORT)); 
+
+//module.exports = app;
 
 console.log('Server running at --> ' + serverAdd + '/\nCTRL+C to shutdown');

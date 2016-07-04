@@ -2,21 +2,28 @@ function Router(path, fileSystem, responseService, authRouter, url) {
 	return {
 		routeGet: function(currentWorkingDir, res, req, contentType) {
 			var uri = url.parse(req.url).pathname;
-			var fileName = path.join(currentWorkingDir, uri);
 			
+			var fileName = path.join(currentWorkingDir, uri);
+			console.log('=============------BEGIN------==============');
+			console.log('LOADING FILE: ' + fileName);			
 			if ((uri.indexOf('node_modules') > -1) || uri.indexOf('src') > -1){
 				this.loadDependencies(res, fileName, contentType);
 				return;
 			}
 			
-			switch (uri){
-				case '/':
-					fileName += 'src/views/index.html';
-					this.renderFile(res, fileName, contentType);
-					break;
-				default:
-					authRouter.routeGet(fileName, res, req, contentType);
-			}
+			authRouter.routeGet(fileName, res, req, contentType);
+			//fileName += 'src/views/index.html';
+			//this.renderFile(res, fileName, contentType);
+			
+			//switch (uri){
+				//case '/':
+				//	fileName += 'src/views/index.html';
+				//	this.renderFile(res, fileName, contentType);
+				//	break;
+			//	default:
+					//authRouter.routeGet(fileName, res, req, contentType);
+					
+		//	}
 		},
 		loadDependencies: function (res, fileName, contentType) {
 			this.renderFile(res, fileName, contentType);

@@ -1,8 +1,8 @@
-/*jshint esnext: true */
-var token = null,
-	userConfigurationHtml = 'src/views/user-configurations.html';
+var token = null;
 
 function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreator, authentication, responseService, configs, Buffer) {
+	//var userConfigurationHtml = path.join(currentWorkingDir, 'src/views/user-configurations.html');
+	
 	return {
 		routeGet: function (fileName, res, req, contentType){
 			var uri = url.parse(req.url).pathname;
@@ -32,19 +32,25 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 				
 				responseService.write401Unauthorized(res);
 				return;
-			} else {
-				if (!authentication.isAuthorized(token)){
-					responseService.write401Unauthorized(res);
-					return;
-				}
+			} //else {
+				//if (!authentication.isAuthorized(token)){
+					//responseService.write401Unauthorized(res);
+					//return;
+				//}
 				
-				switch (uri){
-				case '/user-configurations':
-					fileName = path.join(currentWorkingDir, userConfigurationHtml);
-					
-					this.renderFile(res, fileName, contentType);
-					break;
-				case '/configs':
+				
+			
+				
+			/*	switch (uri){
+				//case '/user-configurations':
+					//fileName += 'src/views/index.html';
+					//fileName = path.join(currentWorkingDir, 'src/views/index.html');
+					//this.renderFile(res, fileName, contentType);
+					//break;
+					//fileName = userConfigurationHtml;
+					//this.renderFile(res, fileName, contentType);
+					//break;
+				/case '/configs':
 					var page = url.parse(req.url, true).query.page;
 					var pageSize = url.parse(req.url, true).query.pagesize;
 					var sortBy = url.parse(req.url, true).query.sortby;
@@ -58,9 +64,15 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					res.end();
 					break;
 				default:
-					responseService.write404NotFound(res);
-				}
-			}
+					//responseService.write404NotFound(res);
+					fileName = 'src/views/index.html';
+					this.renderFile(res, fileName, contentType);
+					break;
+				}*/
+				fileName = 'src/views/index.html';
+				this.renderFile(res, fileName, contentType);
+				return;
+			//}
 		},
 		routePost: function (fileName, res, req, contentType) {
 			var uri = url.parse(req.url).pathname;
@@ -89,7 +101,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 							var addedConfig =  JSON.parse(data).config;
 							if (addedConfig){
 								if (!configs.configurations){
-									configs.configurations = { addedConfig };
+									configs.configurations = { config: addedConfig };
 									addSuccess = true;
 								} else {
 									configs.configurations.push(addedConfig);
