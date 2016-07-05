@@ -7,7 +7,7 @@
 	</div>
 </md-toolbar>
 <md-content flex style="background-color: #D4D4D4;">
-	<div ng-hide="configs.length > 0">
+	<div ng-hide="vm.configs.length > 0">
 		<h3>There are no existing configurations to view.</h3>
 		<md-button ng-show="vm.adding" class="md-raised" style="background-color: #00A5B5;" ng-click="vm.showAdd()">Add Configuration</md-button>
 	</div>
@@ -48,7 +48,7 @@
 		</md-card-content>
 	</md-card>
  
-	<div ng-show="configs.length > 0" flex  style="background-color: #D4D4D4;">
+	<div ng-show="vm.configs.length > 0" flex  style="background-color: #D4D4D4;">
 		<md-list>
 			<md-subheader style="background-color: #D4D4D4;"><h3>Configurations</h3></md-subheader>
 			<div layout="row" flex>
@@ -74,4 +74,4 @@
 </md-content>
 <span flex>	<md-button class="md-raised" style="background-color: #00A5B5;" ng-disabled="page===1" ng-click="vm.getPrev()">Prev</md-button></span>
 <span>Page: {{ page }}</span>
-<span><md-button class="md-raised" style="background-color: #00A5B5;" ng-click="vm.getNext()" ng-disabled="totalDisplayed >= totalConfigs">Next</md-button></span>
+<span><md-button class="md-raised" style="background-color: #00A5B5;" ng-click="vm.getNext()" ng-disabled="totalDisplayed >= vm.totalConfigs">Next</md-button></span>
