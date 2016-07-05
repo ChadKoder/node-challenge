@@ -41,9 +41,9 @@
 			</form>
 			<div layout="row">
 				<md-button class="md-raised" style="background-color: #00A5B5;" ng-click="vm.cancelEdit()">Cancel</md-button>
-				<md-button ng-show="editing" class="md-raised" style="background-color: #00A5B5;" ng-click="vm.deleteConfig()">Delete</md-button>
-				<md-button ng-show="editing" class="md-raised" style="background-color: #00A5B5;" ng-click="vm.updateConfig()">Update</md-button>
-				<md-button ng-show="adding" class="md-raised" style="background-color: #00A5B5;" ng-click="vm.addConfig()">Add</md-button>
+				<md-button ng-show="vm.editing" class="md-raised" style="background-color: #00A5B5;" ng-click="vm.deleteConfig()">Delete</md-button>
+				<md-button ng-show="vm.editing" class="md-raised" style="background-color: #00A5B5;" ng-click="vm.updateConfig()">Update</md-button>
+				<md-button ng-show="vm.adding" class="md-raised" style="background-color: #00A5B5;" ng-click="vm.addConfig()">Add</md-button>
 			</div>
 		</md-card-content>
 	</md-card>
