@@ -5,24 +5,13 @@ function Router(path, fileSystem, responseService, authRouter, url) {
 			
 			var fileName = path.join(currentWorkingDir, uri);
 				
-			if ((uri.indexOf('node_modules') > -1) || uri.indexOf('src') > -1){
+			/*if ((uri.indexOf('web') > -1)){
+				console.log('loading: ' + uri);
 				this.renderFile(res, fileName, contentType);
-				return;
-			}
+			    return;
+			}*/			
 						
 			authRouter.routeGet(fileName, res, req, contentType);
-			//fileName += 'src/views/index.html';
-			//this.renderFile(res, fileName, contentType);
-			
-			//switch (uri){
-				//case '/':
-				//	fileName += 'src/views/index.html';
-				//	this.renderFile(res, fileName, contentType);
-				//	break;
-			//	default:
-					//authRouter.routeGet(fileName, res, req, contentType);
-					
-		//	}
 		},
 		loadDependencies: function (res, fileName, contentType) {
 			
@@ -40,5 +29,3 @@ function Router(path, fileSystem, responseService, authRouter, url) {
 		}
 	};
 }
-
-module.exports = Router;

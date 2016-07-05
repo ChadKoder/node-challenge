@@ -125,7 +125,3 @@ function Sorter (userConfigs) {
 		}
 	};
 }
-
-module.exports = Sorter;
- 
-	

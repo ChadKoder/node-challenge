@@ -1,4 +1,5 @@
-var token = null;
+var token = null,
+	indexHtml = './index.html';
 
 function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreator, authentication, responseService, configs, Buffer) {
 	return {
@@ -15,43 +16,47 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 		},
 		routeGet: function (fileName, res, req, contentType){
 			var uri = url.parse(req.url).pathname;
+			console.log('TRYING TO LOAD URI: ' + uri);
 			
-			if (uri.trim().toLowerCase() === '/validateuser'){
-				var authHeader = req.headers.authorization;
-				if (authHeader){
-					var auth = authHeader.split(' ')[1];
-					
-					var credString = Buffer(auth, 'base64').toString();
-					var credentials = credString.split(':');
-					
-					if (credentials){
-						var username = credentials[0];
-						var password = credentials[1];
+			switch (uri.trim().toLowerCase()){
+				case '/':
+					console.log('loading: ' + uri);
+					this.renderFile(res, indexHtml, contentType);
+					return;
+				case '/validateuser':
+					var authHeader = req.headers.authorization;
+					if (authHeader){
+						var auth = authHeader.split(' ')[1];
 						
-						if (!authentication.validateUser(username, password)){
-							responseService.write401Unauthorized(res);
-							return;
-						} else {
-							token = Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
-							responseService.write200Success(res, null, fileName, contentType, token);
-							return;
+						var credString = Buffer(auth, 'base64').toString();
+						var credentials = credString.split(':');
+						
+						if (credentials){
+							var username = credentials[0];
+							var password = credentials[1];
+							
+							if (!authentication.validateUser(username, password)){
+								responseService.write401Unauthorized(res);
+								return;
+							} else {
+								token = Buffer('username:' + username + ',' + 'password:' + password).toString('base64');
+								responseService.write200Success(res, null, fileName, contentType, token);
+								return;
+							}
 						}
 					}
-				}
 				
-				responseService.write401Unauthorized(res);
-				return;
-			} 
-			
-			switch (uri){
+					responseService.write401Unauthorized(res);
+					return;
 				case '/user-configurations':
 					if (!authentication.isAuthorized(token)){
 						responseService.write401Unauthorized(res);
 						return;
 					}
-					fileName = 'src/views/index.html';
-					this.renderFile(res, fileName, contentType);
-					break;
+					//fileName = 'src/views/index.html';
+					console.log('loading: ' + indexHtml);
+					this.renderFile(res, indexHtml, contentType);
+					return;
 				case '/configs':
 					var page = url.parse(req.url, true).query.page;
 					var pageSize = url.parse(req.url, true).query.pagesize;
@@ -61,14 +66,26 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					var returnObj = {};
 					returnObj = configPageObjCreator.getSortedPageObj(page, pageSize, sortBy, sortOrder);
 					responseService.write200OKWithData(res, returnObj);
-					break;
+					return;
 				default:
-					//responseService.write404NotFound(res);
-					fileName = 'src/views/index.html';
-					this.renderFile(res, fileName, contentType);
-					break;
+					if ((uri.indexOf('src') < 0)){
+						console.log('loading: ' + fileName);
+						this.renderFile(res, fileName, contentType);
+						return;
+					}
+					
+					console.log('was: ' + fileName + ' but loading INDEX.htlml');
+					this.renderFile(res, indexHtml, contentType);
+					
+				//	console.log('loading: ' + uri);
+//					this.renderFile(res, indexHtml, contentType);
+					return;
+					//console.log('wanting to render file: ' + fileName + ' but rendered: ' + indexHtml);
+					//this.renderFile(res, indexHtml, contentType);
+					//break;
 				}
 				 
+				 console.log('wlell....shit...');
 				return;
 		},
 		routePost: function (fileName, res, req, contentType) {
@@ -199,6 +216,4 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 		}		
 	};
 }
-
-module.exports = AuthRouter;
 	

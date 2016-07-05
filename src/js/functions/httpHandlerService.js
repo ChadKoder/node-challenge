@@ -21,6 +21,4 @@ function HttpHandler (path, currentWorkingDir, configs, authentication, router, 
 			return;
 		}
 	};
-}
-
-module.exports = HttpHandler;
+} 

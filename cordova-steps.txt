@@ -1,0 +1,3 @@
+Steps for Cordova Project:
+1. cordova create photo-saver com.example.photosaver PhotoSaver
+2. cordova platform add ios --save

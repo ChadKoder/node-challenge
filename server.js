@@ -9,18 +9,54 @@ var http = require('http'),
 	arg = process.argv[2], 
 	userArg = null,
 	users = require('./src/users.json'),
-	responseService = require('./src/js/functions/responseService.js'),
+	//responseService = require('./src/js/functions/responseService.js'),
 	userConfigs = require('./src/configurations.json');
 	
 
 currentWorkingDir = process.cwd();
-var authentication = require('./src/js/functions/authentication.js')(users);
-var sorter = require('./src/js/functions/sorter.js')(userConfigs);
-var paginator = require('./src/js/functions/paginator.js')(userConfigs);
-var configPageObjCreator = require('./src/js/functions/configPageObjCreator')(userConfigs, sorter, paginator);
-var authRouter = require('./src/js/functions/authRouter.js')( path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs, Buffer);
-var router = require('./src/js/functions/router.js')(path, fs, responseService, authRouter, url);
-var httpHandler = require('./src/js/functions/httpHandlerService')(path, currentWorkingDir, userConfigs, authentication, router, authRouter, responseService);
+
+var miniFunctions = require('./web/js/functions.js');
+var responseService = miniFunctions.ResponseService;
+
+//var res = new authentication();
+//var testa = res.test();
+ 
+
+//var auth = test.Authentication;
+//var atest = auth.test123; 
+//var sort = test.Sorter(userConfigs);
+//var paginate = test.Paginator(userConfigs);
+//var configPgObjCreator = test.ConfigPageObjCreator;
+//var authRoute = test.AutRouter(path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs, Buffer);
+//var route = test.Router(path, fs, responseService, authRouter, url);
+//var httpHandler = test.HttpHandler (path, currentWorkingDir, userConfigs, authentication, router, authRouter, responseService);
+
+
+var authentication = miniFunctions.Authentication(users);
+var sorter = miniFunctions.Sorter(userConfigs);
+var paginator = miniFunctions.Paginator(userConfigs);
+var configPageObjCreator = miniFunctions.ConfigPageObjCreator(userConfigs, sorter, paginator);
+var authRouter = miniFunctions.AuthRouter(path, fs, url, currentWorkingDir, configPageObjCreator, authentication, new responseService(), userConfigs, Buffer);
+var router = miniFunctions.Router(path, fs, new responseService(), authRouter, url);
+var httpHandler = miniFunctions.HttpHandler(path, currentWorkingDir, userConfigs, authentication, router, authRouter, new responseService());
+//var authentication = auth(users);
+//var httpHandler = httpHandlr(path, currentWorkingDir, userConfigs, authentication, router, authRouter, responseService);
+/*var authentication = auth;
+var sorter = sort(userConfigs);
+var paginator = paginate(userConfigs);
+var configPageObjCreator = configPgObjCreator(userConfigs, sorter, paginator);
+var authRouter = authRoute(path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs, Buffer);
+var router = route(path, fs, responseService, authRouter, url);
+var httpHandler = httpHandlr(path, currentWorkingDir, userConfigs, authentication, router, authRouter, responseService);
+*/
+
+//var authentication = require('./src/js/functions/authentication.js')(users);
+//var sorter = require('./src/js/functions/sorter.js')(userConfigs);
+//var paginator = require('./src/js/functions/paginator.js')(userConfigs);
+//var configPageObjCreator = require('./src/js/functions/configPageObjCreator')(userConfigs, sorter, paginator);
+//var authRouter = require('./src/js/functions/authRouter.js')(path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs, Buffer);
+//var router = require('./src/js/functions/router.js')(path, fs, responseService, authRouter, url);
+//var httpHandler = require('./src/js/functions/httpHandlerService')(path, currentWorkingDir, userConfigs, authentication, router, authRouter, responseService);
 	
 const PORT = 8888;
 var serverAdd = 'http://localhost:' + PORT;
@@ -98,7 +134,5 @@ http.createServer(function (req, res) {
 	}
 	 
 }).listen(parseInt(PORT)); 
-
-//module.exports = app;
 
 console.log('Server running at --> ' + serverAdd + '/\nCTRL+C to shutdown');

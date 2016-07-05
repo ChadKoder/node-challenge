@@ -23,11 +23,12 @@ module.exports = function(grunt) {
 	
 	var requiredJsFiles = [
 		'node_modules/angular/angular.js',
-		//'node_modules/angular-cookies/angular-cookies.js',
-        'node_modules/angular-resource/angular-resource.js',
 		'node_modules/angular-route/angular-route.js',
 		'node_modules/angular-animate/angular-animate.js',
-		'node_modules/angular-messages/angular-messages.js'
+		'node_modules/angular-aria/angular-aria.js',
+        'node_modules/angular-resource/angular-resource.js',
+		'node_modules/angular-messages/angular-messages.js',
+		'node_modules/angular-material/angular-material.js'
 	],
 	concatConfig = {
 		requirements: {
@@ -63,9 +64,7 @@ module.exports = function(grunt) {
         return '/*\n' +
             ' * ' + name + ' v <%=pkg.version%> (build <%=build%>)\n' +
             ' * Copyright (c) <%=grunt.template.today("yyyy")%>\n' +
-            ' * <%=pkg.author %> - All Rights Reserved\n' +
-            ' * Unauthorized use of this file is strictly prohibited.\n' +
-            ' * See EULA for details: <%=pkg.eulaUrl%>\n' +
+            ' * Author: <%=pkg.author %> \n' +
             ' */\n\n';
     };
 	
@@ -81,20 +80,32 @@ module.exports = function(grunt) {
 
             // Push pre-concat version to jshint first so we get accurate file names / line numbers.
             jshintFiles.push(moduledir + '/**/*.js');
-
-            concatConfig[module] = {
-                options: {
-                    banner: bannerTemplate,
-                    sourceMap: false
-                },
-                dest: concatenatedFile,
-                src: [
-                   // 'src/intro.js',
-                        moduledir + module + '.js',
-                        moduledir + '/**/*.js'//,
-                   // 'src/outro.js'
-                ]
-            };
+			
+			if (module.trim().toLowerCase() === 'functions'){
+				concatConfig[module] = {
+					options: {
+						banner: bannerTemplate,
+						sourceMap: false
+					},
+					dest: concatenatedFile,
+					src: [
+							'src/intro.js',
+							moduledir + module + '.js',
+							moduledir + '/**/*.js',
+							'src/outro.js'
+					]
+				};
+			} else {
+				concatConfig[module] = {
+					options: {
+						banner: bannerTemplate,
+						sourceMap: false
+					},
+					dest: concatenatedFile,
+					src: [moduledir + module + '.js', moduledir + '/**/*.js']
+				};
+			}
+			
             uglifyConfig[module] = {
                 options: {
                     banner: bannerTemplate
@@ -235,7 +246,7 @@ module.exports = function(grunt) {
                             expand: true,
                             cwd: 'node_modules/angular-material',
                             src: ['angular-material.css', 'angular-material.min.css'],
-                            dest: './www/css/'
+                            dest: './photo-saver/www/css/'
                         },
 						{
 							expand: true,
@@ -246,7 +257,7 @@ module.exports = function(grunt) {
 						{
 							expand: true,
 							cwd: 'src/views',
-							src: ['index.html'],
+							src: ['user-configurations.html', 'login.html'],
 							dest: './web/views'
 						}
 						,

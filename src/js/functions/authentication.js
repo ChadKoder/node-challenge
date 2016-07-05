@@ -1,4 +1,4 @@
-function Authentication(usersJson) {
+(function Authentication(usersJson) {
 	return {
 		validateUser: function(userName, password){
 		var users = usersJson.users;
@@ -18,6 +18,6 @@ function Authentication(usersJson) {
 			return false;
 		}
 	};
-}
+})();
 
 module.exports = Authentication;

@@ -35,5 +35,4 @@ function ConfigPageObjCreator (userConfigs, sorter, paginator){
 		} 
 	};
 }
-
-module.exports = ConfigPageObjCreator;
+ 
