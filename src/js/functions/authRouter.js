@@ -1,8 +1,6 @@
 var token = null;
 
 function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreator, authentication, responseService, configs, Buffer) {
-	//var userConfigurationHtml = path.join(currentWorkingDir, 'src/views/user-configurations.html');
-	
 	return {
 		renderFile: function (res, fileName, contentType){
 			fileSystem.readFile(fileName, 'binary', function(err, file){
@@ -62,10 +60,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					
 					var returnObj = {};
 					returnObj = configPageObjCreator.getSortedPageObj(page, pageSize, sortBy, sortOrder);
-					//TODO: move to responseService
-					res.setHeader('Content-Type', 'application/json'); 
-					res.write(JSON.stringify(returnObj));
-					res.end();
+					responseService.write200OKWithData(res, returnObj);
 					break;
 				default:
 					//responseService.write404NotFound(res);

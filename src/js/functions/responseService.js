@@ -13,6 +13,11 @@ function ResponseService() {
 					return;
 				}
 		},
+		write200OKWithData: function (res, object) {
+			res.writeHeader(200, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify(object));
+			res.end();
+		},
 		write204NoContent: function (res){
 			res.writeHeader(204);
 			res.write('204 No Content');

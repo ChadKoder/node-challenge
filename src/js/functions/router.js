@@ -6,7 +6,6 @@ function Router(path, fileSystem, responseService, authRouter, url) {
 			var fileName = path.join(currentWorkingDir, uri);
 				
 			if ((uri.indexOf('node_modules') > -1) || uri.indexOf('src') > -1){
-				//this.loadDependencies(res, fileName, contentType);
 				this.renderFile(res, fileName, contentType);
 				return;
 			}
@@ -35,7 +34,7 @@ function Router(path, fileSystem, responseService, authRouter, url) {
 					responseService.write500InternalError(res, err);
 					return;
 				}
-				console.log('Rendering File111: ' + fileName);
+				
 				responseService.write200Success(res, file, fileName, contentType);
 			});
 		}
