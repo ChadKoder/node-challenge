@@ -159,7 +159,6 @@ angular.module('ConfigurationCtrl', []).controller('ConfigurationCtrl', ['$http'
 			vm.totalConfigs = res.data.total;
 			vm.configs = res.data.sorted;
 			vm.page = 1;
-			//vm.sortby = 'name';
 		}, function (res){
 			if (res.status === 401){
 				vm.showSimpleToast('Unauthorized user!');

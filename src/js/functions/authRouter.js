@@ -11,8 +11,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					responseService.write500InternalError(res, err);
 					return;
 				}
-				
-				console.log('Rendering File2222: ' + fileName);
+				 
 				responseService.write200Success(res, file, fileName, contentType);
 			});
 		},
@@ -64,7 +63,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					var returnObj = {};
 					returnObj = configPageObjCreator.getSortedPageObj(page, pageSize, sortBy, sortOrder);
 					//TODO: move to responseService
-					res.setHeader('Content-Type', 'application/json');
+					res.setHeader('Content-Type', 'application/json'); 
 					res.write(JSON.stringify(returnObj));
 					res.end();
 					break;
