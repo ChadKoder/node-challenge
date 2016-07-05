@@ -222,7 +222,7 @@ module.exports = function(grunt) {
                 }
 		},
 		uglify: uglifyConfig,
-		/*sync: {
+		sync: {
                 main: {
                     files: [
                         {
@@ -241,6 +241,12 @@ module.exports = function(grunt) {
 							expand: true,
 							cwd: 'src/views',
 							src: ['index.html'],
+							dest: './photo-saver/www'
+						},
+						{
+							expand: true,
+							cwd: 'src/views',
+							src: ['index.html'],
 							dest: './web/views'
 						}
 						,
@@ -252,7 +258,7 @@ module.exports = function(grunt) {
 						}
                     ]
                 }
-            }*/
+            }
 	});
 
     grunt.loadNpmTasks('grunt-karma');
@@ -264,6 +270,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-sync');
 	
-	grunt.registerTask('default', ['clean', 'concat', 'uglify']);
+	grunt.registerTask('default', ['clean', 'concat', 'uglify', 'sync']);
 };
