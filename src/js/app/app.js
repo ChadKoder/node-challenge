@@ -15,4 +15,21 @@ app.config(function ($routeProvider, $locationProvider) {
 	.otherwise({
 		templateUrl:'src/views/index.html'
 	});
-});
+})
+.run(['$rootScope', '$http', '$location', function ($rootScope, $http, $location) {
+	$rootScope.isLoggedIn = false;
+	
+	$rootScope.logout = function () {
+		$http({
+			method: 'POST',
+			url: '/logout'
+		}).then(function (res) {
+			//vm.showSimpleToast('Logging out...');
+			$rootScope.isLoggedIn = false;
+			//vm.redir('/');
+			$location.path('/');
+		}, function (res) {
+			//vm.showSimpleToast('lougout failed... strange...');
+		});
+	};
+}]);

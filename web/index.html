@@ -2,23 +2,27 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <base href="/">	
-		
-		<title>Photo Saver</title>	
+        <base href="/">
+		<title>Photo Saver</title>
 		<link rel="icon" href="https://nodejs.org/static/favicon.ico" /> 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.css"> 
     </head>
 	
 	<body ng-app="photoSaverApp">
-		
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 		<script src="/js/requirements.js" type="text/javascript"></script> 
 		<script src="/js/controllers.js" type="text/javascript"></script>
 		<script src="/js/app.js" type="text/javascript"></script> 
 		
-		<md-toolbar style="background-color: #00A5B5;"  layout="column" layout-align="left" flex>
-			<p>	Photo Saver</p>
+		<md-toolbar style="background-color: #00A5B5;"   flex>		
+			<div layout="row">
+				<h3 layout="column">Photo Saver</h3>
+				<span flex></span>
+				<md-button layout="column" ng-show="isLoggedIn" ng-click="logout()" class="md-raised" style="height: 40px; background-color: #1867BB; margin-top:15px;">Logout</md-button>	
+			</div>
 		</md-toolbar>
+				
+		
 		<div ng-view flex></div>
 	</body>
 </html>

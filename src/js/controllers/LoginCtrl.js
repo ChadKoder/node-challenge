@@ -1,11 +1,12 @@
 //js/controllers/LoginCtrl.js
-angular.module('LoginCtrl', []).controller('LoginCtrl', ['$http', '$mdToast', '$location',
- function ($http, $mdToast, $location) {
+angular.module('LoginCtrl', []).controller('LoginCtrl', ['$rootScope', '$http', '$mdToast', '$location',
+ function ($rootScope, $http, $mdToast, $location) {
 	var vm = this;
 	vm.title = 'NodeJS Sample Application';
 	vm.username = '';
 	vm.password = '';
-		
+	$rootScope.isLoggedIn = false;
+	
 	var redirectDelay = 1000;
 	
 	vm.showSimpleToast = function (msg){

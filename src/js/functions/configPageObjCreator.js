@@ -1,7 +1,3 @@
-/*var userConfigs = require('../configurations.json');
-var sorter = require('./sorter.js')(userConfigs);
-var paginator = require('./paginate.js')(userConfigs);
-*/
 var configs, sort, paginate;
 
 function ConfigPageObjCreator (){

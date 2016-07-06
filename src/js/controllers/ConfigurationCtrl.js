@@ -1,24 +1,26 @@
 //js/controllers/ConfigurationCtrl.js
-angular.module('ConfigurationCtrl', []).controller('ConfigurationCtrl', ['$http', '$mdToast', '$location',
- function ($http, $mdToast, $location) {
+angular.module('ConfigurationCtrl', []).controller('ConfigurationCtrl', ['$rootScope', '$http', '$mdToast', '$location',
+ function ($rootScope, $http, $mdToast, $location) {
    	var vm = this;
 	var redirectDelay = 1000;
 	vm.title = 'NodeJS Sample Application';
-	
+	$rootScope.isLoggedIn = true;
 	vm.redir = function(url){
 		$location.path(url);
 	};
 	
 	vm.logout = function (){
-		$http({
+		//$rootScope.logout();
+		/*$http({
 			method: 'POST',
 			url: '/logout'
 		}).then(function (res) {
 			vm.showSimpleToast('Logging out...');
+			$rootScope.isLoggedIn = false;
 			vm.redir('/');
 		}, function (res) {
 			vm.showSimpleToast('lougout failed... strange...');
-		});
+		});*/
 	};
 
 	vm.showSimpleToast = function (msg){
