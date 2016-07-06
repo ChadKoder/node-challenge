@@ -80,31 +80,14 @@ module.exports = function(grunt) {
 
             // Push pre-concat version to jshint first so we get accurate file names / line numbers.
             jshintFiles.push(moduledir + '/**/*.js');
-			
-			if (module.trim().toLowerCase() === 'functions'){
-				concatConfig[module] = {
-					options: {
-						banner: bannerTemplate,
-						sourceMap: false
-					},
-					dest: concatenatedFile,
-					src: [
-							'src/intro.js',
-							moduledir + module + '.js',
-							moduledir + '/**/*.js',
-							'src/outro.js'
-					]
-				};
-			} else {
-				concatConfig[module] = {
-					options: {
-						banner: bannerTemplate,
-						sourceMap: false
-					},
-					dest: concatenatedFile,
-					src: [moduledir + module + '.js', moduledir + '/**/*.js']
-				};
-			}
+			concatConfig[module] = {
+				options: {
+					banner: bannerTemplate,
+					sourceMap: false
+				},
+				dest: concatenatedFile,
+				src: [moduledir + module + '.js', moduledir + '/**/*.js']
+			};
 			
             uglifyConfig[module] = {
                 options: {

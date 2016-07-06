@@ -27,4 +27,5 @@ function Paginator(userConfigs){
 		}
 	};
 }
- 
+
+module.exports = Paginator;

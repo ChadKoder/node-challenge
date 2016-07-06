@@ -2,11 +2,17 @@
 var sorter = require('./sorter.js')(userConfigs);
 var paginator = require('./paginate.js')(userConfigs);
 */
+var configs, sort, paginate;
 
-function ConfigPageObjCreator (userConfigs, sorter, paginator){
+function ConfigPageObjCreator (){
 	return {
+		init: function (userConfigs, sorter, paginator){
+			configs = userConfigs;
+			sort = sorter;
+			paginate = paginator;
+		},
 		getSortedPageObj: function(pg, pageSize, sortBy, sortOrder){
-			var page, sorted = null, finalConfigs = userConfigs.configurations;
+			var page, sorted = null, finalConfigs = configs.configurations;
 			if (!pg){
 				page = 1;
 			} else {
@@ -15,24 +21,25 @@ function ConfigPageObjCreator (userConfigs, sorter, paginator){
 			
 			if (sortOrder){
 				if (sortOrder.toLowerCase() === 'desc') {
-					sorted = sorter.getSortDesc(sortBy);
+					sorted = sort.getSortDesc(sortBy);
 				} else {
-					sorted = sorter.getSortAsc(sortBy);
+					sorted = sort.getSortAsc(sortBy);
 				}
 			}
 			
 			if (sorted) {
 				if (pageSize) {
-					finalConfigs = paginator.paginateUserConfigs(sorted, pageSize, page);
+					finalConfigs = paginate.paginateUserConfigs(sorted, pageSize, page);
 				}
 			}
 			
 			var sortedReturnObj = {};
 			sortedReturnObj.sorted = finalConfigs;
-			sortedReturnObj.total = userConfigs.configurations.length;
+			sortedReturnObj.total = configs.configurations.length;
 			
 			return sortedReturnObj;
 		} 
 	};
 }
- 
+
+module.exports = ConfigPageObjCreator;

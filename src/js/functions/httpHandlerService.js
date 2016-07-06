@@ -1,8 +1,8 @@
 function HttpHandler (path, currentWorkingDir, configs, authentication, router, authRouter, responseService) {
-	var userConfigsFileName = path.join(currentWorkingDir, 'src/configurations.json');
+	var userConfigsFileName = path.join(currentWorkingDir, '/configurations.json');
 	
 	return {
-		handleGetRequest: function (res, req, contentType){
+		handleGetRequest: function (res, req, contentType){		
 			router.routeGet(currentWorkingDir, res, req, contentType);
 			return;
 		},
@@ -22,3 +22,5 @@ function HttpHandler (path, currentWorkingDir, configs, authentication, router, 
 		}
 	};
 } 
+
+module.exports = HttpHandler;

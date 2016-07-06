@@ -1,8 +1,20 @@
-var token = null,
+var token = null, path, fileSystem, url, currentWorkingDir, configPageObjCreator, 
+	authentication, responseService, configs, Buffer,
 	indexHtml = './index.html';
 
-function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreator, authentication, responseService, configs, Buffer) {
+function AuthRouter() {
 	return {
+		init: function (pth, fs, urlModule, workingDir, configObjCreator, auth, resService, userConfigs, buffer){
+			path = pth;
+			fileSystem = fs;
+			currentWorkingDir = workingDir;
+			authentication = auth;
+			responseService = resService;
+			configPageObjCreator = configObjCreator;
+			configs = userConfigs;
+			Buffer = buffer;
+			url = urlModule;
+		},
 		renderFile: function (res, fileName, contentType){
 			fileSystem.readFile(fileName, 'binary', function(err, file){
 				if (err) {
@@ -16,11 +28,9 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 		},
 		routeGet: function (fileName, res, req, contentType){
 			var uri = url.parse(req.url).pathname;
-			console.log('TRYING TO LOAD URI: ' + uri);
-			
+		
 			switch (uri.trim().toLowerCase()){
 				case '/':
-					console.log('loading: ' + uri);
 					this.renderFile(res, indexHtml, contentType);
 					return;
 				case '/validateuser':
@@ -53,8 +63,7 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 						responseService.write401Unauthorized(res);
 						return;
 					}
-					//fileName = 'src/views/index.html';
-					console.log('loading: ' + indexHtml);
+					
 					this.renderFile(res, indexHtml, contentType);
 					return;
 				case '/configs':
@@ -68,24 +77,10 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 					responseService.write200OKWithData(res, returnObj);
 					return;
 				default:
-					if ((uri.indexOf('src') < 0)){
-						console.log('loading: ' + fileName);
-						this.renderFile(res, fileName, contentType);
-						return;
-					}
-					
-					console.log('was: ' + fileName + ' but loading INDEX.htlml');
-					this.renderFile(res, indexHtml, contentType);
-					
-				//	console.log('loading: ' + uri);
-//					this.renderFile(res, indexHtml, contentType);
+					this.renderFile(res, fileName, contentType);
 					return;
-					//console.log('wanting to render file: ' + fileName + ' but rendered: ' + indexHtml);
-					//this.renderFile(res, indexHtml, contentType);
-					//break;
 				}
 				 
-				 console.log('wlell....shit...');
 				return;
 		},
 		routePost: function (fileName, res, req, contentType) {
@@ -217,3 +212,4 @@ function AuthRouter(path, fileSystem, url, currentWorkingDir, configPageObjCreat
 	};
 }
 	
+module.exports = AuthRouter;

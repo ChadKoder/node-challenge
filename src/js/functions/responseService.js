@@ -50,3 +50,5 @@ function ResponseService() {
 		}
 	};
 }
+
+module.exports = ResponseService;
