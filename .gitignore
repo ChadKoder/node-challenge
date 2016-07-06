@@ -1,6 +1,7 @@
 dist/
 web/js/
 web/css/
+web/views/
 npm-debug.log
 node_modules/
 Thumbs.db
