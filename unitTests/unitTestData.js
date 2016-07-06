@@ -29,4 +29,4 @@ function UnitTestData() {
 	};
 }
 
-//module.exports = UnitTestData;
+module.exports = UnitTestData;

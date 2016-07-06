@@ -1,23 +1,23 @@
-function HttpHandler (path, currentWorkingDir, configs, authentication, router, authRouter, responseService) {
+function HttpHandler (path, currentWorkingDir, configs, authentication, router, responseService) {
 	var userConfigsFileName = path.join(currentWorkingDir, '/configurations.json');
 	
 	return {
 		handleGetRequest: function (res, req, contentType){		
-			router.routeGet(currentWorkingDir, res, req, contentType);
+			router.get(currentWorkingDir, res, req, contentType);
 			return;
 		},
 		handlePostRequest: function (res, req, contentType){
-			authRouter.routePost(userConfigsFileName, res, req, contentType);
+			router.post(userConfigsFileName, res, req, contentType);
 			return;
 		},
 		
 		handlePutRequest: function(res, req, contentType){
 			var data = '', index = null;
-			authRouter.routePut(userConfigsFileName, res, req, contentType);
+			router.put(userConfigsFileName, res, req, contentType);
 			return;
 		},
 		handleDeleteRequest: function(res, req, contentType){
-			authRouter.routeDelete(userConfigsFileName, res, req, contentType);
+			router.delete(userConfigsFileName, res, req, contentType);
 			return;
 		}
 	};

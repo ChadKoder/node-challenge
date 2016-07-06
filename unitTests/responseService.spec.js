@@ -6,7 +6,7 @@ describe ('ResponseService', function (){
 	it('write200OKWithData should call res.writeHeader with 200 OK and object', function() {
 		var obj = { data: 'obj' };
 		responseService.write200OKWithData(res, obj);
-		expect(res.writeHeader).toHaveBeenCalledWith(200);
+		expect(res.writeHeader).toHaveBeenCalledWith(200, { 'Content-Type': 'application/json'});
 		expect(res.write).toHaveBeenCalledWith(JSON.stringify(obj));
 		expect(res.end).toHaveBeenCalled();
 	});

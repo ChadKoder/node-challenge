@@ -3,7 +3,11 @@
   "description": "IOS Photo Saver",
   "author": "Chad Keibler",
   "devDependencies": {
+    "browserify": "^13.0.0",
+    "jasmine": "^2.4.1",
+    "jasmine-core": "^2.4.1",
     "jasmine-node": "latest",
+    "phantomjs": "^1.9.18",
     "supertest": "latest"
   },
   "dependencies": {
@@ -12,6 +16,7 @@
     "angular-aria": "^1.5.7",
     "angular-material": "^1.0.9",
     "angular-messages": "^1.5.5",
+    "angular-mocks": "^1.5.5",
     "angular-resource": "^1.5.7",
     "angular-route": "^1.5.7",
     "grunt": "^1.0.0",
@@ -29,7 +34,8 @@
     "karma-jasmine": "^0.3.6",
     "karma-junit-reporter": "^0.3.7",
     "karma-phantomjs-launcher": "^0.2.1",
-    "phantomjs": "^1.9.18"
+    "karma-browserify": "^5.0.4",
+    "watchify": "^3.7.0"
   },
   "scripts": {
     "test": "jasmine-node --captureExceptions --growl serverTests"

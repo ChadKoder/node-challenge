@@ -60,3 +60,5 @@ function UnitTestMocks() {
 		}
 	}
 }
+
+module.exports = UnitTestMocks;

@@ -1,5 +1,5 @@
 describe('AuthRouter', function (){
-	var authRouter,
+	var authRouter = new AuthRouter(),
 		responseService = new ResponseService(),
 		unitTestMocks = new UnitTestMocks(),
 		configPageObjCreator = new ConfigPageObjCreator(),
@@ -26,12 +26,14 @@ describe('AuthRouter', function (){
 					}
 				};
 				
-				authRouter = new AuthRouter(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
+				authRouter.init(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
 			});
 			
 			it('with successful user validation should return 200 success', function() {
 				var header = { header: 'authorization', value: 'Basic SGVsbG8gV29ybGQ=' };
 				var request = unitTestMocks.request([header], '/validateUser');
+				
+				expect(1).toEqual(1);
 				
 				spyOn(auth, 'validateUser').and.returnValue(true);
 				spyOn(responseService, 'write200Success');
@@ -40,6 +42,9 @@ describe('AuthRouter', function (){
 				
 				expect(auth.validateUser).toHaveBeenCalled();
 				expect(responseService.write200Success).toHaveBeenCalledWith(unitTestMocks.response, null, 'fName', 'contentType', 'ABC123#');
+				
+				
+				
 			});
 			
 			it('invalid credentials should return 401 Unauthorized', function() {
@@ -58,39 +63,33 @@ describe('AuthRouter', function (){
 			it('routeGet /user-configurations should render the user configurations html', function() {
 				spyOn(authRouter, 'renderFile');
 				authRouter.routeGet('fName', unitTestMocks.response, unitTestMocks.request(null, '/user-configurations'), 'contentType');
-				expect(authRouter.renderFile).toHaveBeenCalledWith(unitTestMocks.response, 'c:/src/views/user-configurations.html', 'contentType');
+				expect(authRouter.renderFile).toHaveBeenCalledWith(unitTestMocks.response,'./index.html', 'contentType');
 			});
 	
 			it('routeGet /configs should call configPageOjbCreator.getSortedPageObj', function() {
 				var returnVal = { val: 'myObject' };
+				spyOn(responseService, 'write200OKWithData');
 				spyOn(configPageObjCreator, 'getSortedPageObj').and.returnValue(returnVal);
 				authRouter.routeGet('fName',  unitTestMocks.response, unitTestMocks.request(null, '/configs'), 'contentType');
 				expect(configPageObjCreator.getSortedPageObj).toHaveBeenCalled();
-				expect(unitTestMocks.response.setHeader).toHaveBeenCalled();
-				expect(unitTestMocks.response.write).toHaveBeenCalledWith(JSON.stringify(returnVal));
-				expect(unitTestMocks.response.end).toHaveBeenCalled();
+				expect(responseService.write200OKWithData).toHaveBeenCalled(); 
 			});
 	
-			it('routeGet /invalidUri should call responseService.write404NotFound', function() {
-				spyOn(responseService, 'write404NotFound');
-				authRouter.routeGet('fName',  unitTestMocks.response, unitTestMocks.request(null, '/invalidUri'), 'contentType');
-				expect(responseService.write404NotFound).toHaveBeenCalled();
+			it('routeGet should default to rendering the file', function() {
+				spyOn(authRouter, 'renderFile');
+				
+				authRouter.routeGet('fName',  unitTestMocks.response, unitTestMocks.request(null, '/file.txt'), 'contentType');
+				expect(authRouter.renderFile).toHaveBeenCalled();
 			});
 			
 			it('routeGet /configs should call configPageOjbCreator.getSortedPageObj', function() {
 				var returnVal = { val: 'myObject' };
+				spyOn(responseService, 'write200OKWithData');
 				spyOn(configPageObjCreator, 'getSortedPageObj').and.returnValue(returnVal);
 				authRouter.routeGet('fName',  unitTestMocks.response, unitTestMocks.request(null, '/configs'), 'contentType');
 				expect(configPageObjCreator.getSortedPageObj).toHaveBeenCalled();
-				expect(unitTestMocks.response.setHeader).toHaveBeenCalled();
-				expect(unitTestMocks.response.write).toHaveBeenCalledWith(JSON.stringify(returnVal));
-				expect(unitTestMocks.response.end).toHaveBeenCalled();
-			});
-			
-			it('routeGet /invalidUri should call responseService.write404NotFound', function() {
-				spyOn(responseService, 'write404NotFound');
-				authRouter.routeGet('fName',  unitTestMocks.response, unitTestMocks.request(null, '/invalidUri'), 'contentType');
-				expect(responseService.write404NotFound).toHaveBeenCalled();
+				
+				expect(responseService.write200OKWithData).toHaveBeenCalled(); 
 			});
 		});
 		
@@ -108,7 +107,8 @@ describe('AuthRouter', function (){
 					}
 				};
 				
-				authRouter = new AuthRouter(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
+				authRouter = new AuthRouter();
+				authRouter.init(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
 			});
 			
 			it('should return 401 Unauthorized', function(){
@@ -118,9 +118,9 @@ describe('AuthRouter', function (){
 				expect(auth.validateUser).not.toHaveBeenCalled();
 				expect(responseService.write401Unauthorized).toHaveBeenCalled();
 			});
-		});
+		}); 
 	});
-	
+			
 	describe('routePost', function() {
 		beforeEach(function() {
 			Buffer = function (auth, type) {
@@ -135,10 +135,11 @@ describe('AuthRouter', function (){
 					}
 				};
 				
-			authRouter = new AuthRouter(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
+			authRouter = new AuthRouter();
+			authRouter.init(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
 		});
 
-		it('routePost /logout should set token to null and call responseService.write204NoContent', function() {
+it('routePost /logout should set token to null and call responseService.write204NoContent', function() {
 			spyOn(responseService, 'write204NoContent');
 			authRouter.routePost('fName',  unitTestMocks.response, unitTestMocks.request(null, '/logout'), 'contentType');
 			expect(responseService.write204NoContent).toHaveBeenCalled();
@@ -205,7 +206,8 @@ describe('AuthRouter', function (){
 					}
 				};
 				
-			authRouter = new AuthRouter(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
+			authRouter = new AuthRouter();
+			authRouter.init(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
 		});
 		
 		describe('when user is unauthorized', function(){

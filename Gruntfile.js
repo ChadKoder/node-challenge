@@ -21,6 +21,46 @@ module.exports = function(grunt) {
 	var pkg = grunt.file.readJSON('package.json'),
 		build = grunt.template.today('yyyymmdd_HHMMss_1');
 	
+	var karmaConfig = {
+            debug: {
+                options: {
+                    frameworks: ['jasmine', 'browserify'],
+                    autoWatch: true,
+                    files: [
+                        
+						'node_modules/requirejs/require.js', 
+						'node_modules/angular/angular.js',
+				'node_modules/angular-route/angular-route.js',
+				'node_modules/angular-animate/angular-animate.js',
+				'node_modules/angular-aria/angular-aria.js',
+				'node_modules/angular-resource/angular-resource.js',
+				//'node_modules/angular-messages/angular-messages.js',
+				'node_modules/angular-material/angular-material.js',
+						'node_modules/angular-mocks/angular-mocks.js',
+						//'src/js/functions/responseService.js',
+						'web/js/functions.js',
+						'unitTests/unitTestData.js',
+						'unitTests/unitTestMocks.js',
+						'web/js/controllers/controllers.js',
+						'src/js/app/app.js',
+                        'unitTests/LoginCtrl.spec.js'
+                    ],
+                    browsers: [
+						'PhantomJS'
+                    ],
+                    reporters: ['dots'],
+                    preprocessors: {
+						'unitTests/LoginCtrl.spec.js': ['browserify'],
+                    },
+                    coverageReporter: {
+                        type: 'lcov',
+                        dir: 'tests/coverage'
+                    }
+                },
+                singleRun: false
+            }
+        }
+
 	var requiredJsFiles = [
 		'node_modules/angular/angular.js',
 		'node_modules/angular-route/angular-route.js',
@@ -43,8 +83,7 @@ module.exports = function(grunt) {
 			nonull: true
 		}
 	},
-	jshintFiles = ['src/js/**/*.js'],
-	 
+	jshintFiles = ['src/js/**/*.js'], 
 	uglifyConfig = {
 		requirements: {
 			options: {
@@ -101,11 +140,11 @@ module.exports = function(grunt) {
             //push first party post-concat modules to ensure nothing went wrong with concat.
             jshintFiles.push(concatenatedFile);
 
-           // karmaConfig.debug.options.files.push(concatenatedFile);
-            //karmaConfig.continuousDev.options.files.push(concatenatedFile);
+            karmaConfig.debug.options.files.push(concatenatedFile);
+           // karmaConfig.continuousDev.options.files.push(concatenatedFile);
             //karmaConfig.continuousDev.options.preprocessors[concatenatedFile] = ['coverage'];
             //karmaConfig.continuousBuild.options.files.push(concatenatedFile);
-            //karmaConfig.continuousBuild.options.preprocessors[concatenatedFile] = ['coverage'];
+           //karmaConfig.continuousBuild.options.preprocessors[concatenatedFile] = ['coverage'];
         }
 
         //Push remaining web/js files that may not have been caught.
@@ -216,6 +255,7 @@ module.exports = function(grunt) {
                 }
 		},
 		uglify: uglifyConfig,
+		karma: karmaConfig,
 		sync: {
                 main: {
                     files: [
@@ -233,9 +273,21 @@ module.exports = function(grunt) {
                         },
 						{
 							expand: true,
-							cwd: 'src/views',
+							cwd: 'web',
 							src: ['index.html'],
-							dest: './photo-saver/www'
+							dest: './photo-saver/www/'
+						},
+						{
+							expand: true,
+							cwd: 'web/js',
+							src: ['*.js'],
+							dest: './photo-saver/www/js/'
+						},
+						{
+							expand: true,
+							cwd: 'web/views',
+							src: ['*.html'],
+							dest: './photo-saver/www/views/'
 						},
 						{
 							expand: true,
@@ -252,7 +304,7 @@ module.exports = function(grunt) {
 						}
                     ]
                 }
-            }
+		}
 	});
 
     grunt.loadNpmTasks('grunt-karma');
@@ -266,5 +318,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-sync');
 	
-	grunt.registerTask('default', ['clean', 'concat', 'uglify', 'sync']);
+	grunt.registerTask('default', ['clean', 'concat', 'uglify', 'sync', 'karma']);
 };

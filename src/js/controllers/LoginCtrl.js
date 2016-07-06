@@ -15,7 +15,6 @@ angular.module('LoginCtrl', []).controller('LoginCtrl', ['$rootScope', '$http', 
 	
 	vm.redir = function(url){
 		setTimeout(function(){
-				//$window.location = url;
 				$location.path(url);
 			}, redirectDelay);
 	};

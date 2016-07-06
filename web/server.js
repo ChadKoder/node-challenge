@@ -17,18 +17,17 @@ var authentication = require('../src/js/functions/authentication.js');
 var sorter = require('../src/js/functions/sorter.js');
 var paginator = require('../src/js/functions/paginator.js');
 var configPageObjCreator = require('../src/js/functions/configPageObjCreator');
-var authRouter = require('../src/js/functions/authRouter.js');
+//var authRouter = require('../src/js/functions/authRouter.js');
 var auth = new authentication(users);
-var authorizationRouter = new authRouter();
+//var authorizationRouter = new authRouter();
 var resService = new responseService();
 var sort = new sorter(userConfigs);
 var paginate = new paginator(userConfigs);
 var configPgObjectCreator = new configPageObjCreator();
 configPgObjectCreator.init(userConfigs, sort, paginate);
-authorizationRouter.init(path, fs, url, currentWorkingDir, configPgObjectCreator, auth, resService, userConfigs, Buffer);
-
-var router = require('../src/js/functions/router.js')(path, fs, resService, authorizationRouter, url);
-var httpHandler = require('../src/js/functions/httpHandlerService')(path, currentWorkingDir, userConfigs, auth, router, authorizationRouter, resService);
+var router = require('../src/js/functions/router.js')
+router.init(path, fs, url, currentWorkingDir, configPgObjectCreator, auth, resService, userConfigs, Buffer);
+var httpHandler = require('../src/js/functions/httpHandlerService')(path, currentWorkingDir, userConfigs, auth, router, resService);
 	
 const PORT = 8888;
 var serverAdd = 'http://localhost:' + PORT;

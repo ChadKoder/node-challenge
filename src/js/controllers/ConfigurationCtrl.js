@@ -8,20 +8,6 @@ angular.module('ConfigurationCtrl', []).controller('ConfigurationCtrl', ['$rootS
 	vm.redir = function(url){
 		$location.path(url);
 	};
-	
-	vm.logout = function (){
-		//$rootScope.logout();
-		/*$http({
-			method: 'POST',
-			url: '/logout'
-		}).then(function (res) {
-			vm.showSimpleToast('Logging out...');
-			$rootScope.isLoggedIn = false;
-			vm.redir('/');
-		}, function (res) {
-			vm.showSimpleToast('lougout failed... strange...');
-		});*/
-	};
 
 	vm.showSimpleToast = function (msg){
 		$mdToast.showSimple(msg);
