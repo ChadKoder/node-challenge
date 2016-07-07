@@ -30,23 +30,20 @@ module.exports = function(grunt) {
                         
 						'node_modules/requirejs/require.js', 
 						'node_modules/angular/angular.js',
-				'node_modules/angular-route/angular-route.js',
-				'node_modules/angular-animate/angular-animate.js',
-				'node_modules/angular-aria/angular-aria.js',
-				'node_modules/angular-resource/angular-resource.js',
-				//'node_modules/angular-messages/angular-messages.js',
-				'node_modules/angular-material/angular-material.js',
+						'node_modules/angular-route/angular-route.js',
+						'node_modules/angular-animate/angular-animate.js',
+						'node_modules/angular-aria/angular-aria.js',
+						'node_modules/angular-material/angular-material.js',
 						'node_modules/angular-mocks/angular-mocks.js',
-						//'src/js/functions/responseService.js',
 						'web/js/functions.js',
 						'unitTests/unitTestData.js',
 						'unitTests/unitTestMocks.js',
-						'web/js/controllers/controllers.js',
 						'src/js/app/app.js',
+						'src/js/controllers/LoginCtrl.js',
                         'unitTests/LoginCtrl.spec.js'
                     ],
                     browsers: [
-						'PhantomJS'
+						'PhantomJS2'
                     ],
                     reporters: ['dots'],
                     preprocessors: {

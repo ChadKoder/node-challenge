@@ -2,13 +2,13 @@
 angular.module('LoginCtrl', []).controller('LoginCtrl', ['$rootScope', '$http', '$mdToast', '$location',
  function ($rootScope, $http, $mdToast, $location) {
 	var vm = this;
-	vm.title = 'NodeJS Sample Application';
-	vm.username = '';
-	vm.password = '';
-	$rootScope.isLoggedIn = false;
 	
-	var redirectDelay = 1000;
-	
+	vm.init = function () {
+		vm.username = '';
+		vm.password = '';
+		$rootScope.isLoggedIn = false;
+		vm.redirectDelay = 1000;
+	};
 	vm.showSimpleToast = function (msg){
 			$mdToast.showSimple(msg);
 	};
@@ -16,7 +16,7 @@ angular.module('LoginCtrl', []).controller('LoginCtrl', ['$rootScope', '$http', 
 	vm.redir = function(url){
 		setTimeout(function(){
 				$location.path(url);
-			}, redirectDelay);
+			}, vm.redirectDelay);
 	};
 	
 	vm.login = function (){

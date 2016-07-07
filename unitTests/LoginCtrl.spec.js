@@ -1,8 +1,7 @@
 describe('LoginCtrl', function () {
     var ctrl,
-        $rootScope,
-        $scope,
-		$httpBackend,
+        $httpBackend,
+		$rootScope,
 		$mdToast,
 		callbackSpy,
 		response = 'blah',
@@ -12,48 +11,22 @@ describe('LoginCtrl', function () {
 		angular.mock.module('photoSaverApp');
 	});
 	
-    beforeEach(function () {
+	
+	beforeEach(inject(function($controller, _$rootScope_, _$httpBackend_) {
+		$rootScope = _$rootScope_;
+		$httpBackend = _$httpBackend_;
 		$mdToast = jasmine.createSpyObj('$mdToast', ['showSimple']);
 		callbackSpy = jasmine.createSpy('callbackSpy');
 		
-		inject(function () {
-            //$rootScope = $injector.get('$rootScope');
-			//$scope = $rootScope.$new();
-			//$window = $injector.get('$window');
-			
-//            ctrl = $controller('LoginCtrl', {
-                //$scope: $scope,
-				//$mdToast: $mdToast
-            //});
-			 
-        });
-		
-		/*
-        inject(function ($injector, $controller, _$httpBackend_, _$window_) {
-            $rootScope = $injector.get('$rootScope');
-			$scope = $rootScope.$new();
-			$window = $injector.get('$window');
-            $httpBackend = _$httpBackend_;
-			
-            ctrl = $controller('LoginCtrl', {
-                $scope: $scope,
-				$mdToast: $mdToast
-            });
-			 
-        });*/
-		//spyOn($scope, 'redir');
-    });
+		ctrl = $controller('LoginCtrl', {
+			 $rootScope: $rootScope,
+			 $mdToast: $mdToast
+		});
+	}));
 	
-	it('should stuff', function() {
-		
-		expect(1).toEqual(1);
-	});
-
-	/*
-
-    describe('$scope.showSimpleToast()', function () {
+   describe('ctrl.showSimpleToast()', function () {
         beforeEach(function () {
-			$scope.showSimpleToast('test');
+			ctrl.showSimpleToast('test');
         });
 
         it('should display toast message', function () {
@@ -61,23 +34,44 @@ describe('LoginCtrl', function () {
         });
     });
 	
-	describe('$scope.login()', function () {
+	describe('ctrl.login()', function () {
 		beforeEach(function(){
-			$scope.username = 'a';
-			$scope.password = 'b';
+			ctrl.username = 'a';
+			ctrl.password = 'b';
+			spyOn(ctrl, 'redir');
 			
 			$httpBackend.expectGET('/validateUser').respond(response);
-			$scope.login();
-			 
-			
+			ctrl.login();
 		});
+		
         it('should send http GET and redirect', function () {
 			$httpBackend.flush();
 			$httpBackend.verifyNoOutstandingExpectation();
 			$httpBackend.verifyNoOutstandingRequest();
   
-			expect($scope.redir).toHaveBeenCalled();
+			expect(ctrl.redir).toHaveBeenCalled();
         });
 		
-    });   */
+		it('with no credentials shows toast with error', function(){
+			ctrl.username = '';
+			ctrl.password = '';
+			spyOn(ctrl, 'showSimpleToast');
+			ctrl.login();
+			expect(ctrl.showSimpleToast).toHaveBeenCalled();
+		});
+    });
+	
+	it('ctrl.init should initialize values correctly', function() {
+		ctrl.username = 'name';
+		ctrl.password = 'pass';
+		$rootScope.isLoggedIn = true;
+		ctrl.redirectDelay = 0;
+		ctrl.init();
+		expect(ctrl.username).toBe('');
+		expect($rootScope.isLoggedIn).toBeFalsy();
+		expect(ctrl.password).toBe('');
+		expect(ctrl.redirectDelay).toEqual(1000);
+	});
+	
+  
 });

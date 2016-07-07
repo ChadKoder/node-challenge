@@ -1,5 +1,5 @@
 /*
- * app v  (build 20160706_151256_1)
+ * app v  (build 20160707_113901_1)
  * Copyright (c) 2016
  * Author: Chad Keibler 
  */
@@ -39,3 +39,5 @@ app.config(function ($routeProvider, $locationProvider) {
 		});
 	};
 }]);
+
+module.exports = app;
