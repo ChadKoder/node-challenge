@@ -1,5 +1,5 @@
 /*
- * functions v  (build 20160707_120044_1)
+ * functions v  (build 20160707_150300_1)
  * Copyright (c) 2016
  * Author: Chad Keibler 
  */
@@ -184,29 +184,74 @@ var token = null, path, fileSystem, url, currentWorkingDir, configPageObjCreator
 	authentication, responseService, configs, Buffer,
 	indexHtml = './index.html';
 
-function Router() {
+function Router(path, fileSystem, url, currentWorkingDir, configPageObjCreator, authentication, responseService, configs, Buffer) {
 	return {
-		init: function (pth, fs, urlModule, workingDir, configObjCreator, auth, resService, userConfigs, buffer){
-			path = pth;
-			fileSystem = fs;
-			currentWorkingDir = workingDir;
-			authentication = auth;
-			responseService = resService;
-			configPageObjCreator = configObjCreator;
-			configs = userConfigs;
-			Buffer = buffer;
-			url = urlModule;
-		},
 		renderFile: function (res, fileName, contentType){
-			fileSystem.readFile(fileName, 'binary', function(err, file){
-				if (err) {
-					console.log('error for file : ' + fileName + ' err: ' + err);
-					responseService.write500InternalError(res, err);
-					return;
+			//console.log('attempting to load file: ' + fileName);
+			if (fileSystem.lstatSync(fileName).isDirectory()) {
+				
+				//console.log('IT IS a dir: ' + fileName);
+				var files = fileSystem.readdirSync(fileName);
+				
+				for (var i = 0; i <= files.length - 1; i++){
+					
+					//console.log('attempting to load fileName: ' + files[i]);
+					if (fileSystem.lstatSync(files[i]).isDirectory()){
+						//console.log('IS A Directory: ' + files[i]);
+						
+						var subFiles = fileSystem.readdirSync(files[i]);
+						for (var i = 0; i <= subFiles.length - 1; i++){
+							fileSystem.readFile(subFiles[i], 'binary', function(err, file){
+								if (err) {
+									console.log('error for file : ' + subFiles[i] + ' err: ' + err);
+									responseService.write500InternalError(res, err);
+									//return;
+								}
+								 
+								responseService.write200Success(res, file, fileName, contentType);
+								//return;
+							});
+						}
+						
+						
+					} else {
+						console.log('NOT A Directory: ' + files[i]);
+						fileSystem.readFile(files[i], 'binary', function(err, file){
+							if (err) {
+								console.log('error for file : ' + files[i] + ' err: ' + err);
+								responseService.write500InternalError(res, err);
+								//return;
+							}
+							 
+								responseService.write200Success(res, file, fileName, contentType);
+							//	return;
+							});
+					}
+					/*
+					fileSystem.readFile(files[i], 'binary', function(err, file){
+					if (err) {
+						console.log('error for file : ' + files[i] + ' err: ' + err);
+						responseService.write500InternalError(res, err);
+						return;
+					}
+					 
+						responseService.write200Success(res, file, fileName, contentType);
+						return;
+					});*/
 				}
-				 
-				responseService.write200Success(res, file, fileName, contentType);
-			});
+			} else {
+				console.log('NOT A directory: ' + fileName);
+				fileSystem.readFile(fileName, 'binary', function(err, file){
+					if (err) {
+						console.log('error for file : ' + fileName + ' err: ' + err);
+						responseService.write500InternalError(res, err);
+						//return;
+					}
+					 
+					responseService.write200Success(res, file, fileName, contentType);
+				//	return;
+				});
+			}
 		},
 		get: function (fileName, res, req, contentType){
 			var uri = url.parse(req.url).pathname;
@@ -260,10 +305,10 @@ function Router() {
 					return;
 				default:
 					this.renderFile(res, fileName, contentType);
-					return;
-				}
+					return;				
+			}
 				 
-				return;
+			return;
 		},
 		post: function (fileName, res, req, contentType) {
 			var uri = url.parse(req.url).pathname;
