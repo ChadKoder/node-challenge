@@ -39,8 +39,7 @@ module.exports = function(grunt) {
 						'unitTests/unitTestData.js',
 						'unitTests/unitTestMocks.js',
 						'src/js/app/app.js',
-						'src/js/controllers/LoginCtrl.js',
-                        'unitTests/LoginCtrl.spec.js'
+                        'unitTests/*.spec.js'
                     ],
                     browsers: [
 						'PhantomJS2'
@@ -138,10 +137,6 @@ module.exports = function(grunt) {
             jshintFiles.push(concatenatedFile);
 
             karmaConfig.debug.options.files.push(concatenatedFile);
-           // karmaConfig.continuousDev.options.files.push(concatenatedFile);
-            //karmaConfig.continuousDev.options.preprocessors[concatenatedFile] = ['coverage'];
-            //karmaConfig.continuousBuild.options.files.push(concatenatedFile);
-           //karmaConfig.continuousBuild.options.preprocessors[concatenatedFile] = ['coverage'];
         }
 
         //Push remaining web/js files that may not have been caught.
@@ -156,16 +151,6 @@ module.exports = function(grunt) {
 			},
 			all: ['../output/_PublishedWebsites/PhotoSaver/', './www', 'web/js']
 		},
-		//connect: {
-			//server: {
-				//port: 8888,
-				//base: '../output/_PublishedWebsites/PhotoSaver',
-				//keepalive: false,
-				//open: {
-//					target: 'http://localhost:8888/#'
-				//}
-//			}
-		//},
 		pkg: pkg,
 		build: build,
 		concat: concatConfig,

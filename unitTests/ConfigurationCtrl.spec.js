@@ -1,25 +1,23 @@
 describe('ConfigurationCtrl', function () {
     var ctrl,
         $rootScope,
-        $scope,
 		responseNoSort = { sorted: [{a:'a'}] ,total: 7 },
 		responseSort = { sorted: [{a:'b'}] ,total: 23 },
 		$mdToast,
 		$httpBackend;
 
     beforeEach(function(){
-		module('sampleApp');
+		angular.mock.module('photoSaverApp');
 	});
-
+	
     beforeEach(function () {
 		$mdToast = jasmine.createSpyObj('$mdToast', ['showSimple']);
         inject(function ($injector, $controller, _$httpBackend_) {
             $rootScope = $injector.get('$rootScope');
-			$scope = $rootScope.$new();
 			$httpBackend = _$httpBackend_;
 			
 			ctrl = $controller('ConfigurationCtrl', {
-				$scope: $scope,
+				$rootScope: $rootScope,
 				$mdToast: $mdToast
 			});
         });
@@ -27,110 +25,110 @@ describe('ConfigurationCtrl', function () {
 		$httpBackend.expectGET('/configs?page=1&pagesize=5&sortby=name&sortorder=asc').respond(responseNoSort);
 	});
 			 
-	describe('$scope.init()', function(){
+	describe('ctrl.init()', function(){
 		beforeEach(function(){
-			spyOn($scope, 'getConfigs');
-			$scope.init();
+			spyOn(ctrl, 'getConfigs');
+			ctrl.init();
 		});
 		
-		it('should call $scope.getConfigs', function(){
-			expect($scope.getConfigs).toHaveBeenCalled();
-			expect($scope.adding).toBeFalsy();
-			expect($scope.selectedConfig).toBeFalsy();
-			expect($scope.editing).toBeFalsy();
-			expect($scope.page).toEqual(1);
-			expect($scope.sortBy).toBe('name');
-			expect($scope.pageSize).toEqual(5);
+		it('should call ctrl.getConfigs', function(){
+			expect(ctrl.getConfigs).toHaveBeenCalled();
+			expect(ctrl.adding).toBeFalsy();
+			expect(ctrl.selectedConfig).toBeFalsy();
+			expect(ctrl.editing).toBeFalsy();
+			expect(ctrl.page).toEqual(1);
+			expect(ctrl.sortBy).toBe('name');
+			expect(ctrl.pageSize).toEqual(5);
 		});
 		
 		it ('should default page, sortValue, totalDisplayed, and pageSize', function(){
-			expect($scope.adding).toBeFalsy();
-			expect($scope.selectedConfig).toBe(null);
-			expect($scope.editing).toBeFalsy();
-			expect($scope.page).toEqual(1);
-			expect($scope.pageSize).toEqual(5);
-			expect($scope.totalDisplayed).toEqual(0);
+			expect(ctrl.adding).toBeFalsy();
+			expect(ctrl.selectedConfig).toBe(null);
+			expect(ctrl.editing).toBeFalsy();
+			expect(ctrl.page).toEqual(1);
+			expect(ctrl.pageSize).toEqual(5);
+			expect(ctrl.totalDisplayed).toEqual(0);
 		});
 	});
 	 	
-	describe('$scope.editConfg', function(){
-		it('should set $scope.selectedConfig', function (){
-			$scope.selectedConfig = 'NotEdit';
-			$scope.editConfig('edit');
-			expect($scope.selectedConfig).toBe('edit');
+	describe('ctrl.editConfg', function(){
+		it('should set ctrl.selectedConfig', function (){
+			ctrl.selectedConfig = 'NotEdit';
+			ctrl.editConfig('edit');
+			expect(ctrl.selectedConfig).toBe('edit');
 		});
 	});
 	
-	describe('$scope.sort', function(){
+	describe('ctrl.sort', function(){
 		beforeEach(function(){
-			spyOn($scope, 'getConfigs');
-			$scope.sort('name');
+			spyOn(ctrl, 'getConfigs');
+			ctrl.sort('name');
 		});
 		
-		it('should call $scope.getConfigs', function(){
-			expect($scope.getConfigs).toHaveBeenCalledWith('name');
+		it('should call ctrl.getConfigs', function(){
+			expect(ctrl.getConfigs).toHaveBeenCalledWith('name');
 		});
 	});
 	
-	describe('$scope.getConfigs with no sort value', function(){
+	describe('ctrl.getConfigs with no sort value', function(){
 		beforeEach(function(){
-			$scope.sortValue = null;
-			$scope.pageSize = 5;
-			$scope.page = 0;
-			$scope.totalDisplayed = 0;
-			$scope.totalConfigs = 0;
-			$scope.configs = null;
+			ctrl.sortValue = null;
+			ctrl.pageSize = 5;
+			ctrl.page = 0;
+			ctrl.totalDisplayed = 0;
+			ctrl.totalConfigs = 0;
+			ctrl.configs = null;
 			$httpBackend.expectGET('/configs?page=1&pagesize=5&sortby=name&sortorder=asc').respond(responseNoSort);
-			$scope.getConfigs(null);
+			ctrl.getConfigs(null);
 		});
 		
 		it('should set the sort value and pageSize', function(){
 			$httpBackend.flush();
 			$httpBackend.verifyNoOutstandingExpectation();
 			$httpBackend.verifyNoOutstandingRequest();
-			expect($scope.sortValue).toBe(null); 
-			expect($scope.totalDisplayed).toBe($scope.pageSize); 
-			expect($scope.page).toBe(1); 
-			expect($scope.totalConfigs).toBe(7); 
-			expect($scope.configs.length).toEqual(1);
+			expect(ctrl.sortValue).toBe(null); 
+			expect(ctrl.totalDisplayed).toBe(ctrl.pageSize); 
+			expect(ctrl.page).toBe(1); 
+			expect(ctrl.totalConfigs).toBe(7); 
+			expect(ctrl.configs.length).toEqual(1);
 		});
 	});
 	
-	describe('$scope.getConfigs with a sort value', function(){
+	describe('ctrl.getConfigs with a sort value', function(){
 		beforeEach(function(){
-			$scope.sortValue = null;
-			$scope.pageSize = 5;
-			$scope.page = 0;
-			$scope.totalDisplayed = 0;
-			$scope.totalConfigs = 0;
-			$scope.configs = null;
-			$scope.sortOrder = 'asc';
+			ctrl.sortValue = null;
+			ctrl.pageSize = 5;
+			ctrl.page = 0;
+			ctrl.totalDisplayed = 0;
+			ctrl.totalConfigs = 0;
+			ctrl.configs = null;
+			ctrl.sortOrder = 'asc';
 			$httpBackend.expectGET('/configs?page=1&pagesize=5&sortby=name&sortorder=asc').respond(responseSort);
-			$scope.getConfigs('name');
+			ctrl.getConfigs('name');
 		});
 		
 		it('should set the sort value and pageSize', function(){
 			$httpBackend.flush();
 			$httpBackend.verifyNoOutstandingExpectation();
 			$httpBackend.verifyNoOutstandingRequest();
-			expect($scope.sortBy).toBe('name'); 
-			expect($scope.totalDisplayed).toBe($scope.pageSize); 
-			expect($scope.page).toBe(1); 
-			expect($scope.totalConfigs).toBe(23); 
-			expect($scope.configs.length).toEqual(1);
+			expect(ctrl.sortBy).toBe('name'); 
+			expect(ctrl.totalDisplayed).toBe(ctrl.pageSize); 
+			expect(ctrl.page).toBe(1); 
+			expect(ctrl.totalConfigs).toBe(23); 
+			expect(ctrl.configs.length).toEqual(1);
 		});
 	});
 	
-	describe('$scope.getConfigs with http 401 Unauthorized', function () {
+	describe('ctrl.getConfigs with http 401 Unauthorized', function () {
 		beforeEach(function(){
-			$scope.sortValue = null;
-			$scope.pageSize = 5;
-			$scope.page = 0;
-			$scope.totalDisplayed = 0;
-			$scope.totalConfigs = 0;
-			$scope.configs = null;
+			ctrl.sortValue = null;
+			ctrl.pageSize = 5;
+			ctrl.page = 0;
+			ctrl.totalDisplayed = 0;
+			ctrl.totalConfigs = 0;
+			ctrl.configs = null;
 			$httpBackend.expectGET('/configs?page=1&pagesize=5&sortby=name&sortorder=asc').respond(401);
-			$scope.getConfigs('name');
+			ctrl.getConfigs('name');
 			
 		});
 		

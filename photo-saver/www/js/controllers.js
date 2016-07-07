@@ -1,5 +1,5 @@
 /*
- * controllers v  (build 20160707_113901_1)
+ * controllers v  (build 20160707_120044_1)
  * Copyright (c) 2016
  * Author: Chad Keibler 
  */
@@ -202,7 +202,6 @@ angular.module('LoginCtrl', []).controller('LoginCtrl', ['$rootScope', '$http', 
 		vm.redirectDelay = 1000;
 	};
 	vm.showSimpleToast = function (msg){
-		console.log('here');
 			$mdToast.showSimple(msg);
 	};
 	
