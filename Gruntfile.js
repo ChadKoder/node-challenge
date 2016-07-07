@@ -300,5 +300,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-sync');
 	
-	grunt.registerTask('default', ['clean', 'concat', 'uglify', 'sync', 'karma']);
+	grunt.registerTask('default', ['clean', 'concat', 'uglify', 'sync']);
+	grunt.registerTask('test', ['clean', 'concat', 'uglify', 'sync', 'karma']);
+	
 };
