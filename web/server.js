@@ -25,8 +25,8 @@ var sort = new sorter(userConfigs);
 var paginate = new paginator(userConfigs);
 var configPgObjectCreator = new configPageObjCreator();
 configPgObjectCreator.init(userConfigs, sort, paginate);
-var router = require('../src/js/functions/router.js')
-router.init(path, fs, url, currentWorkingDir, configPgObjectCreator, auth, resService, userConfigs, Buffer);
+var router = require('../src/js/functions/router.js')(path, fs, url, currentWorkingDir, configPgObjectCreator, auth, resService, userConfigs, Buffer);
+//router.init(path, fs, url, currentWorkingDir, configPgObjectCreator, auth, resService, userConfigs, Buffer);
 var httpHandler = require('../src/js/functions/httpHandlerService')(path, currentWorkingDir, userConfigs, auth, router, resService);
 	
 const PORT = 8888;
