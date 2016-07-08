@@ -33,5 +33,3 @@ app.config(function ($routeProvider, $locationProvider) {
 		});
 	};
 }]);
-
-module.exports = app;
