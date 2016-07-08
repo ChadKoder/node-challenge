@@ -3,7 +3,7 @@ function HttpHandler (path, currentWorkingDir, configs, authentication, router, 
 	
 	return {
 		handleGetRequest: function (res, req, contentType){		
-			router.get(currentWorkingDir, res, req, contentType);
+			router.get(res, req, contentType);
 			return;
 		},
 		handlePostRequest: function (res, req, contentType){

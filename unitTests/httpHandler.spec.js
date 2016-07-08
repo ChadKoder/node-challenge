@@ -14,60 +14,45 @@ describe('httpHandler', function(){
 	req,
 	responseService;
 	 
+  
+	it('handleGetRequest should call router.get when route is not node_modules or src', function () {
+		spyOn(router, 'get');
+		req = unitTestMocks.request(null, 'anything');
+		httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
+	
+		httpHandler.handleGetRequest(unitTestMocks.response, req, 'application/json');
+		expect(router.get).toHaveBeenCalledWith(unitTestMocks.response, req, 'application/json');
+	}); 
 	 
-	describe('handleGetRequest', function (){
-		beforeEach(function(){
-			//spyOn(router, 'loadDependencies');
-			spyOn(router, 'get');
-		});
+	it ('handlePostRequest should call router.post', function () {
+		spyOn(router, 'post');
+		req = unitTestMocks.request(null, 'src');
+		httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
 		
-		it('should call router.get when route is not node_modules or src', function () {
-			req = unitTestMocks.request(null, 'src');
-			httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
+		httpHandler.handlePostRequest(unitTestMocks.response, req, 'application/json');
 		
-			httpHandler.handleGetRequest(unitTestMocks.response, req, 'application/json');
-			//expect(router.loadDependencies).not.toHaveBeenCalled();
-			expect(router.get).toHaveBeenCalledWith('C:/', unitTestMocks.response, req, 'application/json');
-		});
+		expect(router.post).toHaveBeenCalled();
+	}); 
+ 
+	it ('handlePutRequest should call router.put', function () {
+		req = unitTestMocks.request(null, 'configs');
+		httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
+		
+		spyOn(router, 'put');
+		
+		httpHandler.handlePutRequest(unitTestMocks.response, req, 'application/json');
+		
+		expect(router.put).toHaveBeenCalled();
 	});
-	
-	describe('handlePostRequest', function() {
-		it ('should call router.post', function () {
-			spyOn(router, 'post');
-			req = unitTestMocks.request(null, 'src');
-			httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
-			
-			httpHandler.handlePostRequest(unitTestMocks.response, req, 'application/json');
-			
-			expect(router.post).toHaveBeenCalled();
-		});
-	});
-	
-	describe('handlePutRequest', function() {
-		it ('should call router.put', function () {
-			req = unitTestMocks.request(null, 'configs');
-			httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
-			
-			spyOn(router, 'put');
-			
-			httpHandler.handlePutRequest(unitTestMocks.response, req, 'application/json');
-			
-			expect(router.put).toHaveBeenCalled();
-		});
-	});
-
-	describe('handleDeleteRequest', function() {
-		it ('should call router.delete', function () {
-			req = unitTestMocks.request(null, 'configs');
-			httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
-			
-			spyOn(router, 'delete');
-			
-			httpHandler.handleDeleteRequest(unitTestMocks.response, req, 'application/json');
-			
-			expect(router.delete).toHaveBeenCalled();
-		});
-	});
-	
-	
+	  
+	it ('handleDeleteRequest should call router.delete', function () {
+		req = unitTestMocks.request(null, 'configs');
+		httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
+		
+		spyOn(router, 'delete');
+		
+		httpHandler.handleDeleteRequest(unitTestMocks.response, req, 'application/json');
+		
+		expect(router.delete).toHaveBeenCalled();
+	}); 
 });

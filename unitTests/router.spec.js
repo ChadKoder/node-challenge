@@ -1,6 +1,5 @@
 describe('Router', function (){
-	var router = new Router(),
-		responseService = new ResponseService(),
+	var responseService = new ResponseService(),
 		unitTestMocks = new UnitTestMocks(),
 		configPageObjCreator = new ConfigPageObjCreator(),
 		unitTestData = new UnitTestData(),
@@ -10,7 +9,7 @@ describe('Router', function (){
 		userConfigs = unitTestData.userConfigs,
 		url = unitTestMocks.url, 
 		Buffer;
-	
+		
 	describe('routeGet with uri /validateUser', function() {
 		describe('when a valid authorization header and credentials are provided', function (){
 			beforeEach(function() {
@@ -26,7 +25,7 @@ describe('Router', function (){
 					}
 				};
 				
-				router.init(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
+				router = new Router(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
 			});
 			
 			it('with successful user validation should return 200 success', function() {
@@ -36,10 +35,10 @@ describe('Router', function (){
 				spyOn(auth, 'validateUser').and.returnValue(true);
 				spyOn(responseService, 'write200Success');
 				
-				router.get('fName', unitTestMocks.response, request, 'contentType');
+				router.get(unitTestMocks.response, request, 'contentType');
 				
 				expect(auth.validateUser).toHaveBeenCalled();
-				expect(responseService.write200Success).toHaveBeenCalledWith(unitTestMocks.response, null, 'fName', 'contentType', 'ABC123#');
+				expect(responseService.write200Success).toHaveBeenCalledWith(unitTestMocks.response, null, 'c://validateUser', 'contentType', 'ABC123#');
 				
 				
 				
@@ -52,7 +51,7 @@ describe('Router', function (){
 				spyOn(auth, 'validateUser').and.returnValue(false);
 				spyOn(responseService, 'write401Unauthorized');
 				
-				router.get('fName', unitTestMocks.response, request, 'contentType');
+				router.get(unitTestMocks.response, request, 'contentType');
 				
 				expect(auth.validateUser).toHaveBeenCalled();
 				expect(responseService.write401Unauthorized).toHaveBeenCalled();
@@ -60,7 +59,7 @@ describe('Router', function (){
 			
 			it('routeGet /user-configurations should render the user configurations html', function() {
 				spyOn(router, 'renderFile');
-				router.get('fName', unitTestMocks.response, unitTestMocks.request(null, '/user-configurations'), 'contentType');
+				router.get(unitTestMocks.response, unitTestMocks.request(null, '/user-configurations'), 'contentType');
 				expect(router.renderFile).toHaveBeenCalledWith(unitTestMocks.response,'./index.html', 'contentType');
 			});
 	
@@ -68,7 +67,7 @@ describe('Router', function (){
 				var returnVal = { val: 'myObject' };
 				spyOn(responseService, 'write200OKWithData');
 				spyOn(configPageObjCreator, 'getSortedPageObj').and.returnValue(returnVal);
-				router.get('fName',  unitTestMocks.response, unitTestMocks.request(null, '/configs'), 'contentType');
+				router.get( unitTestMocks.response, unitTestMocks.request(null, '/configs'), 'contentType');
 				expect(configPageObjCreator.getSortedPageObj).toHaveBeenCalled();
 				expect(responseService.write200OKWithData).toHaveBeenCalled(); 
 			});
@@ -76,7 +75,7 @@ describe('Router', function (){
 			it('routeGet should default to rendering the file', function() {
 				spyOn(router, 'renderFile');
 				
-				router.get('fName',  unitTestMocks.response, unitTestMocks.request(null, '/file.txt'), 'contentType');
+				router.get( unitTestMocks.response, unitTestMocks.request(null, '/file.txt'), 'contentType');
 				expect(router.renderFile).toHaveBeenCalled();
 			});
 			
@@ -84,7 +83,7 @@ describe('Router', function (){
 				var returnVal = { val: 'myObject' };
 				spyOn(responseService, 'write200OKWithData');
 				spyOn(configPageObjCreator, 'getSortedPageObj').and.returnValue(returnVal);
-				router.get('fName',  unitTestMocks.response, unitTestMocks.request(null, '/configs'), 'contentType');
+				router.get( unitTestMocks.response, unitTestMocks.request(null, '/configs'), 'contentType');
 				expect(configPageObjCreator.getSortedPageObj).toHaveBeenCalled();
 				
 				expect(responseService.write200OKWithData).toHaveBeenCalled(); 
@@ -105,14 +104,13 @@ describe('Router', function (){
 					}
 				};
 				
-				router = new Router();
-				router.init(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
+			router = new Router(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
 			});
 			
 			it('should return 401 Unauthorized', function(){
 				spyOn(responseService, 'write401Unauthorized');
 				spyOn(auth, 'validateUser');
-				router.get('fName', unitTestMocks.response, unitTestMocks.request(null, '/validateUser'), 'contentType');
+				router.get(unitTestMocks.response, unitTestMocks.request(null, '/validateUser'), 'contentType');
 				expect(auth.validateUser).not.toHaveBeenCalled();
 				expect(responseService.write401Unauthorized).toHaveBeenCalled();
 			});
@@ -133,8 +131,7 @@ describe('Router', function (){
 					}
 				};
 				
-			router = new Router();
-			router.init(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
+			router = new Router(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
 		});
 
 it('routePost /logout should set token to null and call responseService.write204NoContent', function() {
@@ -204,8 +201,7 @@ it('routePost /logout should set token to null and call responseService.write204
 					}
 				};
 				
-			router = new Router();
-			router.init(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
+			router = new Router(path, unitTestMocks.fileSystem, url, currentWorkingDir, configPageObjCreator, auth, responseService, userConfigs, Buffer);
 		});
 		
 		describe('when user is unauthorized', function(){

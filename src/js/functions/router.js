@@ -5,62 +5,6 @@ var token = null, path, fileSystem, url, currentWorkingDir, configPageObjCreator
 function Router(path, fileSystem, url, currentWorkingDir, configPageObjCreator, authentication, responseService, configs, Buffer) {
 	return {
 		renderFile: function (res, fileName, contentType){
-			var fName;
-			//console.log('attempting to load file: ' + fileName);
-			if (fileSystem.lstatSync(fileName).isDirectory()) {
-				//console.log('IS a Directory: ' + fileName);
-				//console.log('IT IS a dir: ' + fileName);
-				var files = fileSystem.readdirSync(fileName);
-				
-				for (var i = 0; i <= files.length - 1; i++){
-					//console.log('attempting to load fileName: ' + files[i]);
-					if (fileSystem.lstatSync(files[i]).isDirectory()){
-						console.log('222:  IS A SUB Directory: ' + files[i]);
-						
-						var subFiles = fileSystem.readdirSync(files[i]);
-						
-						for (var j = 0; j <= subFiles.length - 1; j++){	
-							console.log('sub directory... building from... ');
-							console.log('1: ' + currentWorkingDir);
-							console.log('2: ' + files[i]);
-							console.log('3: ' + subFiles[j]);
-							var tempName = path.join(currentWorkingDir, files[i]);
-							var fName = path.join(tempName, subFiles[j]);
-							
-							//var tempName = path.join(files[i], fileName);
-							//var tempName = path.join(files[i],)
-							//fName = path.join(tempName, subFiles[i]);
-							
-							//console.log('attempting to load sub file : ' + fName);
-							fileSystem.readFile(fName, 'binary', function(err, file){
-								if (err) {
-									console.log('error for file : ' + subFiles[j] + ' err: ' + err);
-									responseService.write500InternalError(res, err);
-									return;
-								}
-								 
-								responseService.write200Success(res, file, fileName, contentType);
-								return;
-							});
-						}	
-						
-					} else {
-							
-						//console.log('rendering file: ' + fName);
-						fileSystem.readFile(files[i], 'binary', function(err, file){
-							if (err) {
-								console.log('error for file : ' + files[i] + ' err: ' + err);
-								responseService.write500InternalError(res, err);
-								return;
-							}
-							 
-								responseService.write200Success(res, file, fileName, contentType);
-								return;
-							});
-					}
-				}
-			} else {
-				console.log('NOT A directory: ' + fileName);
 				fileSystem.readFile(fileName, 'binary', function(err, file){
 					if (err) {
 						console.log('error for file : ' + fileName + ' err: ' + err);
@@ -71,12 +15,11 @@ function Router(path, fileSystem, url, currentWorkingDir, configPageObjCreator, 
 					responseService.write200Success(res, file, fileName, contentType);
 					return;
 				});
-			}
-			return;
 		},
-		get: function (fileName, res, req, contentType){
+		get: function (res, req, contentType){
 			var uri = url.parse(req.url).pathname;
-		
+			var fileName = path.join(currentWorkingDir, uri);
+			
 			switch (uri.trim().toLowerCase()){
 				case '/':
 					this.renderFile(res, indexHtml, contentType);
