@@ -273,6 +273,12 @@ module.exports = function(grunt) {
 						},
 						{
 							expand: true,
+							cwd: 'resources',
+							src: ['config.xml'],
+							dest: './photo-saver/'
+						},
+						{
+							expand: true,
 							cwd: 'src/views',
 							src: ['user-configurations.html', 'login.html'],
 							dest: './web/views'
