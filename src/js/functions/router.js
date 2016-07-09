@@ -11,6 +11,8 @@ function Router(path, fileSystem, url, currentWorkingDir, configPageObjCreator, 
 						responseService.write500InternalError(res, err);
 						return;
 					}
+                                    
+                                    console.log('rendering file: ' + fileName);
 					 
 					responseService.write200Success(res, file, fileName, contentType);
 					return;

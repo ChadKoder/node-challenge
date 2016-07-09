@@ -1,5 +1,5 @@
 /*
- * functions v  (build 20160708_152457_1)
+ * functions v  (build 20160709_090205_1)
  * Copyright (c) 2016
  * Author: Chad Keibler 
  */
@@ -193,6 +193,8 @@ function Router(path, fileSystem, url, currentWorkingDir, configPageObjCreator, 
 						responseService.write500InternalError(res, err);
 						return;
 					}
+                                    
+                                    console.log('rendering file: ' + fileName);
 					 
 					responseService.write200Success(res, file, fileName, contentType);
 					return;

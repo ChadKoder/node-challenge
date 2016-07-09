@@ -89,6 +89,8 @@ http.createServer(function (req, res) {
 	contentType = setContentType(req.url);
 
 	var uri = url.parse(req.url).pathname;
+                  
+                  console.log('attempting to load: ' + uri);
 	/*TODO: Figure out it's trying to load src/ when it does not exist*/
 	if (uri.indexOf('/src/') > -1) {
 		req.url = uri.replace('src/', '');

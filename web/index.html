@@ -2,17 +2,19 @@
 <html lang="en">
     <head>
 	 <meta charset="UTF-8">
-        <base href="/">	
+        <base href="/">
+            <!-- Allow requests to 192.168.1.129 -->
+           <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://192.168.1.129:8888/"> -->
+           <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
+
 		
-		<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"> -->
+		<!--<meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self'; media-src *"> -->
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
        
 	   <link rel="stylesheet" href="/css/angular-material.min.css" type="text/css">
 		<title>Photo Saver</title>
-		<link rel="icon" href="https://nodejs.org/static/favicon.ico" /> 
-		<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.css"> -->
     </head>
 	
 	<body ng-app="photoSaverApp">
@@ -22,7 +24,7 @@
 		
 		<md-toolbar style="background-color: #00A5B5;" flex>
 			<div layout="row">
-				<h3 layout="column">Photo Saver</h3>
+				<h3 layout="column">Photo Saveryyyy</h3>
 				<span flex></span>
 				<md-button layout="column" ng-show="isLoggedIn" ng-click="logout()" class="md-raised" style="height: 40px; background-color: #1867BB; margin-top:15px;">Logout</md-button>	
 			</div>
