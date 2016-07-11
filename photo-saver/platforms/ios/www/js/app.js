@@ -1,9 +1,3 @@
-/*
- * app v  (build 20160709_090205_1)
- * Copyright (c) 2016
- * Author: Chad Keibler 
- */
-
 var app = angular.module('photoSaverApp', ['ngMaterial', 'ngRoute', 'LoginCtrl', 'ConfigurationCtrl']);
 app.config(function ($routeProvider, $locationProvider) {
 	$locationProvider.html5Mode(true);

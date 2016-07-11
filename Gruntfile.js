@@ -59,6 +59,7 @@ module.exports = function(grunt) {
 
 	var requiredJsFiles = [
 		'node_modules/angular/angular.js',
+		'node_modules/requirejs/require.js',
 		'node_modules/angular-route/angular-route.js',
 		'node_modules/angular-animate/angular-animate.js',
 		'node_modules/angular-aria/angular-aria.js',
@@ -110,7 +111,8 @@ module.exports = function(grunt) {
                 scriptsdir = 'web/js/',
                 concatenatedFile = scriptsdir + module + '.js',
                 minified = scriptsdir + module + '.min.js',
-                moduledir = 'src/js/' + module + '/',
+                moduledir = 'src-ios/js/' + module + '/',
+				//  moduledir = 'src/js/' + module + '/',
                 bannerTemplate = createBannerTemplate(module);
 
             // Push pre-concat version to jshint first so we get accurate file names / line numbers.
@@ -255,35 +257,89 @@ module.exports = function(grunt) {
                         },
 						{
 							expand: true,
-							cwd: 'web',
+							cwd: 'src-ios',
 							src: ['index.html'],
 							dest: './photo-saver/www/'
-						},
-						{
-							expand: true,
-							cwd: 'web/js',
-							src: ['*.js'],
-							dest: './photo-saver/www/js/'
-						},
-						{
+						},						 
+						/*{
 							expand: true,
 							cwd: 'web/views',
 							src: ['*.html'],
 							dest: './photo-saver/www/views/'
-						},
+						},*/
 						{
 							expand: true,
-							cwd: 'resources',
+							cwd: 'src-ios',
 							src: ['config.xml'],
 							dest: './photo-saver/'
 						},
 						{
 							expand: true,
+							cwd: 'src-ios/res',
+							src: ['icon.png'],
+							dest: './photo-saver/www/res/'
+						},
+						{
+							expand: true,
+							cwd: 'src-ios/js/app',
+							src: ['app.js'],
+							dest: './photo-saver/www/js/'
+						},
+					/*	{
+							expand: true,
+							cwd: 'src-ios/js/functions',
+							src: ['app.js'],
+							dest: './photo-saver/www/js/'
+						},
+						{
+							expand: true,
+							cwd: 'src-ios/js/controllers',
+							src: ['*.js'],
+							dest: './photo-saver/www/js/controllers/'
+						},*/
+						{
+							expand: true,
+							cwd: 'src-ios',
+							src: ['server.js'],
+							dest: './photo-saver/www/'
+						},
+						{
+							expand: true,
+							cwd: 'src-ios/js/functions',
+							src: ['*.js'],
+							dest: './photo-saver/www/js/functions/'
+						},
+						{
+							expand: true,
+							cwd: 'web/js',
+							src: ['requirements.js', 'controllers.js'],
+							dest: './photo-saver/www/js/'
+						},
+						{
+							expand: true,
+							cwd: 'src-ios/js',
+							src: ['cordova.js'],
+							dest: './photo-saver/www/'
+						},
+						{
+							expand: true,
+							cwd: 'src-ios/views',
+							src: ['*.html'],
+							dest: './photo-saver/www/views/'
+						},
+						{
+							expand: true,
+							cwd: 'src-ios',
+							src: ['*.json'],
+							dest: './photo-saver/www/'
+						},
+						/*{
+							expand: true,
 							cwd: 'src/views',
 							src: ['user-configurations.html', 'login.html'],
 							dest: './web/views'
 						}
-						,
+						,*/
 						{
 							expand: true,
 							cwd: 'src/js',

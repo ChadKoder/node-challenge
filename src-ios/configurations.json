@@ -1,0 +1,76 @@
+{
+	"configurations": [
+		{
+			"name": "host1",
+			"hostname": "nessus-ntp.lab.com",
+			"port": 8715,
+			"username": "toto"
+		},
+		{
+			"name": "john",
+			"hostname": "nessus-xml.lab.com",
+			"port": 3384,
+			"username": "admin"
+		},
+		{
+			"name": "bill",
+			"hostname": "nessus-xml.lab.com",
+			"port": 2998,
+			"username": "jonesb"
+		},
+		{
+			"name": "chris",
+			"hostname": "another-nessus-ntp.lab.com",
+			"port": 5478,
+			"username": "smithc"
+		},
+		{
+			"name": "frank",
+			"hostname": "yet-another-xml.lab.com",
+			"port": 7548,
+			"username": "johnsonf"
+		},
+		{
+			"name": "chad",
+			"hostname": "oh-yet-another-xml.lab.com",
+			"port": 4365,
+			"username": "keiblerc"
+		},
+		{
+			"name": "jennifer",
+			"hostname": "zzzzz.ntp.lab.com",
+			"port": 3525,
+			"username": "usergirl"
+		},
+		{
+			"name": "tim",
+			"hostname": "fdsa.ntp.lab.com",
+			"port": 4215,
+			"username": "userguy"
+		},
+		{
+			"name": "michelle",
+			"hostname": "dsfa.ntp.lab.com",
+			"port": 8466,
+			"username": "nodeuser"
+		},
+		{
+			"name": "susan",
+			"hostname": "jgks.ntp.lab.com",
+			"port": 8443,
+			"username": "zebra"
+		},
+		{
+			"name": "brad",
+			"hostname": "plkm.ntp.lab.com",
+			"port": 4433,
+			"username": "orange"
+		},
+		{
+			"name": "donna",
+			"hostname": "uumm.ntp.lab.com",
+			"port": 9988,
+			"username": "user1"
+		}
+	]
+}

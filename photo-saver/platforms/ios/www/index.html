@@ -1,35 +1,37 @@
 <!doctype html>
 <html lang="en">
     <head>
-	 <meta charset="UTF-8">
-        <base href="/">	
-		
-		<meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self'; media-src *">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-       
-	   <link rel="stylesheet" href="/css/angular-material.min.css" type="text/css">
-		<title>Photo Saver</title>
-		<link rel="icon" href="https://nodejs.org/static/favicon.ico" />
+        <meta charset="UTF-8">
+            <base href="/">
+                <!-- Allow requests to 192.168.1.129 -->
+                <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' http://192.168.1.129:8888/"> -->
+                <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"/>
+                
+                
+                <!--<meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self'; media-src *"> -->
+                <meta name="format-detection" content="telephone=no">
+                    <meta name="msapplication-tap-highlight" content="no">
+                        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+                            
+                            <link rel="stylesheet" href="/css/angular-material.min.css" type="text/css">
+                                <title>Photo Saver</title>
+                                </head>
+    
+    <body ng-app="photoSaverApp">
+        <script src="js/requirements.js" type="text/javascript"></script>
+        <script src="js/controllers.js" type="text/javascript"></script>
+        <script src="js/app.js" type="text/javascript"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
         
-		 
-    </head>
-	
-	<body ng-app="photoSaverApp">
-		<script src="../photo-saver/platforms/ios/www/js/requirements.js" type="text/javascript"></script>
-		<script src="../photo-saver/platforms/ios/www/js/controllers.js" type="text/javascript"></script>
-		<script src="../photo-saver/platforms/ios/www/js/app.js" type="text/javascript"></script>
-		<button onclick="testclick()">test ---btn</button>
-		<md-toolbar style="background-color: #00A5B5;" flex>
-			<div layout="row">
-				<h3 layout="column">Photo Saveryy</h3>
-				<span flex></span>
-				<md-button layout="column" ng-show="isLoggedIn" ng-click="logout()" class="md-raised" style="height: 40px; background-color: #1867BB; margin-top:15px;">Logout</md-button>	
-			</div>
-		</md-toolbar>
-		<div ng-view flex></div>
-	</body>
+        <md-toolbar style="background-color: #00A5B5;" flex>
+            <div layout="row">
+                <h3 layout="column">Photo Saver</h3>
+                <span flex></span>
+                <md-button layout="column" ng-show="isLoggedIn" ng-click="logout()" class="md-raised" style="height: 40px; background-color: #1867BB; margin-top:15px;">Logout</md-button>	
+            </div>
+        </md-toolbar>
+        <div ng-view flex></div>
+    </body>
 </html>
 
 
