@@ -8,29 +8,50 @@ angular.module('LoginCtrl', []).controller('LoginCtrl', ['$rootScope', '$http', 
 		 
 		 document.addEventListener("deviceready", onDeviceReady, false);
 		 function onDeviceReady() {
-		 alert('device ready!');
-		 alert(navigator.camera);
-		 pictureSource = navigator.camera.PictureSourceType;
-		 destinationType = navigator.camera.DestinationType;
+			alert(navigator.camera);
+			//pictureSource = navigator.camera.PictureSourceType;
+			//destinationType = navigator.camera.DestinationType;
 		 };
 		 
 		 vm.cameraSuccess = function(imageUri) {
-		 vm.images.push(imageUri);
+			//vm.images.push(imageUri);
+			console.log('got pic: ' + imageUri);
+		 };
+		 
+		 
+		 vm.showCameraRoll1 = function () {
+			 window.imagePicker.getPictures(function(results) {
+				//alert('total pics: ' + results.length);
+				
+				var req = {
+					method: 'POST',
+					url: '/photo',
+					data: { imagedata: results[0] }
+				};
+								 
+				 $http(req).success(function(){
+					 alert('photo saved successfully!');
+					}).error(function(){
+					 alert('failed to save photo :(');
+				 });
+			 });
+		 };
+		 
+		 vm.cameraError = function () {
+			alert('error!') ;
 		 };
 		 
 		 vm.showCameraRoll = function (){
-		 window.imagePicker.getPictures(function(results) {
-										alert('total pics: ' + results.length);
-										});
-		 /* var options = {
+			  
+		  var options = {
 		  quality: 50,
 		  destinationType: navigator.camera.DestinationType.FILE_URI,
 		  sourceType: navigator.camera.DestinationType.PHOTOLIBRARY,
 		  targetWidth: 200,
 		  targetHeight: 200
-		  };*/
+		  };
 		 
-		 //   navigator.camera.getPicture(vm.cameraSuccess, vm.cameraError, options);
+		    navigator.camera.getPicture(vm.cameraSuccess, vm.cameraError, options);
 		 };
 		 
 		 

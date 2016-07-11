@@ -1,6 +1,9 @@
 <md-content>
 	 <div ng-hide="showConfigs">
-         <md-button ng-click="vm.showCameraRoll()">Show Camera Roll</md-button>
+         <md-button ng-click="vm.showCameraRoll()">Show Camera Roll - camera1</md-button>
+		 <md-button ng-click="vm.showCameraRoll1()">Show Camera Roll - imagePicker1</md-button>
+		 
+		 
          <div ng-show="images.length > 0" ng-repeat="image in vm.images">
              Image: {{ image }}
         </div>

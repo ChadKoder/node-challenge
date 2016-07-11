@@ -11,9 +11,8 @@ function Router(path, fileSystem, url, currentWorkingDir, configPageObjCreator, 
 						responseService.write500InternalError(res, err);
 						return;
 					}
-                                    
-                                    console.log('rendering file: ' + fileName);
-					 
+
+                    console.log('rendering file: ' + fileName);
 					responseService.write200Success(res, file, fileName, contentType);
 					return;
 				});
@@ -83,6 +82,34 @@ function Router(path, fileSystem, url, currentWorkingDir, configPageObjCreator, 
 					token = null;
 					responseService.write204NoContent(res);
 					break;
+				case '/photo':
+					var imagedata = '';
+					res.setEncoding('binary');
+					req.on('data', function(chunk){
+						if (chunk) {
+							imagedata += chunk;
+						}
+					});
+					
+					req.on('end', function(){
+						if (imagedata.length > 0) {
+							fileSystem.writeFile('test123photo.jpg', imagedata, 'binary', function(err) {
+								if (err) {
+									console.log('ERROR. file not saved.');
+									responseService.write500InternalError(res, 'ERROR');
+									return;
+								}
+								
+								console.log('file SAVED!');
+								responseService.write204NoContent(res);
+								return;
+							});
+						}
+					});
+					
+					
+					
+					return;
 				case '/configs':
 					var addSuccess = false;
 					var data = '';
