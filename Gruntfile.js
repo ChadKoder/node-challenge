@@ -27,7 +27,6 @@ module.exports = function(grunt) {
                     frameworks: ['jasmine', 'browserify'],
                     autoWatch: true,
                     files: [
-                        
 						'node_modules/requirejs/require.js', 
 						'node_modules/angular/angular.js',
 						'node_modules/angular-route/angular-route.js',
@@ -65,7 +64,8 @@ module.exports = function(grunt) {
 		'node_modules/angular-aria/angular-aria.js',
         'node_modules/angular-resource/angular-resource.js',
 		'node_modules/angular-messages/angular-messages.js',
-		'node_modules/angular-material/angular-material.js'
+		'node_modules/angular-material/angular-material.js',
+		'node_modules/angular-base64/angular-base64.js'
 	],
 	concatConfig = {
 		requirements: {
@@ -111,7 +111,7 @@ module.exports = function(grunt) {
                 scriptsdir = 'web/js/',
                 concatenatedFile = scriptsdir + module + '.js',
                 minified = scriptsdir + module + '.min.js',
-                moduledir = 'src-ios/js/' + module + '/',
+                moduledir = 'src-ios-dash/js/' + module + '/',
 				//  moduledir = 'src/js/' + module + '/',
                 bannerTemplate = createBannerTemplate(module);
 
@@ -253,85 +253,85 @@ module.exports = function(grunt) {
                             expand: true,
                             cwd: 'node_modules/angular-material',
                             src: ['angular-material.css', 'angular-material.min.css'],
-                            dest: './photo-saver/www/css/'
+                            dest: './photo-dash/www/css/'
                         },
 						{
 							expand: true,
-							cwd: 'src-ios',
+							cwd: 'src-ios-dash',
 							src: ['index.html'],
-							dest: './photo-saver/www/'
+							dest: './photo-dash/www/'
 						},						 
 						/*{
 							expand: true,
 							cwd: 'web/views',
 							src: ['*.html'],
-							dest: './photo-saver/www/views/'
+							dest: './photo-dash/www/views/'
 						},*/
 						{
 							expand: true,
-							cwd: 'src-ios',
+							cwd: 'src-ios-dash',
 							src: ['config.xml'],
-							dest: './photo-saver/'
+							dest: './photo-dash/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios/res',
+							cwd: 'src-ios-dash/res',
 							src: ['icon.png'],
-							dest: './photo-saver/www/res/'
+							dest: './photo-dash/www/res/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios/js/app',
+							cwd: 'src-ios-dash/js/app',
 							src: ['app.js'],
-							dest: './photo-saver/www/js/'
+							dest: './photo-dash/www/js/'
 						},
 					/*	{
 							expand: true,
-							cwd: 'src-ios/js/functions',
+							cwd: 'src-ios-dash/js/functions',
 							src: ['app.js'],
-							dest: './photo-saver/www/js/'
+							dest: './photo-dash/www/js/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios/js/controllers',
+							cwd: 'src-ios-dash/js/controllers',
 							src: ['*.js'],
-							dest: './photo-saver/www/js/controllers/'
+							dest: './photo-dash/www/js/controllers/'
 						},*/
 						{
 							expand: true,
-							cwd: 'src-ios',
+							cwd: 'src-ios-dash',
 							src: ['server.js'],
-							dest: './photo-saver/www/'
+							dest: './photo-dash/www/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios/js/functions',
+							cwd: 'src-ios-dash/js/functions',
 							src: ['*.js'],
-							dest: './photo-saver/www/js/functions/'
+							dest: './photo-dash/www/js/functions/'
 						},
 						{
 							expand: true,
 							cwd: 'web/js',
 							src: ['requirements.js', 'controllers.js'],
-							dest: './photo-saver/www/js/'
+							dest: './photo-dash/www/js/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios/js',
+							cwd: 'src-ios-dash/js',
 							src: ['cordova.js'],
-							dest: './photo-saver/www/'
+							dest: './photo-dash/www/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios/views',
+							cwd: 'src-ios-dash/views',
 							src: ['*.html'],
-							dest: './photo-saver/www/views/'
+							dest: './photo-dash/www/views/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios',
+							cwd: 'src-ios-dash',
 							src: ['*.json'],
-							dest: './photo-saver/www/'
+							dest: './photo-dash/www/'
 						},
 						/*{
 							expand: true,
