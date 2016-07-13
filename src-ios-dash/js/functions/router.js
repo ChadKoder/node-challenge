@@ -9,7 +9,6 @@ function Router(path, fileSystem, url, currentWorkingDir, responseService, Buffe
 			switch (uri) {
 				case '/photo':
 					var imagedata = '';
-					//res.setEncoding('binary');
 					req.on('data', function(chunk){
 						if (chunk) {
 							imagedata += chunk;
@@ -18,20 +17,37 @@ function Router(path, fileSystem, url, currentWorkingDir, responseService, Buffe
 					
 					req.on('end', function(){
 						if (imagedata.length > 0) {
-							console.log('imagedata: ' + imagedata);
-							 //data = "data:" + response.headers["content-type"] + ";base64," + new Buffer(body).toString('base64');
-        
-							fileSystem.writeFile('test123photo.jpg', imagedata, 'binary', function(err) {
+							console.log('retrieved data from /photo post...');
+							var decodedImage = new Buffer(imagedata, 'base64');
+						
+							fileSystem.writeFile('base64data.txt', imagedata, function(err) {
+								if (err){
+									console.log('error writing imagedata.txt');
+								}
+								
+								console.log('wrote imagedata.txt successfully');
+								
+							});
+							
+							
+							fileSystem.writeFile('realBuffPic.jpg', decodedImage, function (err) {
+								
 								if (err) {
-									console.log('ERROR. file not saved.');
-									responseService.write500InternalError(res, 'ERROR');
+									console.log('error: ' + err);
+									responseService.write500InternalError('Internal Server Error:' + err);
 									return;
 								}
 								
-								console.log('file SAVED!');
+								console.log('saved file successfully.');
 								responseService.write204NoContent(res);
 								return;
 							});
+							 
+							
+							 return;
+						} else {
+							responseService.write500InternalError(res, 'No data.');
+							return;
 						}
 					});
 					

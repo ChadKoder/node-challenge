@@ -1,6 +1,6 @@
 //js/controllers/LoginCtrl.js
-angular.module('MainCtrl', []).controller('MainCtrl', ['$scope', '$http', '$mdToast', '$location', '$base64',
-		 function ($scope, $http, $mdToast, $location, $base64) {
+angular.module('MainCtrl', []).controller('MainCtrl', ['$scope', '$http', '$mdToast', '$location',
+		 function ($scope, $http, $mdToast, $location) {
 		 var vm = this;
 		 var pictureSource,
 		 destinationType;
@@ -17,13 +17,17 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$scope', '$http', '$mdTo
 			//vm.images.push(imageUri);
 			console.log('got pic: ' + imageUri);
 		 };
-		 
+                                                       
+                                                       vm.clear = function() {
+                                                       $scope.images = [];
+                                                       }
+                                                       ;
 		 vm.sendPhotos = function (img){
-			 alert('attempting to send base64 image: ' + img);
+			// alert('attempting to send base64 image: ' + img);
 			  var req = {
 				method: 'POST',
 				url: 'http://192.168.1.109:8888/photo',
-				data: { imagedata: img }
+				data: img
 			};
 								 
 			 $http(req).success(function(){
@@ -38,9 +42,9 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$scope', '$http', '$mdTo
 			 window.imagePicker.getPictures(function(results) {
 				for (var i = 0; i < results.length; i++){
 					$scope.images.push(results[i]);
-					window.plugins.base64.encodeFile(results[i], function(base64) {
-						vm.sendPhotos(base64);
-					});
+                                           // console.log(results[i]);
+                                            vm.sendPhotos(results[i]);
+                                          //  vm.sendPhotos(results[i]);
 						//vm.images.push(results[i]);
 						//window.plugins.Base64.encodeFile(results[i], function(base64) {
 							//vm.images.push(base64);
@@ -83,6 +87,5 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$scope', '$http', '$mdTo
 			 setTimeout(function(){
 					$location.path(url);
 				}, vm.redirectDelay);
-		 };		 	
-		 
+		 };
 }]);

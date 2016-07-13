@@ -21,11 +21,9 @@
         <allow-intent href="market:*" />
     </platform>
     <platform name="ios">
-		<icon src="www/res/icon.png" />
+        <icon src="www/res/icon.png" />
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
-    <plugin name="com-badrit-base64" spec="https://github.com/hazemhagrass/phonegap-base64.git" />
-    <plugin name="cordova-plugin-camera" spec="~2.2.0" />
-    <plugin name="cordova-plugin-image-picker" spec="~1.1.1" />
+    <plugin name="ro.qualitance.obimagepicker" spec="~2.0.13" />
 </widget>
