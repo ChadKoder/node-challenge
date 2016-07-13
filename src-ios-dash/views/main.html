@@ -7,10 +7,13 @@
 		 
 		 
 		 Total Images:{{vm.images.length}}<div ng-show="!vm.images">0</div>
+		 image---->
+		 
+		 <img src='./res/icon.png' />
          <div ng-repeat="image in vm.images">
 			Card
 			<md-card>
-				<img data-ng-src="{{image.dataURL}}" class="md-card-image" alt="image caption" />
+				<img data-ng-src="data:image/png;base64,{{image}}" class="md-card-image" alt="image caption" />
 				<md-card-content>
 					<h2>Card headline</h2>
 					<p>Card content</p>

@@ -299,15 +299,15 @@ module.exports = function(grunt) {
 						},*/
 						{
 							expand: true,
-							cwd: 'src-ios-dash',
+							cwd: 'src-ios-dash/js',
 							src: ['server.js'],
-							dest: './photo-dash/www/'
+							dest: './server/'
 						},
 						{
 							expand: true,
 							cwd: 'src-ios-dash/js/functions',
 							src: ['*.js'],
-							dest: './photo-dash/www/js/functions/'
+							dest: './server/js/'
 						},
 						{
 							expand: true,
@@ -315,37 +315,37 @@ module.exports = function(grunt) {
 							src: ['requirements.js', 'controllers.js'],
 							dest: './photo-dash/www/js/'
 						},
-						{
+						/*{
 							expand: true,
 							cwd: 'src-ios-dash/js',
 							src: ['cordova.js'],
 							dest: './photo-dash/www/'
-						},
+						},*/
 						{
 							expand: true,
 							cwd: 'src-ios-dash/views',
 							src: ['*.html'],
 							dest: './photo-dash/www/views/'
 						},
-						{
+						/*{
 							expand: true,
 							cwd: 'src-ios-dash',
 							src: ['*.json'],
 							dest: './photo-dash/www/'
-						},
+						},*/
 						/*{
 							expand: true,
 							cwd: 'src/views',
 							src: ['user-configurations.html', 'login.html'],
 							dest: './web/views'
 						}
-						,*/
+						,
 						{
 							expand: true,
 							cwd: 'src/js',
 							src: ['*.js'],
 							dest: './web/js'
-						}
+						}*/
                     ]
                 }
 		}

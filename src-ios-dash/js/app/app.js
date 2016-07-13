@@ -1,5 +1,5 @@
 
-var app = angular.module('photoSaverApp', ['ngMaterial', 'ngRoute', 'base64', 'LoginCtrl']);
+var app = angular.module('photoSaverApp', ['ngMaterial', 'ngRoute', 'base64', 'MainCtrl']);
 app.config(function ($routeProvider, $locationProvider) {
 	$locationProvider.html5Mode({
 		enabled: true,
@@ -8,27 +8,13 @@ app.config(function ($routeProvider, $locationProvider) {
 	
 	$routeProvider
 	.when('/', {
-		templateUrl:'./views/login.html',
-		controller: 'LoginCtrl'
+		templateUrl:'./views/main.html',
+		controller: 'MainCtrl',
+		controllerAs: 'vm'
 	})
 	.otherwise({
-		templateUrl:'./views/login.html'
+		templateUrl:'./views/main.html',
+		controller: 'MainCtrl',
+		controllerAs: 'vm'
 	});
-})
-.run(['$rootScope', '$http', '$location', function ($rootScope, $http, $location) {
-	$rootScope.isLoggedIn = false;
-	
-	$rootScope.logout = function () {
-		$http({
-			method: 'POST',
-			url: '/logout'
-		}).then(function (res) {
-			//vm.showSimpleToast('Logging out...');
-			$rootScope.isLoggedIn = false;
-			//vm.redir('/');
-			$location.path('/');
-		}, function (res) {
-			//vm.showSimpleToast('lougout failed... strange...');
-		});
-	};
-}]);
+});

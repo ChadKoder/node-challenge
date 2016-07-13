@@ -1,23 +1,20 @@
-function HttpHandler (path, currentWorkingDir, configs, authentication, router, responseService) {
-	var userConfigsFileName = path.join(currentWorkingDir, '/configurations.json');
-	
+function HttpHandler (path, currentWorkingDir, router, responseService) {
 	return {
-		handleGetRequest: function (res, req, contentType){		
-			router.get(res, req, contentType);
+		handleGetRequest: function (res, req, contentType){
+			responseService.write405MethodNotAllowed(res);
 			return;
 		},
 		handlePostRequest: function (res, req, contentType){
-			router.post(userConfigsFileName, res, req, contentType);
+			router.post(res, req, contentType);
 			return;
 		},
 		
 		handlePutRequest: function(res, req, contentType){
-			var data = '', index = null;
-			router.put(userConfigsFileName, res, req, contentType);
+			responseService.write405MethodNotAllowed(res);
 			return;
 		},
 		handleDeleteRequest: function(res, req, contentType){
-			router.delete(userConfigsFileName, res, req, contentType);
+			responseService.write405MethodNotAllowed(res);
 			return;
 		}
 	};
