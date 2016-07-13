@@ -34,7 +34,7 @@ module.exports = function(grunt) {
 						'node_modules/angular-aria/angular-aria.js',
 						'node_modules/angular-material/angular-material.js',
 						'node_modules/angular-mocks/angular-mocks.js',
-						'web/js/functions.js',
+						'www/js/functions.js',
 						'unitTests/unitTestData.js',
 						'unitTests/unitTestMocks.js',
 						'src/js/app/app.js',
@@ -75,7 +75,7 @@ module.exports = function(grunt) {
 				  ' * Requirements v <%=pkg.version%> (build <%=build%>)\n' +
 				  ' */\n\n'
 			},
-			dest: 'web/js/requirements.js',
+			dest: 'www/js/requirements.js',
 			src: requiredJsFiles,
 			nonull: true
 		}
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
 					' */\n\n'
 			},
 			files: {
-				'web/js/requirements.min.js': 'web/js/requirements.js'
+				'www/js/requirements.min.js': 'www/js/requirements.js'
 			}
 		}
 	};
@@ -108,10 +108,10 @@ module.exports = function(grunt) {
     (function () {
         for (var i = 0; i < modules.length; i++) {
             var module = modules[i],
-                scriptsdir = 'web/js/',
+                scriptsdir = 'www/js/',
                 concatenatedFile = scriptsdir + module + '.js',
                 minified = scriptsdir + module + '.min.js',
-                moduledir = 'src-ios-dash/js/' + module + '/',
+                moduledir = 'src/js/' + module + '/',
 				//  moduledir = 'src/js/' + module + '/',
                 bannerTemplate = createBannerTemplate(module);
 
@@ -142,7 +142,7 @@ module.exports = function(grunt) {
         }
 
         //Push remaining web/js files that may not have been caught.
-        jshintFiles.push('!web/js/angular-ui.js');
+        jshintFiles.push('!www/js/angular-ui.js');
     })();	
 	 
 	grunt.initConfig({
@@ -247,7 +247,7 @@ module.exports = function(grunt) {
                             expand: true,
                             cwd: 'node_modules/angular-material',
                             src: ['angular-material.css', 'angular-material.min.css'],
-                            dest: './web/css/'
+                            dest: './www/css/'
                         },
                         {
                             expand: true,
@@ -257,7 +257,7 @@ module.exports = function(grunt) {
                         },
 						{
 							expand: true,
-							cwd: 'src-ios-dash',
+							cwd: 'src',
 							src: ['index.html'],
 							dest: './photo-dash/www/'
 						},						 
@@ -269,67 +269,67 @@ module.exports = function(grunt) {
 						},*/
 						{
 							expand: true,
-							cwd: 'src-ios-dash',
+							cwd: 'src',
 							src: ['config.xml'],
 							dest: './photo-dash/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios-dash/res',
+							cwd: 'src/res',
 							src: ['icon.png'],
 							dest: './photo-dash/www/res/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios-dash/js/app',
+							cwd: 'src/js/app',
 							src: ['app.js'],
 							dest: './photo-dash/www/js/'
 						},
 					/*	{
 							expand: true,
-							cwd: 'src-ios-dash/js/functions',
+							cwd: 'src/js/functions',
 							src: ['app.js'],
 							dest: './photo-dash/www/js/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios-dash/js/controllers',
+							cwd: 'src/js/controllers',
 							src: ['*.js'],
 							dest: './photo-dash/www/js/controllers/'
 						},*/
 						{
 							expand: true,
-							cwd: 'src-ios-dash/js',
+							cwd: 'src/js',
 							src: ['server.js'],
 							dest: './server/'
 						},
 						{
 							expand: true,
-							cwd: 'src-ios-dash/js/functions',
+							cwd: 'src/js/functions',
 							src: ['*.js'],
 							dest: './server/js/'
 						},
 						{
 							expand: true,
-							cwd: 'web/js',
+							cwd: 'www/js',
 							src: ['requirements.js', 'controllers.js'],
 							dest: './photo-dash/www/js/'
 						},
 						/*{
 							expand: true,
-							cwd: 'src-ios-dash/js',
+							cwd: 'src/js',
 							src: ['cordova.js'],
 							dest: './photo-dash/www/'
 						},*/
 						{
 							expand: true,
-							cwd: 'src-ios-dash/views',
+							cwd: 'src/views',
 							src: ['*.html'],
 							dest: './photo-dash/www/views/'
 						},
 						/*{
 							expand: true,
-							cwd: 'src-ios-dash',
+							cwd: 'src',
 							src: ['*.json'],
 							dest: './photo-dash/www/'
 						},*/
