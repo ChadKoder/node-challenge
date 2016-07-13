@@ -4,4 +4,6 @@ web/css/
 web/views/
 npm-debug.log
 node_modules/
+server/
+www/
 Thumbs.db
