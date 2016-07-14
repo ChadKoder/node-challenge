@@ -23,19 +23,19 @@
 						<span flex></span>
 					</div>
 				</md-toolbar>
+				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.clear()">Clear</md-button>
+				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.submitPhotos()">Send</md-button>
                 <md-list flex>
-					<md-list-item ng-click="vm.showCameraRoll()">Select Images</md-list-item>
+					<md-list-item ng-disabled="!vm.deviceReady" ng-click="vm.showCameraRoll()">Select Images</md-list-item>
 				</md-list>
 				
 				<p ng-repeat="img in images">
 					<img data-ng-src="data:image/png;base64,{{img}}" style="max-width:250px; max-height: 250px;" />
 				</p>
            </md-content>
-            
-           <md-button class="md-raised" ng-click="vm.clear()">Clear</md-button>
        </div>
 		<script src="./js/requirements.js" type="text/javascript"></script> 
-        <script type="text/javascript" src="cordova.js"></script>        
+        <script src="./cordova.js" type="text/javascript"></script>        
         <script src="./js/controllers.js" type="text/javascript"></script>        
         <script src="./js/app.js" type="text/javascript"></script>
     </body>

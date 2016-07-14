@@ -4,25 +4,25 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 		 var vm = this;
 		 var pictureSource,
 		 destinationType;
-		 $scope.images = [];
+		 $scope.images = [],
+		 vm.deviceReady = false;
 		 
 		 document.addEventListener("deviceready", onDeviceReady, false);
+		 
 		 function onDeviceReady() {
-			//alert(navigator.camera);
-			//pictureSource = navigator.camera.PictureSourceType;
-			//destinationType = navigator.camera.DestinationType;
+			 vm.deviceReady = true;
 		 };
 		 
-		 vm.cameraSuccess = function(imageUri) {
+		 /*vm.cameraSuccess = function(imageUri) {
 			//vm.images.push(imageUri);
 			console.log('got pic: ' + imageUri);
-		 };
-                                                       
-                                                       vm.clear = function() {
-                                                       $scope.images = [];
-                                                       }
-                                                       ;
-		 vm.sendPhotos = function (img){
+		 };*/
+	   
+	   vm.clear = function() {
+			$scope.images = [];
+	   };
+	   
+		vm.sendPhoto = function (img){
 			  var req = {
 				method: 'POST',
 				url: 'http://192.168.1.109:8888/photo',
@@ -41,13 +41,19 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 			 $window.imagePicker.getPictures(function(results) {
 				for (var i = 0; i < results.length; i++){
 					$scope.images.push(results[i]); 
-					vm.sendPhotos(results[i]);
+					//vm.sendPhotos(results[i]);
 				}
 				
 				if (!$scope.$$phase) {
 					$scope.$apply();
 				}
 			 });
+		 };
+		 
+		 vm.submitPhotos = function () {
+			 for (var i = 0; i >= $scope.images.length; i++){
+				vm.sendPhoto($scope.images[i]);
+			 }
 		 };
 		 
 		 vm.cameraError = function () {
