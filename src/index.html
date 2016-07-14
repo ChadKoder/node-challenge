@@ -23,7 +23,9 @@
 						<span flex></span>
 					</div>
 				</md-toolbar>
-                <md-button class="md-raised" ng-click="vm.showCameraRoll()">image picker</md-button>
+                <md-list flex>
+					<md-list-item ng-click="vm.showCameraRoll()">Select Images</md-list-item>
+				</md-list>
 				
 				<p ng-repeat="img in images">
 					<img data-ng-src="data:image/png;base64,{{img}}" style="max-width:250px; max-height: 250px;" />

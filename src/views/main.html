@@ -1,9 +1,13 @@
 <md-content>
 	 <div>
-         <md-button ng-click="vm.showCameraRoll()">Show Camera Roll - camera1</md-button>
+         <!--<md-button ng-click="vm.showCameraRoll()">Show Camera Roll - camera1</md-button>
 		 <md-button ng-click="vm.showCameraRoll1()">Show Camera Roll - imagePicker1</md-button>
 		 
-		 <md-button ng-click="vm.test()">Test click</md-button>
+		 <md-button ng-click="vm.test()">Test click</md-button>-->
+		 
+		 <md-list flex>
+			<md-list-item ng-click="vm.showCameraRoll()">Select Images</md-list-item>
+		 </md-list>
 		 
 		 
 		 Total Images:{{vm.images.length}}<div ng-show="!vm.images">0</div>

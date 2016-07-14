@@ -32,16 +32,18 @@ function Router(path, fileSystem, url, currentWorkingDir, responseService, Buffe
 							var fileName = new Date().getUTCMilliseconds() + '.jpg';
 							
 							//does file exist?
-							fileSystem.statSync('./' + fileName, function (err, stats) {
+							/*fileSystem.statSync('./' + fileName, function (err, stats) {
 								if (err) {
 									responseService.write500InternalError(res, 'Internal Server Error: Failed to get file.');
 									return;
 								}
+								
+								
 							});
+							*/
 							
 							
-							
-							fileSystem.writeFile('realBuffPic.jpg', decodedImage, function (err) {
+							fileSystem.writeFile(fileName, decodedImage, function (err) {
 								
 								if (err) {
 									console.log('error: ' + err);
