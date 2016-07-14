@@ -19,17 +19,7 @@ function Router(path, fileSystem, url, currentWorkingDir, responseService, Buffe
 						if (imagedata.length > 0) {
 							console.log('retrieved data from /photo post...');
 							var decodedImage = new Buffer(imagedata, 'base64');
-						
-							fileSystem.writeFile('base64data.txt', imagedata, function(err) {
-								if (err){
-									console.log('error writing imagedata.txt');
-								}
-								
-								console.log('wrote imagedata.txt successfully');
-							});
-							
-							
-							var fileName = new Date().getUTCMilliseconds() + '.jpg';
+							var fileName = './photos/' + new Date().getUTCMilliseconds() + '.jpg';
 							
 							//does file exist?
 							/*fileSystem.statSync('./' + fileName, function (err, stats) {
@@ -37,8 +27,6 @@ function Router(path, fileSystem, url, currentWorkingDir, responseService, Buffe
 									responseService.write500InternalError(res, 'Internal Server Error: Failed to get file.');
 									return;
 								}
-								
-								
 							});
 							*/
 							
