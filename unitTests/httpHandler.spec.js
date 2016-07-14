@@ -1,58 +1,49 @@
 describe('httpHandler', function(){
 	var responseService = new ResponseService(),
 	router = new Router(),
-	auth = new Authentication(),
-	sorter = new Sorter(),
-	paginator = new Paginator(),
 	unitTestMocks = new UnitTestMocks(),
 	unitTestData = new UnitTestData(),
-	userConfigs = unitTestData.userConfigs,
-	users = unitTestData.users,
 	fileSystem,
 	httpHandler,
 	workingDir = "C:/",
 	req,
 	responseService;
 	 
+	 beforeEach(function() {
+		spyOn(responseService, 'write405MethodNotAllowed'); 
+	 });
   
 	it('handleGetRequest should call router.get when route is not node_modules or src', function () {
-		spyOn(router, 'get');
+		 
 		req = unitTestMocks.request(null, 'anything');
-		httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
+		httpHandler = new HttpHandler(unitTestMocks.path, workingDir,  router, responseService);
 	
 		httpHandler.handleGetRequest(unitTestMocks.response, req, 'application/json');
-		expect(router.get).toHaveBeenCalledWith(unitTestMocks.response, req, 'application/json');
+		expect(responseService.write405MethodNotAllowed).toHaveBeenCalled();
 	}); 
 	 
 	it ('handlePostRequest should call router.post', function () {
 		spyOn(router, 'post');
-		req = unitTestMocks.request(null, 'src');
-		httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
-		
+		req = unitTestMocks.request(null, 'any');
+		httpHandler = new HttpHandler(unitTestMocks.path, workingDir,  router, responseService);
 		httpHandler.handlePostRequest(unitTestMocks.response, req, 'application/json');
 		
 		expect(router.post).toHaveBeenCalled();
 	}); 
  
-	it ('handlePutRequest should call router.put', function () {
-		req = unitTestMocks.request(null, 'configs');
-		httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
-		
-		spyOn(router, 'put');
-		
+	it ('handlePutRequest should call responseService.write405MethodNotAllowed', function () {
+		req = unitTestMocks.request(null, 'any');
+		httpHandler = new HttpHandler(unitTestMocks.path, workingDir,  router, responseService);
 		httpHandler.handlePutRequest(unitTestMocks.response, req, 'application/json');
 		
-		expect(router.put).toHaveBeenCalled();
+		expect(responseService.write405MethodNotAllowed).toHaveBeenCalled();
 	});
 	  
-	it ('handleDeleteRequest should call router.delete', function () {
-		req = unitTestMocks.request(null, 'configs');
-		httpHandler = new HttpHandler(unitTestMocks.path, workingDir, userConfigs, auth, router, responseService);
-		
-		spyOn(router, 'delete');
-		
+	it ('handleDeleteRequest should call responseService.write405MethodNotAllowed', function () {
+		req = unitTestMocks.request(null, 'any');
+		httpHandler = new HttpHandler(unitTestMocks.path, workingDir, router, responseService);
 		httpHandler.handleDeleteRequest(unitTestMocks.response, req, 'application/json');
 		
-		expect(router.delete).toHaveBeenCalled();
+		expect(responseService.write405MethodNotAllowed).toHaveBeenCalled();
 	}); 
 });

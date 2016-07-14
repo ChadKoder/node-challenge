@@ -1,6 +1,6 @@
 //js/controllers/LoginCtrl.js
-angular.module('MainCtrl', []).controller('MainCtrl', ['$scope', '$http', '$mdToast', '$location',
-		 function ($scope, $http, $mdToast, $location) {
+angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$http', '$mdToast', '$location',
+		 function ($window, $scope, $http, $mdToast, $location) {
 		 var vm = this;
 		 var pictureSource,
 		 destinationType;
@@ -23,7 +23,6 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$scope', '$http', '$mdTo
                                                        }
                                                        ;
 		 vm.sendPhotos = function (img){
-			// alert('attempting to send base64 image: ' + img);
 			  var req = {
 				method: 'POST',
 				url: 'http://192.168.1.109:8888/photo',
@@ -34,22 +33,15 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$scope', '$http', '$mdTo
 				 alert('photo saved successfully!');
 				 
 				}).error(function(){
-				 alert('failed to save photo :(');
+				 alert('failed to save photo.');
 			 });
 		 };
 		 
 		 vm.showCameraRoll = function () {
-			 window.imagePicker.getPictures(function(results) {
+			 $window.imagePicker.getPictures(function(results) {
 				for (var i = 0; i < results.length; i++){
-					$scope.images.push(results[i]);
-                                           // console.log(results[i]);
-                                            vm.sendPhotos(results[i]);
-                                          //  vm.sendPhotos(results[i]);
-						//vm.images.push(results[i]);
-						//window.plugins.Base64.encodeFile(results[i], function(base64) {
-							//vm.images.push(base64);
-						//});
-					
+					$scope.images.push(results[i]); 
+					vm.sendPhotos(results[i]);
 				}
 				
 				if (!$scope.$$phase) {
