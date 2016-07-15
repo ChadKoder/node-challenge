@@ -11,7 +11,11 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 		 
 		 function onDeviceReady() {
 			 vm.deviceReady = true;
-		 };
+                                                       
+             if (!$scope.$$phase) {
+                $scope.$apply();
+             }
+        };
 		 
 		 /*vm.cameraSuccess = function(imageUri) {
 			//vm.images.push(imageUri);
@@ -51,7 +55,7 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 		 };
 		 
 		 vm.submitPhotos = function () {
-			 for (var i = 0; i >= $scope.images.length; i++){
+			 for (var i = 0; i < $scope.images.length; i++){
 				vm.sendPhoto($scope.images[i]);
 			 }
 		 };
