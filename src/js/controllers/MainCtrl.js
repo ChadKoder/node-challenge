@@ -7,7 +7,7 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 		 $scope.images = [],
 		 vm.deviceReady = false;
 		 
-		 document.addEventListener("deviceready", onDeviceReady, false);
+		/* document.addEventListener("deviceready", onDeviceReady, false);
 		 
 		 function onDeviceReady() {
 			 vm.deviceReady = true;
@@ -15,7 +15,7 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
              if (!$scope.$$phase) {
                 $scope.$apply();
              }
-        };
+        };*/
 		 
 		 /*vm.cameraSuccess = function(imageUri) {
 			//vm.images.push(imageUri);

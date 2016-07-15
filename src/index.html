@@ -26,7 +26,7 @@
 				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.clear()">Clear</md-button>
 				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.submitPhotos()">Send</md-button>
                 <md-list flex>
-					<md-list-item ng-disabled="!vm.deviceReady" ng-click="vm.showCameraRoll()">Select Images</md-list-item>
+					<md-list-item ng-disabled="!deviceReady" ng-click="vm.showCameraRoll()">Select Images</md-list-item>
 				</md-list>
 				
 				<p ng-repeat="img in images">

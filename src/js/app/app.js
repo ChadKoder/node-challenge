@@ -17,4 +17,15 @@ app.config(function ($routeProvider, $locationProvider) {
 		controller: 'MainCtrl',
 		controllerAs: 'vm'
 	});
-});
+})
+.run(['$rootScope', function($rootScope) {
+	 document.addEventListener("deviceready", onDeviceReady, false);
+		 
+		 function onDeviceReady() {
+			 $rootScope.deviceReady = true;
+                                                       
+             if (!$scope.$$phase) {
+                $rootScope.$apply();
+             }
+        };
+}]);
