@@ -19,18 +19,18 @@
 						<!--<md-button class="menu md-icon-button" hide-gt-md ng-click="toggleSidenav()" aria-label="Show Menu">
 							<md-icon ><i class="material-icons">menu</i></md-icon>
 						</md-button> -->
-						<span class="md-title" ng-transclude></span>
 						<span flex></span>
 					</div>
 				</md-toolbar>
 				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.clear()">Clear</md-button>
 				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.submitPhotos()">Send</md-button>
+                <md-button class="md-raised" ng-click="vm.convertMoFo()">convert to base64 like a mofo</md-button>
                 <md-list flex>
 					<md-list-item ng-disabled="!deviceReady" ng-click="vm.showCameraRoll()">Select Images</md-list-item>
 				</md-list>
 				
 				<p ng-repeat="img in images">
-					<img data-ng-src="data:image/png;base64,{{img}}" style="max-width:250px; max-height: 250px;" />
+					<img data-ng-src="{{img}}" style="max-width:250px; max-height: 250px;" />
 				</p>
            </md-content>
        </div>

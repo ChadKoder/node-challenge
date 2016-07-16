@@ -28,6 +28,7 @@ module.exports = function(grunt) {
                     autoWatch: true,
                     files: [
 						'node_modules/requirejs/require.js', 
+						'node_modules/angular-base64/angular-base64.js',
 						'node_modules/angular/angular.js',
 						'node_modules/angular-route/angular-route.js',
 						'node_modules/angular-animate/angular-animate.js',

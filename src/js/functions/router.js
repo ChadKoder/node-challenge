@@ -18,7 +18,8 @@ function Router(path, fileSystem, url, currentWorkingDir, responseService, Buffe
 					req.on('end', function(){
 						if (imagedata.length > 0) {
 							console.log('retrieved data from /photo post...');
-							var decodedImage = new Buffer(imagedata, 'base64');
+							var base64data = imagedata.replace('data:image/jpeg;base64,', '');
+							var decodedImage = new Buffer(base64data, 'base64');
 							var fileName = './photos/' + new Date().getUTCMilliseconds() + '.jpg';
 							
 							//does file exist?
@@ -28,8 +29,19 @@ function Router(path, fileSystem, url, currentWorkingDir, responseService, Buffe
 									return;
 								}
 							});
-							*/
 							
+							fileSystem.writeFile('imagedataText.txt', base64data, function (err) {
+								
+								if (err) {
+									console.log('error writing image data to text file.' + err);
+									//responseService.write500InternalError('Internal Server Error:' + err);
+									return;
+								}
+								
+								console.log('wrote text file....');
+								//responseService.write204NoContent(res);
+								return;
+							});*/
 							
 							fileSystem.writeFile(fileName, decodedImage, function (err) {
 								

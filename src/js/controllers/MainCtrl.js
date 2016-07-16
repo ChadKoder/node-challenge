@@ -1,26 +1,10 @@
 //js/controllers/LoginCtrl.js
-angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$http', '$mdToast', '$location',
-		 function ($window, $scope, $http, $mdToast, $location) {
+angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$http', '$mdToast', '$location', '$base64',
+		 function ($window, $scope, $http, $mdToast, $location, $base64) {
 		 var vm = this;
 		 var pictureSource,
 		 destinationType;
-		 $scope.images = [],
-		 vm.deviceReady = false;
-		 
-		/* document.addEventListener("deviceready", onDeviceReady, false);
-		 
-		 function onDeviceReady() {
-			 vm.deviceReady = true;
-                                                       
-             if (!$scope.$$phase) {
-                $scope.$apply();
-             }
-        };*/
-		 
-		 /*vm.cameraSuccess = function(imageUri) {
-			//vm.images.push(imageUri);
-			console.log('got pic: ' + imageUri);
-		 };*/
+		 $scope.images = [];
 	   
 	   vm.clear = function() {
 			$scope.images = [];
@@ -39,55 +23,73 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 				}).error(function(){
 				 alert('failed to save photo.');
 			 });
+		 };      
+
+		vm.addImage = function(base64Image) {
+			$scope.images.push(base64Image);
+			if (!$scope.$$phase) {
+				$scope.$apply();
+			}
+		};
+		 
+		 vm.readFile = function(file){
+			  var reader = new FileReader();
+			  
+			  reader.onloadend = function(e) {
+				var content = this.result;
+				
+                vm.addImage(content);
+			  };
+			  
+			  reader.readAsDataURL(file);
 		 };
 		 
-		 vm.showCameraRoll = function () {
-			 $window.imagePicker.getPictures(function(results) {
-				for (var i = 0; i < results.length; i++){
-					$scope.images.push(results[i]); 
-					//vm.sendPhotos(results[i]);
-				}
+		vm.receivedFileSuccess = function(imgFile){
+			imgFile.file(vm.readFile);
+		};
+		
+		vm.receivedFileFailure = function(e) {
+			alert('failed to read file: ' + e);
+		};
 				
-				if (!$scope.$$phase) {
-					$scope.$apply();
+		vm.convertImageToBase64 = function(path) {
+		   $window.resolveLocalFileSystemURL(path, vm.receivedFileSuccess, vm.receivedFileFailure); 
+		};
+              
+		vm.getBase64Image = function (imgElem) {
+			// imgElem must be on the same server otherwise a cross-origin error will be thrown "SECURITY_ERR: DOM Exception 18"
+			var canvas = document.createElement("canvas");
+			canvas.width = imgElem.clientWidth;
+			canvas.height = imgElem.clientHeight;
+			var ctx = canvas.getContext("2d");
+			ctx.drawImage(imgElem, 0, 0);
+			var dataURL = canvas.toDataURL("image/png");
+			return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+};
+		vm.showCameraRoll = function () {
+			 $window.imagePicker.getPictures(function(results) {
+				 for (var i = 0; i < results.length; i++){
+					vm.convertImageToBase64(results[i]);
+					//vm.getBase64Image(results[i]);
 				}
 			 });
-		 };
+		};
 		 
-		 vm.submitPhotos = function () {
+		vm.submitPhotos = function () {
 			 for (var i = 0; i < $scope.images.length; i++){
 				vm.sendPhoto($scope.images[i]);
 			 }
-		 };
+		};
 		 
-		 vm.cameraError = function () {
+		vm.cameraError = function () {
 			alert('error!') ;
 		 };
-		 
-		/* vm.showCameraRoll = function (){
-			  
-		  var options = {
-			  quality: 50,
-			  destinationType: navigator.camera.DestinationType.FILE_URI,
-			  sourceType: navigator.camera.DestinationType.PHOTOLIBRARY,
-			  targetWidth: 200,
-			  targetHeight: 200
-		  };
-		 
-		    navigator.camera.getPicture(vm.cameraSuccess, vm.cameraError, options);
-		 };*/
-		 
+		  
 		 vm.init = function () {
 			 vm.redirectDelay = 1000;
 		 };
 		 
 		 vm.showSimpleToast = function (msg){
 			$mdToast.showSimple(msg);
-		 };
-		 
-		 vm.redir = function(url){
-			 setTimeout(function(){
-					$location.path(url);
-				}, vm.redirectDelay);
 		 };
 }]);

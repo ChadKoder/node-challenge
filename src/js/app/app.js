@@ -1,5 +1,5 @@
 
-var app = angular.module('photoSaverApp', ['ngMaterial', 'ngRoute', 'MainCtrl']);
+var app = angular.module('photoSaverApp', ['ngMaterial', 'ngRoute', 'MainCtrl', 'base64']);
 app.config(function ($routeProvider, $locationProvider) {
 	$locationProvider.html5Mode({
 		enabled: true,
@@ -24,7 +24,7 @@ app.config(function ($routeProvider, $locationProvider) {
 		 function onDeviceReady() {
 			 $rootScope.deviceReady = true;
                                                        
-             if (!$scope.$$phase) {
+             if (!$rootScope.$$phase) {
                 $rootScope.$apply();
              }
         };
