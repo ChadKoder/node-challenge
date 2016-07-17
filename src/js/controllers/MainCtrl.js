@@ -21,10 +21,10 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 			};
 
 			 $http(req).success(function(){
-				 alert('photo saved successfully!');
+				 vm.showSimpleToast('Photo saved successfully!');
 				 
 				}).error(function(){
-				 alert('failed to save photo.');
+				  vm.showSimpleToast('Failed to save photo.');
 			 });
 		};
 		                                           
@@ -42,40 +42,38 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
             var canvas = document.createElement('canvas');
             var canvasId = 'canvas' + ctr;
             canvas.setAttribute('id', canvasId);
+            canvas.setAttribute('style', 'width: 70%; height: 70%;');
             var context = canvas.getContext('2d');
-                                                
+
             var img = new Image();
             img.src = image;
-                                                       
+
             img.onload = function(){
-                canvas.width = img.width;
+				canvas.width = img.width;
                 canvas.height = img.height;
-                context.drawImage(this, 0, 0, img.width, img.height);
+                context.drawImage(this, 0, 0);
             }
-                                                       
+
             parent.appendChild(canvas);
+
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
-        }; 
+        };
+        
+        vm.getEncodedImageById = function (id) {
+            var canvas = document.getElementById(id);
+            return canvas.toDataURL('image/png|gif|jpg|jpeg');
+        };
       
 		vm.submitPhotos = function () {
 		   for (var i = 0; i < $scope.images.length; i++){
-			     var canvas = document.getElementById('canvas' + i);
-           var encoded = canvas.toDataURL('image/png|gif|jpg|jpeg');
-           vm.sendPhoto(encoded);
+               var encoded = vm.getEncodedImageById('canvas' + i);
+               vm.sendPhoto(encoded);
 		   }
 		};
 		 
-		vm.cameraError = function () {
-			alert('error!') ;
-		 };
-		  
-		 vm.init = function () {
-			 vm.redirectDelay = 1000;
-		 };
-		 
-		 vm.showSimpleToast = function (msg){
+		vm.showSimpleToast = function (msg){
 			$mdToast.showSimple(msg);
-		 };
+		};
 }]);
