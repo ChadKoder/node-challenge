@@ -57,7 +57,7 @@ function Router(path, fileSystem, url, currentWorkingDir, responseService, Buffe
 									return;
 								}
 								
-								console.log('saved file successfully.');
+								console.log('saved file successfully... @' + date.toLocaleString() );
 								responseService.write204NoContent(res);
 								return;
 							});
