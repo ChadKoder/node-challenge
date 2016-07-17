@@ -19,8 +19,14 @@ function Router(path, fileSystem, url, currentWorkingDir, responseService, Buffe
 						if (imagedata.length > 0) {
 							console.log('retrieved data from /photo post...');
 							var base64data = imagedata.replace('data:image/jpeg;base64,', '');
-							var decodedImage = new Buffer(base64data, 'base64');
-							var fileName = './photos/' + new Date().getUTCMilliseconds() + '.jpg';
+							
+							var decodedImage = new Buffer(base64data
+							 .replace(/^data:image\/(png|gif|jpeg);base64,/,''), 'base64');
+							 
+							var date = new Date();
+							var month = date.getMonth();
+							var day = date.getDate();
+							var fileName = './photos/' + month + '_' + day + '_' + date.getUTCMilliseconds() + '.jpg';
 							
 							//does file exist?
 							/*fileSystem.statSync('./' + fileName, function (err, stats) {
