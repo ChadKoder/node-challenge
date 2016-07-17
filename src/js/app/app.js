@@ -1,5 +1,5 @@
 
-var app = angular.module('photoSaverApp', ['ngMaterial', 'ngRoute', 'MainCtrl', 'base64']);
+var app = angular.module('photoSaverApp', ['ngMaterial', 'ngRoute', 'MainCtrl']);
 app.config(function ($routeProvider, $locationProvider) {
 	$locationProvider.html5Mode({
 		enabled: true,

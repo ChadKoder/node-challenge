@@ -25,17 +25,12 @@
                 <md-button class="md-raised" ng-click="vm.loadImages()">load images</md-button>
 				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.clear()">Clear</md-button>
 				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.submitPhotos()">Send</md-button>
-                <md-button class="md-raised" ng-click="vm.convertMoFo()">convert to base64 like a mofo</md-button>
                 <md-list flex>
 					<md-list-item ng-disabled="!deviceReady" ng-click="vm.showCameraRoll()">Select Images</md-list-item>
 				</md-list>
-                <!--<canvas id="canvas1" width="250px;" height="250px;"></canvas>-->
 				 
 				<div id="images">
                     <h4>Images:</h4>
-                    
-					<!--<img data-ng-src="{{img}}" style="max-width:250px; max-height: 250px;" /> -->
-					<!--<canvas id="canvas" width="250px;" height="250px;"></canvas>-->
 				</div>
            </md-content>
        </div>
