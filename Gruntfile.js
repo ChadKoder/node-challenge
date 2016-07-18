@@ -34,6 +34,7 @@ module.exports = function(grunt) {
 						'node_modules/angular-aria/angular-aria.js',
 						'node_modules/angular-material/angular-material.js',
 						'node_modules/angular-mocks/angular-mocks.js',
+						'node_modules/angular-loading-bar/build/loading-bar.js',
 						'www/js/functions.js',
 						'unitTests/unitTestData.js',
 						'unitTests/unitTestMocks.js',
@@ -64,7 +65,8 @@ module.exports = function(grunt) {
 		'node_modules/angular-aria/angular-aria.js',
         'node_modules/angular-resource/angular-resource.js',
 		'node_modules/angular-messages/angular-messages.js',
-		'node_modules/angular-material/angular-material.js'
+		'node_modules/angular-material/angular-material.js',
+		'node_modules/angular-loading-bar/build/loading-bar.js'
 	],
 	concatConfig = {
 		requirements: {
@@ -247,6 +249,18 @@ module.exports = function(grunt) {
                             cwd: 'node_modules/angular-material',
                             src: ['angular-material.css', 'angular-material.min.css'],
                             dest: './www/css/'
+                        },
+						{
+                            expand: true,
+                            cwd: 'node_modules/angular-loading-bar/build',
+                            src: ['loading-bar.css'],
+                            dest: './photo-dash/www/css/'
+                        },
+						{
+                            expand: true,
+                            cwd: 'src/css',
+                            src: ['styles.css'],
+                            dest: './photo-dash/www/css/'
                         },
                         {
                             expand: true,

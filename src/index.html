@@ -22,12 +22,19 @@
 						<span flex></span>
 					</div>
 				</md-toolbar>
+				<div id="myProgress" ng-show="vm.inProgress">
+					<div id="myBar">
+						<div id="label">0%</div>
+					</div>
+				</div>
 				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.clear()">Clear</md-button>
 				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.submitPhotos()">Send</md-button>
                 <md-list flex>
 					<md-list-item ng-disabled="!deviceReady" ng-click="vm.showCameraRoll()">Select Images</md-list-item>
 				</md-list>
-				 
+				 <div ng-show="vm.sendingPhotos">
+					Sending Photos...
+				 </div>
 				<div id="images">
                     <h4>Images:</h4>
 				</div>
