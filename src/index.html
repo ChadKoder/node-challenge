@@ -1,46 +1,47 @@
 <!DOCTYPE html>
 <html>
-    <head> 
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval';
-		style-src 'self' 'unsafe-inline'; media-src *; connect-src 'self' http://192.168.1.109:8888/">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-
-		<link rel="stylesheet" href="./css/angular-material.min.css" type="text/css">
-        <title>Photo Dash</title>
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com/  data: gap: https://ssl.gstatic.com 'unsafe-eval';
+            style-src 'self' https://fonts.googleapis.com/ 'unsafe-inline'; font-src https://fonts.gstatic.com/; media-src *; connect-src 'self' http://192.168.1.109:8888/">
+            <meta name="format-detection" content="telephone=no">
+            <meta name="msapplication-tap-highlight" content="no">
+            <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+                        
+            <link rel="stylesheet" href="./css/angular-material.min.css" type="text/css">
+            <link rel="stylesheet" href="./css/loading-bar.css" type="text/css">
+            <link rel="stylesheet" href="./css/styles.css" type="text/css">
+            <title>Photo Dash</title>
     </head>
     <body ng-app="photoSaverApp">
-       <div ng-controller="MainCtrl as vm">
-           <md-content>
-				<md-toolbar  class="md-whiteframe-z1">
-					<div class="md-toolbar-tools" layout="row">
-						<h3>Photo Dash</h3>
-						<!--<md-button class="menu md-icon-button" hide-gt-md ng-click="toggleSidenav()" aria-label="Show Menu">
-							<md-icon ><i class="material-icons">menu</i></md-icon>
-						</md-button> -->
-						<span flex></span>
-					</div>
-				</md-toolbar>
-				<div id="myProgress" ng-show="vm.inProgress">
-					<div id="myBar">
-						<div id="label">0%</div>
-					</div>
-				</div>
-				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.clear()">Clear</md-button>
-				<md-button ng-show="images.length > 0" class="md-raised" ng-click="vm.submitPhotos()">Send</md-button>
+        <div ng-controller="MainCtrl as vm">
+            <md-content flex>
+                <div class="overlayColor" ng-show="vm.inProgress"></div>
+                <md-toolbar class="md-whiteframe-z1">
+                    <div class="md-toolbar-tools" layout="row">
+                        <h3>Photo Dash</h3>
+                        <!--<md-button class="menu md-icon-button" hide-gt-md ng-click="toggleSidenav()" aria-label="Show Menu">
+                         <md-icon ><i class="material-icons">menu</i></md-icon>
+                         </md-button> -->
+                        <span flex></span>
+                    </div>
+                </md-toolbar>
+                <md-button class="md-raised" ng-click="vm.loadAlbum()">load album</md-button>
+                <md-button ng-show="album.length > 0" class="md-raised" ng-disabled="vm.inProgress" ng-click="vm.clear()">Clear</md-button>
+                <md-button ng-show="album.length > 0" class="md-raised" ng-disabled="vm.inProgress" ng-click="vm.submitPhotos()">Send</md-button>
                 <md-list flex>
-					<md-list-item ng-disabled="!deviceReady" ng-click="vm.showCameraRoll()">Select Images</md-list-item>
-				</md-list>
-				 <div ng-show="vm.sendingPhotos">
-					Sending Photos...
-				 </div>
-				<div id="images">
-                    <h4>Images:</h4>
+                    <md-list-item class="md-raised" ng-disabled="!deviceReady && vm.inProgress" ng-click="vm.showCameraRoll()">Select Images</md-list-item>
+                </md-list>
+                
+				
+				<div ng-repeat="photo in album" flex>
+					<canvas id="canvas{{photo.index}}" style="width: 70%; height: 70%;" flex>hey!</canvas>
 				</div>
-           </md-content>
-       </div>
-		<script src="./js/requirements.js" type="text/javascript"></script> 
+				
+				
+				
+            </md-content>
+        </div>
+        <script src="./js/requirements.js" type="text/javascript"></script> 
         <script src="./cordova.js" type="text/javascript"></script>        
         <script src="./js/controllers.js" type="text/javascript"></script>        
         <script src="./js/app.js" type="text/javascript"></script>
