@@ -1,6 +1,12 @@
+/*
+ * controllers v  (build 20160720_134703_1)
+ * Copyright (c) 2016
+ * Author: Chad Keibler 
+ */
+
 //js/controllers/LoginCtrl.js
-angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$http', '$mdToast', '$location',
-	function ($window, $scope, $http, $mdToast, $location) {
+angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$http', '$mdToast', '$location', '$cordovaFileTransfer',
+	function ($window, $scope, $http, $mdToast, $location, $cordovaFileTransfer) {
 	var vm = this;
 	var pictureSource,
 	destinationType;
@@ -8,7 +14,9 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 	vm.inProgress = false;
 	$scope.album = [];
     vm.album = null;
+	vm.albumSelected = false;
     vm.totalLoaded = 0;
+	vm.albumLoaded = false;
 
 	vm.clear = function() {
 		for (var i = 0; i < $scope.album.length; i++){
@@ -17,6 +25,8 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 		$scope.album = [];
         vm.totalSent = 0;
         vm.imagesLoaded = false;
+		vm.albumSelected = false;
+		vm.albumLoaded = false;
 	};
 
 	vm.sendPhoto = function (img){
@@ -44,20 +54,30 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
         var canvas = document.getElementById(id);
         return canvas.toDataURL('image/png|gif|jpg|jpeg');
     };
-                                                       
+    
+    vm.sleep = function(milliseconds) {
+        var start = new Date().getTime();
+        for(var i = o; i < 1e7; i++){
+            if((new Date().getTime() - start) > millisecond) {
+                break;
+            }
+        }
+    };
+                                                   
     vm.submitPhotos = function () {
         vm.inProgress = true;
         for (var i = 0; i < $scope.album.length; i++){
             vm.sendPhoto($scope.album[i].base64img);
+            vm.sleep(1000);
         }
     };
              
-    vm.getBase64s = function() {
+   /* vm.getBase64s = function() {
         for (var i = 0; i < $scope.album.length; i++){
             $scope.album[i].base64img = vm.getEncodedImageById('canvas' + i);
             vm.refresh();
         }
-    };
+    };*/
     
     vm.loadImage = function(img, index) {
 		img.onload = function() {
@@ -79,13 +99,45 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
         }
     };
     
+ 
+    
     vm.loadImages = function() {
-        for (var i = 0; i < $scope.album.length; i++){
-            var img = new Image();
-            img.src = $scope.album[i].image;
+        /*var processed = 0;
+         if ($scope.album.length > 5) {
+             
+             for (var i = 0; i < $scope.album.length; i++){
+                if (processed % 5 === 0) {
+                    vm.sleep(3000);
+                }
+                var img = new Image();
+                img.src = $scope.album[i].image;
+                                        
+                vm.loadImage(img, i);
+                processed++;
+             }
+             
+             
+             
+            // vm.sleep(1000);
+             
+             
+             
+             
+             
+         } else {*/
+          
+            for (var i = 0; i < $scope.album.length; i++){
+                var img = new Image();
+                img.src = $scope.album[i].image;
                              
-            vm.loadImage(img, i);
-        }
+                vm.loadImage(img, i);
+            }
+        // }
+    
+    
+    
+		
+		//vm.albumSelected = true;
     };
     
     vm.showCameraRoll = function() {
@@ -100,14 +152,11 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
                  $scope.album.push(photo);
                   vm.refresh();
             }
-            
-           
-            vm.loadImages();
+			
+            //vm.loadImages();
+            vm.albumSelected = true;
+            vm.refresh();
         });
-    };
-    
-    vm.selectFromRoll = function() {
-        vm.showCameraRoll();
     };
 
 	vm.refresh = function () {
@@ -118,5 +167,13 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 
     vm.showSimpleToast = function (msg){
 		$mdToast.showSimple(msg);
+	};
+	
+	vm.viewAlbum = function(){
+		vm.loadImages();
+		//vm.albumSelected = false;
+		vm.albumLoaded = true;
+        vm.refresh();
+		
 	};
 }]);

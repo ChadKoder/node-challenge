@@ -26,4 +26,5 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <plugin name="cordova-plugin-image-picker" spec="https://github.com/ChadKoder/cordova-imagePicker.git" />
+    <plugin name="cordova-plugin-file-transfer" spec="~1.5.1" />
 </widget>
