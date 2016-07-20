@@ -26,8 +26,8 @@
                         <span flex></span>
                     </div>
                 </md-toolbar>
-                <md-button ng-show="album.length > 0" class="md-raised" ng-disabled="vm.inProgress" ng-click="vm.clear()">Clear</md-button>
-                <md-button ng-show="album.length > 0" class="md-raised" ng-disabled="vm.inProgress" ng-click="vm.submitPhotos()">Send</md-button>
+                <md-button ng-show="album.length > 0" class="md-raised" ng-disabled="vm.inProgress || !vm.imagesLoaded" ng-click="vm.clear()">Clear</md-button>
+                <md-button ng-show="album.length > 0" class="md-raised" ng-disabled="vm.inProgress || !vm.imagesLoaded" ng-click="vm.submitPhotos()">Send</md-button>
                 <md-list flex>
                     <md-list-item class="md-raised" ng-disabled="!deviceReady && vm.inProgress" ng-click="vm.showCameraRoll()">Select Images</md-list-item>
                 </md-list>

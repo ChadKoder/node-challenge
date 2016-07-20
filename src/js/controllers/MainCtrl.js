@@ -8,6 +8,7 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 	vm.inProgress = false;
 	$scope.album = [];
     vm.album = null;
+    vm.totalLoaded = 0;
 
 	vm.clear = function() {
 		for (var i = 0; i < $scope.album.length; i++){
@@ -15,6 +16,7 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 		}
 		$scope.album = [];
         vm.totalSent = 0;
+        vm.imagesLoaded = false;
 	};
 
 	vm.sendPhoto = function (img){
@@ -46,11 +48,16 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
     vm.submitPhotos = function () {
         vm.inProgress = true;
         for (var i = 0; i < $scope.album.length; i++){
-            //var encoded = vm.getEncodedImageById('canvas' + i);
             vm.sendPhoto($scope.album[i].base64img);
         }
     };
-                                                       
+             
+    vm.getBase64s = function() {
+        for (var i = 0; i < $scope.album.length; i++){
+            $scope.album[i].base64img = vm.getEncodedImageById('canvas' + i);
+            vm.refresh();
+        }
+    };
     
     vm.loadImage = function(img, index) {
 		img.onload = function() {
@@ -61,8 +68,14 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
             canvas.height = img.height;
             context.drawImage(this, 0, 0);
             
+            vm.totalLoaded++;
+            
             $scope.album[index].base64img = canvas.toDataURL('image/png|gif|jpg|jpeg');
-            vm.refresh();
+            
+            if (vm.totalLoaded === $scope.album.length) {
+                vm.imagesLoaded = true;
+                vm.refresh();
+            }
         }
     };
     
@@ -72,20 +85,8 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
             img.src = $scope.album[i].image;
                              
             vm.loadImage(img, i);
-            //$scope.album[i].base64img = vm.getEncodedImageById('canvas' + i);
-          //  vm.refresh();
         }
-        
-      //  vm.getBase64s();
     };
-    
-  /* vm.getBase64s = function() {
-        for (var i = 0; i < $scope.album.length; i++){
-            $scope.album[i].base64img = vm.getEncodedImageById('canvas' + i);
-            vm.refresh();
-        }
-          
-    };*/
     
     vm.showCameraRoll = function() {
         $window.imagePicker.getPictures(function (results){
@@ -102,8 +103,6 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
             
            
             vm.loadImages();
-            
-           // vm.getBase64s();
         });
     };
     
