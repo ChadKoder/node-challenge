@@ -14,6 +14,7 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 			var canvas = document.getElementById('canvas' + i).remove();
 		}
 		$scope.album = [];
+        vm.totalSent = 0;
 	};
 
 	vm.sendPhoto = function (img){
@@ -37,6 +38,19 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 		});
 	};
     
+    vm.getEncodedImageById = function (id) {
+        var canvas = document.getElementById(id);
+        return canvas.toDataURL('image/png|gif|jpg|jpeg');
+    };
+                                                       
+    vm.submitPhotos = function () {
+        vm.inProgress = true;
+        for (var i = 0; i < $scope.album.length; i++){
+            //var encoded = vm.getEncodedImageById('canvas' + i);
+            vm.sendPhoto($scope.album[i].base64img);
+        }
+    };
+                                                       
     
     vm.loadImage = function(img, index) {
 		img.onload = function() {
@@ -46,31 +60,50 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
             canvas.width = img.width;
             canvas.height = img.height;
             context.drawImage(this, 0, 0);
+            
+            $scope.album[index].base64img = canvas.toDataURL('image/png|gif|jpg|jpeg');
+            vm.refresh();
         }
     };
     
-    vm.callback = function() {
-            for (var i = 0; i < $scope.album.length; i++){
-                var img = new Image();
-                img.src = $scope.album[i].image;
+    vm.loadImages = function() {
+        for (var i = 0; i < $scope.album.length; i++){
+            var img = new Image();
+            img.src = $scope.album[i].image;
                              
-                vm.loadImage(img, i);
-            }
+            vm.loadImage(img, i);
+            //$scope.album[i].base64img = vm.getEncodedImageById('canvas' + i);
+          //  vm.refresh();
+        }
+        
+      //  vm.getBase64s();
     };
+    
+  /* vm.getBase64s = function() {
+        for (var i = 0; i < $scope.album.length; i++){
+            $scope.album[i].base64img = vm.getEncodedImageById('canvas' + i);
+            vm.refresh();
+        }
+          
+    };*/
     
     vm.showCameraRoll = function() {
         $window.imagePicker.getPictures(function (results){
             for (var i = 0; i < results.length; i++){
                 var photo = {
                     index: i,
-                    image: results[i]
+                    image: results[i],
+                    base64img: null
                 }
                 
                  $scope.album.push(photo);
+                  vm.refresh();
             }
             
-            vm.refresh();
-            vm.callback();
+           
+            vm.loadImages();
+            
+           // vm.getBase64s();
         });
     };
     
@@ -84,20 +117,7 @@ angular.module('MainCtrl', []).controller('MainCtrl', ['$window','$scope', '$htt
 		}
 	};
 
-	vm.getEncodedImageById = function (id) {
-		var canvas = document.getElementById(id);
-		return canvas.toDataURL('image/png|gif|jpg|jpeg');
-	};
-
-	vm.submitPhotos = function () {
-		vm.inProgress = true;
-		for (var i = 0; i < $scope.album.length; i++){
-			var encoded = vm.getEncodedImageById('canvas' + i);
-			vm.sendPhoto(encoded);
-		}
-	};
-
-		vm.showSimpleToast = function (msg){
+    vm.showSimpleToast = function (msg){
 		$mdToast.showSimple(msg);
 	};
 }]);
