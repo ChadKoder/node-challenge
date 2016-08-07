@@ -11,32 +11,39 @@
             <link rel="stylesheet" href="./css/loading-bar.css" type="text/css">
             <link rel="stylesheet" href="./css/styles.css" type="text/css">
 			<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+			<link rel="stylesheet" href="./css/lf-ng-md-file-input.css">
             <title>Photo Dash</title>
     </head>
     <body ng-app="photoSaverApp">
+    
+    
         <div ng-controller="MainCtrl as vm">
+        
+        <div id="errorMsg"></div>
             <md-content flex>
                 <div class="overlayColor" ng-show="vm.inProgress"></div>
                 <md-toolbar class="md-whiteframe-z1">
                     <div class="md-toolbar-tools" layout="row">
                         <h3>Photo Dash</h3>
-                        <!--<md-button class="menu md-icon-button" hide-gt-md ng-click="toggleSidenav()" aria-label="Show Menu">
-                         <md-icon ><i class="material-icons">menu</i></md-icon>
-                         </md-button> -->
                         <span flex></span>
                     </div>
                 </md-toolbar>
-                <md-button ng-show="album.length > 0" class="md-raised" ng-click="vm.clear()">Clear</md-button>
-                <md-button ng-show="vm.albumLoaded" class="md-raised" ng-disabled="!vm.albumLoaded" ng-click="vm.submitPhotos()">Send</md-button>
-                <md-list flex>
-                    <md-list-item ng-show="!vm.albumSelected && !vm.albumLoaded" class="md-raised" ng-click="vm.showCameraRoll()">Select Images</md-list-item>
-					<md-list-item ng-show="vm.albumSelected && !vm.albumLoaded" class="md-raised" ng-click="vm.viewAlbum()">View Album</md-list-item>
-                </md-list>
-				<div ng-show="vm.albumLoaded" ng-repeat="photo in album" flex>
+              <!--  <md-button ng-show="album.length > 0" class="md-raised" ng-disabled="vm.inProgress" ng-click="vm.clear()">Clear</md-button>
+                <md-button ng-show="album.length > 0" class="md-raised"ng-disabled="vm.inProgress" ng-click="vm.submitPhotos()">Send</md-button>
+                <md-button ng-show="album.length > 0" class="md-raised"ng-disabled="vm.inProgress" ng-click="vm.submitPhotos2()">Send2</md-button>
+                <md-button class="md-raised"ng-disabled="vm.inProgress" ng-click="vm.takePicAndSend()">take and send</md-button>-->
+				<lf-ng-md-file-input lf-files='files' multiple preview>md-select-multiple</lf-ng-md-file-input>
+                <md-button class="md-raised" ng-click="submit()">submit from lf-md-mg selection</md-button>
+                
+				<div ng-show="album.length > 0" ng-repeat="photo in album" flex>
                     <!--<canvas id="canvas{{photo.index}}" flex="75"></canvas>-->
-					<canvas id="canvas{{photo.index}}" style="width: 70%; height: 70%;" flex></canvas>
-					<md-icon ng-show="vm.totalSent >= {{photo.index}} + 1" style="color=green;" class="material-icons">done</md-icon>
-             <!--   <md-icon style="color: green;" flex="25" class="material-icons">done</md-icon>-->
+					<input type='file' file-model='vm.imageFile'/>
+					<button ng-click="vm.uploadFile()">upload it!</button>
+
+<!--					<canvas id="canvas{{photo.index}}" style="width: 70%; height: 70%;" flex></canvas> -->			
+
+			<!--<md-icon ng-show="vm.totalSent >= {{photo.index}} + 1" style="color=green;" class="material-icons">done</md-icon>
+                <md-icon style="color: green;" flex="25" class="material-icons">done</md-icon>-->
                 
 				</div>
             </md-content>

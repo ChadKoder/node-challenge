@@ -1,105 +1,67 @@
-var http = require('http'),
-	url = require('url'),
-	path = require('path'),
-	fs = require('fs'),
-	childProcess = require('child_process'),
-	browserToLaunch = '',
-	chrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-	iexplore = 'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe',
-	arg = process.argv[2], 
-	userArg = null,
-	currentWorkingDir = process.cwd();
+var formidable = require('formidable'),
+    http = require('http'),
+    util = require('util'),
+    fs   = require('fs.extra');
 
-var responseService = require('./js/responseService.js');
-var resService = new responseService();
-var router = require('./js/router.js')(path, fs, url, currentWorkingDir, resService, Buffer);
-var httpHandler = require('./js/httpHandlerService')(path, currentWorkingDir, router, resService);
-	
-const PORT = 8888;
-var serverAdd = 'http://localhost:' + PORT;
+/*
+***TODO***
+DELETE TEMP FILES IN /temp/ folder!
+*/
+ 
+http.createServer(function(req, res) {
 
-
-if (arg){
-	userArg = arg.toLowerCase();
-}
-	
-if (userArg){
-	console.log('attempting to run node with ' + userArg + '...');
-	
-	if (userArg === 'chrome'){
-		try {
-			fs.statSync(chrome);
-			browserToLaunch = chrome;
-		} catch(e) {
-			console.log('chrome does not exist, setting to launch with iexplore');
-			browserToLaunch = iexplore;
-		}
-	} else if (userArg === 'iexplore'){
-		try {
-			fs.statSync(iexplore);
-			browserToLaunch = iexplore;
-		} catch(e) {
-			console.log('iexplore does not exist, please manually launch your browser and navigate to ' + serverAdd);
-			browserToLaunch = '';
-		}
-	} else if (userArg === 'serverTests/') {
-		browserToLaunch = null;
-		return;
-	}
-}
-
-if (browserToLaunch){
-	childProcess.spawn(browserToLaunch, [serverAdd]);
-}
-
-var urlContains = function(url, str){
-	return url.indexOf(str) != -1;
-};
-
-var setContentType = function (url) {
-	var contentType = 'text/html';
-	
-	if (urlContains(url, '.html')){
-		contentType = 'text/html';
-	} else if (urlContains(url, '.css')){
-		contentType = 'text/css';
-	} else if (urlContains(url, '.js')) {
-		contentType = 'text/javascript';
-	}
-	
-	return contentType;
-};
-
-http.createServer(function (req, res) {
-	var contentType,
-	contentType = setContentType(req.url);
-
-	var uri = url.parse(req.url).pathname;
-                  
-    //console.log('attempting to load: ' + uri);
-	/*TODO: Figure out it's trying to load src/ when it does not exist*/
-	if (uri.indexOf('/src/') > -1) {
-		req.url = uri.replace('src/', '');
-	}
-	
-	switch (req.method){
-		case 'GET':
-			httpHandler.handleGetRequest(res, req, contentType);
-			break;
-		case 'POST':
-			httpHandler.handlePostRequest(res, req, contentType);
-			break;
-		case 'PUT':
-			httpHandler.handlePutRequest(res, req, contentType);
-			break;
-		case 'DELETE':
-			httpHandler.handleDeleteRequest(res, req, contentType);
-			break;
-		default:
-	}
+  /* Process the form uploads */
+  if (req.url == '/' && req.method.toLowerCase() == 'post') {
+	console.log('POST RECEIVED...');
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files) {
+		//console.log('fields : ' + JSON.stringify(fields));
+		console.log('total files: ' + files.length);
+		res.writeHead(200, {'content-type': 'text/plain'});
+		res.write('received upload:\n\n');
+		res.end(util.inspect({fields: fields, files: files}));
+    });
+ 
+    form.on('progress', function(bytesReceived, bytesExpected) {
+        var percent_complete = (bytesReceived / bytesExpected) * 100;
+       // console.log(percent_complete.toFixed(2));
+    });
+ 
+    form.on('error', function(err) {
+		console.log('ERROR: ' + JSON.stringify(err));
+    });
+ 
+    form.on('end', function(fields, files) {
+		var ctr = 1;
+		for (var i = 0; i < this.openedFiles.length; i++){
+			var temp_path = this.openedFiles[i].path;
+			var date = new Date();
+			var month = date.getMonth();
+			var day = date.getDate();
+			var fileName = month + '_' + day + '_' + (date.getUTCMilliseconds() + 10000) + '_' + ctr + '_' + '.jpeg';
+			console.log('fileName: ' + fileName);
+			var newLocation = './photos/';
 	 
-}).listen(parseInt(PORT)); 
+			fs.copy(temp_path, newLocation + fileName, function(err) {  
+				if (err) {
+					console.error(err);
+				} else {
+					console.log("success!")
+				}
+			});
 
-//module.exports = app;
+			ctr++;
+		}
 
-console.log('Server running at --> ' + serverAdd + '/\nCTRL+C to shutdown');
+
+        
+    });
+ 
+    return;
+  }
+ 
+  /* Display the file upload form. */
+  res.writeHead(200, {'content-type': 'text/html'});
+  res.end();
+ 
+}).listen(8888);

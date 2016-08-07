@@ -35,6 +35,9 @@ module.exports = function(grunt) {
 						'node_modules/angular-material/angular-material.js',
 						'node_modules/angular-mocks/angular-mocks.js',
 						'node_modules/angular-loading-bar/build/loading-bar.js',
+						'node_modules/ng-cordova/dist/ng-cordova.js',
+						'node_modules/lf-ng-md-file-input/dist/lf-ng-md-file-input.js',
+						'node_modules/ng-file-upload/dist/ng-file-upload.js',
 						'www/js/functions.js',
 						'unitTests/unitTestData.js',
 						'unitTests/unitTestMocks.js',
@@ -66,7 +69,11 @@ module.exports = function(grunt) {
         'node_modules/angular-resource/angular-resource.js',
 		'node_modules/angular-messages/angular-messages.js',
 		'node_modules/angular-material/angular-material.js',
-		'node_modules/angular-loading-bar/build/loading-bar.js'
+		'node_modules/angular-loading-bar/build/loading-bar.js',
+		'node_modules/lf-ng-md-file-input/dist/lf-ng-md-file-input.js',
+		//'node_modules/angular-file-upload/dist/angular-file-upload.js', 
+		'node_modules/ng-file-upload/dist/ng-file-upload.js',
+		'node_modules/ng-cordova/dist/ng-cordova.js'
 	],
 	concatConfig = {
 		requirements: {
@@ -254,6 +261,12 @@ module.exports = function(grunt) {
                             expand: true,
                             cwd: 'node_modules/angular-loading-bar/build',
                             src: ['loading-bar.css'],
+                            dest: './photo-dash/www/css/'
+                        },
+						{
+                            expand: true,
+                            cwd: 'node_modules/lf-ng-md-file-input/dist',
+                            src: ['lf-ng-md-file-input.css'],
                             dest: './photo-dash/www/css/'
                         },
 						{
