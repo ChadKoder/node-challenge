@@ -1,9 +1,5 @@
-Tenable Backend Challenge - Microservices
 Description: 
-	- This application demonstrates the use of NodeJS as a RESTful API
-	- AUTHENTICATION, CONFIGURATIONS, and SORTING are demonstrated in this application
-		-> The details are at the bottom of this document that describe how the app demonstrates each
-	
+	Sample app that demonstrates front to back-end development using Angular, Angular Material, and nodeJS.
 	
 Manual Setup Instructions:
 1. Install NodeJS: https://nodejs.org/en/download/
@@ -41,7 +37,6 @@ NOTE: Had to separate controller tests because of the structure of the project.
 AUTHENTICATION:
 - Login with basic authentication
 	- valid users are:
-		- username: chadk password: Tenable
 		- username: admin password: 123xyzABC!@
 		- username: user password: pass
 
