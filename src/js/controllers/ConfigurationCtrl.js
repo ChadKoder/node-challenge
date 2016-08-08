@@ -1,7 +1,7 @@
 angular.module('sampleApp.controllers', []).
 controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	var redirectDelay = 1000;
-	$scope.title = 'Tenable Backend Challenge - Microservices';
+	$scope.title = 'NodeJS Sample Application';
 	
 	$scope.redir = function(url){
 		$window.location = url;
@@ -101,7 +101,8 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	
 	$scope.getPrev = function(){
 		var prevPage = $scope.page - 1;
-		$http.get('/configs?page=' + prevPage + '&sortby=' + $scope.sortValue)
+		$http.get('/configs?page=' + prevPage + '&pagesize=' + $scope.pageSize + '&sortby=' + $scope.sortValue 
+			+ '&sortorder=' + $scope.sortOrder)
 			.then(function (res) {
 				if (prevPage === 1){
 					$scope.totalDisplayed = $scope.pageSize;
@@ -130,7 +131,8 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 	
 	$scope.getNext = function(){
 		var nextPage = $scope.page + 1;
-		$http.get('/configs?page=' + nextPage + '&sortby=' + $scope.sortValue)
+		$http.get('/configs?page=' + nextPage + '&pagesize=' + $scope.pageSize + '&sortby=' + $scope.sortValue
+		 + '&sortorder=' + $scope.sortOrder)
 			.then(function (res) {
 				$scope.page = nextPage;
 				$scope.totalConfigs = res.data.total;
@@ -141,61 +143,54 @@ controller('ConfigurationCtrl', function($scope, $http, $mdToast, $window) {
 				if (res.status === 401){
 					$scope.showSimpleToast('Unauthorized user!');
 				} else {
-					$scope.showSimpleToast('Unable to retrieve configs.');
+					$scope.showSimpleToast('Unable to retrieve configurations');
 				}
 			});
 			
 	};
 	
-	$scope.getConfigs = function(sortValue) {
-		if (sortValue){
-			$scope.sortValue = sortValue;
-			$http.get('/configs?page=1&sortby=' + sortValue)
-			.then(function (res) {
-				$scope.showSimpleToast('sorting by ' + sortValue + ' and displaying page 1');
-				$scope.totalDisplayed = $scope.pageSize;
-				$scope.totalConfigs = res.data.total;
-				$scope.configs = res.data.sorted;
-				$scope.page = 1;
-				$scope.sortby = 'name';
-			}, function (res){
-				if (res.status === 401){
-					$scope.showSimpleToast('Unauthorized user!');
-				} else {
-					$scope.showSimpleToast('Unable to retrieve configs.');
-				}
-			});
-		} else {
-			$http.get('/configs?page=1&sortby=name')
-			.then(function (res) {
-				$scope.page = 1;
-				$scope.totalDisplayed = $scope.pageSize;
-				$scope.sortby = 'name';
-				$scope.totalConfigs = res.data.total;
-				$scope.configs = res.data.sorted;
-			}, function (res){
-				if (res.status === 401){
-					$scope.showSimpleToast('Unauthorized user!');
-				} else {
-					$scope.showSimpleToast('Unable to retrieve configs.');
-				}
-			});
-		}
+	$scope.getConfigs = function() {
+		$http.get('/configs?page=1' + '&pagesize=' + $scope.pageSize + '&sortby=' + $scope.sortBy + '&sortorder=' + $scope.sortOrder)
+		.then(function (res) {
+			$scope.showSimpleToast('sorting by ' + $scope.sortBy + ' ' + $scope.sortOrder + ' and displaying page 1');
+			$scope.totalDisplayed = $scope.pageSize;
+			$scope.totalConfigs = res.data.total;
+			$scope.configs = res.data.sorted;
+			$scope.page = 1;
+			//$scope.sortby = 'name';
+		}, function (res){
+			if (res.status === 401){
+				$scope.showSimpleToast('Unauthorized user!');
+			} else {
+				$scope.showSimpleToast('Unable to retrieve configs.');
+			}
+		});
 	};
 	
 	$scope.sort = function(sortBy){
+		$scope.sortBy = sortBy;
+		$scope.toggleSortOrder();
 		$scope.getConfigs(sortBy);
 	};
 	
+	$scope.toggleSortOrder = function (){
+		if ($scope.sortOrder === 'asc'){
+			$scope.sortOrder = 'desc';
+		} else {
+			$scope.sortOrder = 'asc';
+		}
+	};
+	
 	$scope.init = function(){
-		$scope.configs = $scope.getConfigs();
 		$scope.adding = false;
 		$scope.selectedConfig = null;
 		$scope.editing = false;
 		$scope.page = 1; 
-		$scope.sortValue = 'name';
+		$scope.sortBy = 'name';
 		$scope.pageSize = 5;
 		$scope.totalDisplayed = 0;
+		$scope.sortOrder = 'asc';
+		$scope.configs = $scope.getConfigs();
 	};
 	
 	$scope.init();

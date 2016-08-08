@@ -36,7 +36,7 @@ describe('server authorized', function() {
 				.expect(200, done);
 		});
 		
-		it('then GET /invalidUrl should return status code 404 Not Found', function(done){
+		it('/invalidUrl should return status code 404 Not Found', function(done){
 			 api.get('/invalidUrl')
 				.set('Accept', 'application/json')
 				.expect(404, done);
@@ -45,7 +45,7 @@ describe('server authorized', function() {
 	
 	describe('http DELETE', function(){
 		it('/configs should return status code 204 No Content', function(done){
-			 api.delete('/configs')
+			 api.delete('/configs?id=brad')
 				.set('Accept', 'application/json')
 				.expect(204, done);
 		});
@@ -59,7 +59,7 @@ describe('server authorized', function() {
 	
 	describe('http POST', function(){
 		it('should return status code 204 No Content', function(done){
-			var newConfig = '{"config":{"username":"d","name":"g","hostname":"r","port":"c"}}';
+			var newConfig = '{"config":{"username":"newusername","name":"newname","hostname":"newhost","port":"9876"}}';
 			api.post('/configs')
 				.set('Accept', 'application/json')
 				.set('Content-Type', 'application/json')
@@ -76,8 +76,15 @@ describe('server authorized', function() {
 	});
 	
 	describe('http PUT', function(){
+		it('/configs should return status code 204 No Content', function(done){
+			var updatedConfig = '{"config":{"username":"admin","name":"john","hostname":"updatedhost","port":"4713"}}';
 			
-		it('then PUT /invalidUrl should return status code 404 Not Found', function(done){
+		 api.put('/configs')
+			.set('Acceptconfigs', 'application/json')
+			.send(updatedConfig)
+			.expect(204, done);
+		});
+		it('/invalidUrl should return status code 404 Not Found', function(done){
 			 api.put('/invalidUrl')
 				.set('Accept', 'application/json')
 				.expect(404, done);

@@ -1,14 +1,29 @@
 var http = require('http'),
 	url = require('url'),
+	path = require('path'),
 	fs = require('fs'),
-	httpHandler = require('./src/httpHandlerService'),
 	childProcess = require('child_process'),
 	browserToLaunch = '',
 	chrome = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
 	iexplore = 'C:\\Program Files (x86)\\Internet Explorer\\iexplore.exe',
-	arg = process.argv[2], userArg = null;
+	arg = process.argv[2], 
+	userArg = null,
+	users = require('./src/users.json'),
+	responseService = require('./src/js/responseService.js'),
+	userConfigs = require('./src/configurations.json');
+	
+
+currentWorkingDir = process.cwd();
+var authentication = require('./src/js/authentication.js')(users);
+var sorter = require('./src/js/sorter.js')(userConfigs);
+var paginator = require('./src/js/paginator.js')(userConfigs);
+var configPageObjCreator = require('./src/js/configPageObjCreator')(userConfigs, sorter, paginator);
+var authRouter = require('./src/js/authRouter.js')( path, fs, url, currentWorkingDir, configPageObjCreator, authentication, responseService, userConfigs, Buffer);
+var router = require('./src/js/router.js')(path, fs, responseService, authRouter, url);
+var httpHandler = require('./src/js/httpHandlerService')(path, currentWorkingDir, userConfigs, authentication, router, authRouter, responseService);
 	
 const PORT = 8888;
+var serverAdd = 'http://localhost:' + PORT;
 
 if (arg){
 	userArg = arg.toLowerCase();
@@ -30,7 +45,7 @@ if (userArg){
 			fs.statSync(iexplore);
 			browserToLaunch = iexplore;
 		} catch(e) {
-			console.log('iexplore does not exist, please manually launch your browser and navigate to "http://localhost:8888"');
+			console.log('iexplore does not exist, please manually launch your browser and navigate to ' + serverAdd);
 			browserToLaunch = '';
 		}
 	} else if (userArg === 'serverTests/') {
@@ -40,7 +55,7 @@ if (userArg){
 }
 
 if (browserToLaunch){
-	childProcess.spawn(browserToLaunch, ['http://localhost:8888']);
+	childProcess.spawn(browserToLaunch, [serverAdd]);
 }
 
 var urlContains = function(url, str){
@@ -62,12 +77,12 @@ var setContentType = function (url) {
 };
 
 http.createServer(function (req, res) {
-	var contentType, 
+	var contentType,
 	contentType = setContentType(req.url);
 	
 	switch (req.method){
 		case 'GET':
-			httpHandler.handleGetRequest(res, req, url, contentType);
+			httpHandler.handleGetRequest(res, req, contentType);
 			break;
 		case 'POST':
 			httpHandler.handlePostRequest(res, req, contentType);
@@ -81,6 +96,6 @@ http.createServer(function (req, res) {
 		default:
 	}
 	 
-}).listen(parseInt(PORT, 10)); 
+}).listen(parseInt(PORT)); 
 
-console.log('Server running at --> http://localhost:' + PORT + '/\nCTRL+C to shutdown');
+console.log('Server running at --> ' + serverAdd + '/\nCTRL+C to shutdown');

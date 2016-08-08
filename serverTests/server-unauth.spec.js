@@ -36,18 +36,24 @@ describe('server unauthorized', function() {
 				.expect(200, done);
 		});
 		
-		it('/invalidUrl should return status code 404 Not Found', function(done){
+		it('/invalidUrl should return status code 401 Unauthorized', function(done){
 			 api.get('/invalidUrl')
 				.set('Accept', 'application/json')
-				.expect(404, done);
+				.expect(401, done);
 		});
 	});
 	
 	describe('http DELETE', function(){
 		it('/configs should return status code 401 Unauthorized', function(done){
-		 api.delete('/configs')
-			.set('Accept', 'application/json')
-			.expect(401, done);
+			api.delete('/configs')
+				.set('Accept', 'application/json')
+				.expect(401, done);
+		});
+		
+		it('/invalidUrl should return status code 404 Unauthorized', function(done){
+			 api.delete('/invalidUrl')
+				.set('Accept', 'application/json')
+				.expect(401, done);
 		});
 	});
 	
@@ -64,6 +70,27 @@ describe('server unauthorized', function() {
 				.expect(204, done);
 		});
 		
+		it('then POST /invalidUrl should return status code 404 Not Found', function(done){
+			 api.post('/invalidUrl')
+				.set('Accept', 'application/json')
+				.expect(404, done);
+		});
+	});
+	
+	describe('http PUT', function(){
+		it('/configs should return 401 Unauthorized', function(done){
+			var newConfig = '{"config":{"username":"d","name":"g","hostname":"r","port":"c"}}';
+			api.post('/configs')
+				.set('Accept', 'application/json')
+				.set('Content-Type', 'application/json')
+				.send(newConfig)
+				.expect(401, done);
+		});
 		
+		it('/invalidUrl should return status code 401 Unauthorized', function(done){
+			 api.put('/invalidUrl')
+				.set('Accept', 'application/json')
+				.expect(401, done);
+		});
 	});
 });

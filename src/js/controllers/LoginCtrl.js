@@ -1,6 +1,6 @@
 angular.module('sampleApp.controllers', []).
 controller('LoginCtrl', function($scope, $http, $mdToast, $window) {
-	$scope.title = 'Tenable Backend Challenge - Microservices';
+	$scope.title = 'NodeJS Sample Application';
 	$scope.username = '';
 	$scope.password = '';
 		
